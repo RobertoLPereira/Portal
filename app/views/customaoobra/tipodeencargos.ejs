@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+	<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de sistemas</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+	 function Acao(descricao,idtipoencargo,)
+			{
+				var vForm = document.getElementById("frm");
+				//vForm.nomesistema.focus();  
+				if (tp == "Ed"){
+					vForm.descricao.value=descricao;
+vForm.idtipoencargo.value=idtipoencargo;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	vForm.action="/atualizasistema";
+			    	vForm.method="put";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.descricao.value="";
+vForm.idtipoencargo.value="";
+						vForm.action="/validarSistema";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.descricao.value="";
+vForm.idtipoencargo.value="";
+							vForm.action="/pesquisarsistema";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+							vEx
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/excsistema";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}	 
+				 
+			}
+		</script></head>
+
+	<body onload="carregar(<%=JSON.stringify(tipodeencargo)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="img/sistemas.png" class="img-responsive img-center" />
+									<br />
+									<P id="mensagem"></P>
+									<form action="/atualizatipodeencargo" method="put" id="frm" name="frm"><div class="form-group">
+					<input type="text" name="descricao" id="descricaoo" class="form-control" placeholder="Informe descricao" value=""></div>
+<div class="form-group">
+				<input type="hidden" name="idtipoencargo" id="idtipoencargoo" class="form-control" placeholder="idtipoencargo" value=""></div>
+</form>
+								
+								</div>
+									<div id="lista" name="lista">
+				<accordion-group heading="listagem de tipodeencargo" >
+
+			<h4>Lista de tipodeencargos</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv','','')">Novo</button>&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('Psq','','')" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				<tr class="login-header">
+				<th style="min-width: 60px;">descricao</th><th style="min-width: 60px;">idtipoencargo</th>
+				</tr>
+				</thead>
+				<tbody>
+					<% if(tipodeencargo.length > 0) { %>
+	    				<% for(var i = 0; i < tipodeencargo.length; i++) {%>
+							<tr>
+								<td><%=tipodeencargo[i].descricao%></td><td><%=tipodeencargo[i].idtipoencargo%></td>					
+								<td><%if (tipodeencargo[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=tipodeencargo[i].descricao%>','<%=tipodeencargo[i].idtipoencargo%>')">editar</button>
+									<%}else{%>
+											<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=tipodeencargo[i].descricao%>','<%=tipodeencargo[i].idtipoencargo%>')">Ativar</button>
+									<% } %>
+									<%if (tipodeencargo[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex','<%=tipodeencargo[i].descricao%>','<%=tipodeencargo[i].idtipoencargo%>')">excluir</button>
+									<% } %>
+								</td>
+
+							</tr>
+						<% } %>
+					<% } %>
+				</tbody>
+			</table>
+	
+	</accordion-group>
+				</div>
+											
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+	<script type="text/javascript">
+		//chama a funcao de auto preenchimento do campo passando o nome do campo e o array com os conteudos de pesquisa
+		autocomplete(document.getElementById("nomesistema"), wtipodeencargo);
+
+	</script>
+</html>

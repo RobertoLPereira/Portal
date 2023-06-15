@@ -1,0 +1,365 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    <title>Carrinho</title>
+    <style>
+        img{
+            width: 100%;
+        }
+    </style>
+    <script src="https://www.mercadopago.com/v2/security.js" view="item" output="deviceId"></script>
+    <script language="javascript" src="JavaScript/AjaxBrowser.js"></script>
+    <script lang="javascript" src="JavaScript/preference.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="display">Itens no Carrinho</h2>
+        <div class="row" id="row">
+            
+        </div>
+        <div class="row" id="rowb">
+            
+        </div>
+
+    </div>
+    <script>
+        var categ = 0;
+        var resp = [];
+        var productos = [];
+        var total = 0.00;
+        var pedidosCarrinho =[];
+        //console.log(item['deviceId']);
+        var httpRequest;
+        function makeRequest(idpessoa)  {
+            if (window.ActiveXObject){
+                httpRequest = new ActiveXObject("Microsoft.XMLHTTP");                
+            }
+            else if (window.XMLHttpRequest)
+            {            
+                httpRequest = new XMLHttpRequest();
+            }
+
+            if (!httpRequest) {
+              alert('Giving up :( Cannot create an XMLHTTP instance');
+              return false;
+            }
+                httpRequest.onreadystatechange = alertContents;
+                httpRequest.open('GET', 'http://10.0.0.109:5050/PedidocarrinhoPessoa/'+idpessoa);
+                httpRequest.send();
+          }
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+              if (httpRequest.status === 200) {
+                productos = JSON.parse(httpRequest.responseText)
+                carregar();
+                
+              } else {
+                alert('There was a problem with the request.');
+              }
+            }
+          }     
+        window.onload = function(){     
+         makeRequest(<%=idpessoa%>);
+        }
+        function carregar(){
+            var vForm = document.getElementById('carrinho');
+            for (let i = 0; i < productos.length; i++) {  
+              const row = document.getElementById('row');
+              let col = document.createElement('div');
+              var wt = parseFloat(productos[i].valor) * parseFloat(productos[i].quantidade);
+              col.classList.add('col-md-4');
+              row.appendChild(col)
+                let card = document.createElement('div');
+                card.classList.add('card');
+                col.appendChild(card);
+
+                let cardHeader = document.createElement('div');
+                cardHeader.classList.add('card-header');
+                card.appendChild(cardHeader);
+                cardHeader.innerHTML = `<h3> ${productos[i].name} </h3>`
+
+                let cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
+                card.appendChild(cardBody);
+                cardBody.innerHTML = `<img src="${productos[i].urlimagem}">`
+                let priceBox = document.createElement('h4');
+                cardBody.appendChild(priceBox);               
+                priceBox.innerHTML = `R\$${productos[i].valor}&nbsp;x&nbsp;${(parseFloat(productos[i].quantidade))}&nbsp;=&nbsp;R\$${wt}`;
+                priceBox.classList.add('mt-2');
+
+                let boton = document.createElement('button');
+                boton.classList.add('btn', 'btn-primary', 'btn-block');
+                boton.onclick = function() {
+                   carrinhoExc(productos[i].idpedidoitem,productos[i].idpedido);
+                };
+                cardBody.appendChild(boton);
+                boton.innerText = "Excluir";
+                total+=parseFloat(productos[i].valor) * parseFloat(productos[i].quantidade);
+                if (pedidosCarrinho.length > 0){
+                    var wtem = false;
+                    for(let ww =0;ww < pedidosCarrinho.length;ww++){
+                      if(pedidosCarrinho[ww].idpedido == productos[i].idpedido){
+                        wtem = true;
+                      }
+                    }
+                    if (!wtem){
+                      pedidosCarrinho.push({"idpedido":productos[i].idpedido});
+                    }
+                }else{
+                  pedidosCarrinho.push({"idpedido":productos[i].idpedido});
+                };
+                //console.log(i,productos.length);
+                if(i === (productos.length - 1)){
+                    const row2 = document.getElementById('rowb');
+                    let col2 = document.createElement('div');
+                    col2.classList.add('col-md-8');
+                    row2.appendChild(col2)
+                    let card = document.createElement('div');
+                    card.classList.add('card');
+                    col2.appendChild(card);
+
+                    let cardHeader = document.createElement('div');
+                    cardHeader.classList.add('card-header');
+                    card.appendChild(cardHeader);
+                    cardHeader.innerHTML = `<h3> Pagamento </h3>`
+
+                    let cardBody = document.createElement('div');
+                    cardBody.classList.add('card-body');
+                    card.appendChild(cardBody);
+                    cardBody.innerHTML = ` <h3>Detalhe do comprador</h3>
+                      <div>
+                        <div>
+                          <label for="email">E-mail</label>
+                          <input id="email" name="email" type="text" value="test@test.com"/ size=30>
+                        </div>
+                        <div>
+                          <label for="docType">Tipo de documento</label>
+                          <select id="docType" name="docType" data-checkout="docType" type="text"></select>
+                        </div>
+                        <div>
+                          <label for="docNumber">Número do documento</label>
+                          <input id="docNumber" name="docNumber" data-checkout="docNumber" type="text"/>
+                        </div>
+                      </div>
+                    <h3>Detalhes do cartão</h3>
+                      <div>
+                        <div>
+                          <label for="cardholderName">Titular do cartão</label>
+                          <input id="cardholderName" data-checkout="cardholderName" type="text" size=50>
+                        </div>
+                        <div>
+                          <label for="">Data de vencimento</label>
+                          <div>
+                            <input type="text" placeholder="MM" id="cardExpirationMonth" data-checkout="cardExpirationMonth"
+                              onselectstart="return false" onpaste="return false"
+                              oncopy="return false" oncut="return false"
+                              ondrag="return false" ondrop="return false" autocomplete=off size=2>
+                            <span class="date-separator">/</span>
+                            <input type="text" placeholder="YY" id="cardExpirationYear" data-checkout="cardExpirationYear"
+                              onselectstart="return false" onpaste="return false"
+                              oncopy="return false" oncut="return false"
+                              ondrag="return false" ondrop="return false" autocomplete=off size=2>
+                          </div>
+                        </div>
+                        <div>
+                          <label for="cardNumber">Número do cartão</label>
+                          <input type="text" id="cardNumber" data-checkout="cardNumber"
+                            onselectstart="return false" onpaste="return false"
+                            oncopy="return false" oncut="return false"
+                            ondrag="return false" ondrop="return false" autocomplete=off size=18>
+                        </div>
+                        <div>
+                          <label for="securityCode">Código de segurança</label>
+                          <input id="securityCode" data-checkout="securityCode" type="text"
+                            onselectstart="return false" onpaste="return false"
+                            oncopy="return false" oncut="return false"
+                            ondrag="return false" ondrop="return false" autocomplete=off size=4>
+                        </div>
+                        <div id="issuerInput">
+                          <label for="issuer">Banco emissor</label>
+                          <select id="issuer" name="issuer" data-checkout="issuer"></select>
+                        </div>
+                        <div>
+                          <label for="installments">Parcelas</label>
+                          <select type="text" id="installments" name="installments"></select>
+                        </div>
+                        <div>
+                          <input type="hidden" name="transactionAmount" id="transactionAmount" value="100" />
+                          <input type="hidden" name="paymentMethodId" id="paymentMethodId" />
+                          <input type="hidden" name="description" id="description" />
+                          <br>
+                          <!--button type="submit">Pagar ${total}</button-->
+                          <br>
+                        </div>
+                    </div>`
+                    let priceBox = document.createElement('h4');
+                    cardBody.appendChild(priceBox);   
+                    var wsl = new Intl.NumberFormat('br-IN', { maximumSignificantDigits: 2 }).format(total);            
+                    priceBox.innerHTML = `R\$  ${parseFloat(wsl)}`;
+                    priceBox.classList.add('mt-2');
+
+                    let boton = document.createElement('button');
+                    boton.classList.add('btn', 'btn-primary', 'btn-block');
+                    boton.onclick = function() {
+                    pagar(productos);
+                    };
+                    cardBody.appendChild(boton);
+                    boton.innerText = "Pagar";
+                    console.log(pedidosCarrinho);
+                    console.log(total);
+                }                
+        }
+        
+        }
+        var m = new Date();
+        var dataHoje = m.getUTCFullYear();
+        if((m.getUTCMonth()+1) < 10){
+            dataHoje += "-0"+(m.getUTCMonth()+1);
+        }else{
+            dataHoje += (m.getUTCMonth()+1);
+        }
+        if(m.getUTCDate() < 10){
+            dataHoje +="-0"+ m.getUTCDate();
+        }else{
+            dataHoje+="-"+ m.getUTCDate();
+        }
+        
+        function pagar(lista){
+          if (!httpRequest) {
+              alert('Nao temos o objeto httpRequest!');
+              return false;
+          }
+          
+          for (let a = 0; a < lista.length; a++) {
+            if (a === 0){
+              preference.items[a].title = lista[a].name.trim();
+              preference.items[a].quantity = parseInt(lista[a].quantidade);
+              preference.items[a].currency_id = "BRL";
+              preference.items[a].unit_price = parseFloat(lista[a].valor) * parseFloat(lista[a].quantidade);
+            } else{ 
+            preference.items.push({"title":lista[a].name.trim(),
+                                  "quantity":parseInt(lista[a].quantidade),
+                                  "currency_id" :"BRL",
+                                  "unit_price": parseFloat(lista[a].valor) * parseFloat(lista[a].quantidade)});
+            }            
+          }
+          //console.log(preference);
+          var options =  {"Accept" : "application/json"};
+          ajax = openAjax();	   
+            if (ajax == undefined){
+                ajax = new XMLHttpRequest();
+            }        
+            var url = "http://10.0.0.109:3200/CheckoutMP";
+            ajax.onreadystatechange = respostaMercadoPago;
+            ajax.open("POST",url,true);     
+            ajax.setRequestHeader('Content-Type','application/json');   
+            ajax.send(JSON.stringify(preference));
+           
+        }
+        function respostaMercadoPago() {
+            if (ajax.readyState === ajax.DONE) {
+              if (ajax.status === 200) {
+                var resp = JSON.parse(ajax.responseText)
+                console.log(resp);
+                desviarSandBox(resp.sandbox_init_point);
+              } else {
+                alert('Problema no retorno Mercado Pago');
+                console.log(ajax);
+              }
+            }
+          }  
+        function desviarSandBox(url){
+          //console.log(url);
+          httpRequest.onreadystatechange = respostaSandBox;
+          httpRequest.open('GET', url);
+          httpRequest.send();
+        }   
+        function respostaSandBox(){
+          if (httpRequest.readyState === XMLHttpRequest.DONE) {
+              if (httpRequest.status === 200) {
+                var resp = JSON.parse(httpRequest.responseText)
+                console.log(resp);
+                atualizarPedido();
+              } else {
+                alert('Problema no retorno SandBox Mercado Pago');
+                console.log(httpRequest);
+              }
+            }
+        }
+        function atualizarPedido(){
+            //alert(prc);
+            var vForm = document.getElementById('pagamento');
+            vForm.action="";
+            
+            ajax = openAjax();	   
+            if (ajax == undefined){
+                ajax = new XMLHttpRequest();
+            }      
+            for (let xx=0;xx < pedidosCarrinho.length;xx++) {
+              var pedido = {"enviado":1,"recebido":1};
+              var url = "http://10.0.0.109:5050/Pedido/"+pedidosCarrinho[xx].idpedido;
+              ajax.open("put",url,true);
+              ajax.setRequestHeader('Content-Type', 'application/json');
+              ajax.onreadystatechange = pedidoResposta;
+              ajax.send(JSON.stringify(pedido));
+            }                        
+        }
+        function pedidoResposta(){
+            if (ajax.readyState === ajax.DONE) {
+              if (ajax.status === 200) {
+                var pedido = JSON.parse(ajax.responseText)
+                console.log(pedido); 
+                //alert("Pedido atualizado sobre o pagamento");               
+              } else {
+                alert('Tratar o retorno da alteracao do pedido');
+                console.log(ajax.responseText);
+              }
+            }
+        }
+        function carrinhoExc(idpedidoitem,idpedido){
+            //alert(prc);
+            var vForm = document.getElementById('pagamento');
+            vForm.action="";
+            
+            ajax = openAjax();	   
+            if (ajax == undefined){
+                ajax = new XMLHttpRequest();
+            }        
+            var pedidoitem = {"idpedidoitem":idpedidoitem};
+            var url = "http://10.0.0.109:5050/Pedidoitem/"+idpedidoitem;
+            ajax.open("DELETE",url,true);
+            ajax.setRequestHeader('Content-Type', 'application/json');
+            ajax.onreadystatechange = verResposta;
+            ajax.send(JSON.stringify(pedidoitem));
+            
+        }     
+        function verResposta(){
+            if (ajax.readyState === ajax.DONE) {
+              if (ajax.status === 200) {
+                var pedido = JSON.parse(ajax.responseText)
+                console.log(pedido); 
+                alert("Pedido incluido");               
+              } else {
+                alert('Tratar o retorno da inclusão do pedido');
+                console.log(ajax.responseText);
+              }
+            }
+        }
+    </script>
+     
+    <form action="http://10.0.0.109:3100/checkout" method="POST" id="carrinho" name="carrinho">
+        <input type="hidden" name="title" value="">
+        <input type="hidden" name="price" value=""> 
+        <input type="hidden" name="qtd"   value="">   
+        <input type="hidden" name="describe" value="">   
+        <input type="hidden" name="idpessoa" value="<%=idpessoa%>"> 
+        <input type="hidden" name="iddevice" id="iddevice" value="">                        
+        <!--input type="submit" value="Comprar ahora" class="btn btn-primary btn-block"-->
+    </form>
+</body>
+</html>

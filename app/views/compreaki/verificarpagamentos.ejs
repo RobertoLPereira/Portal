@@ -1,0 +1,149 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    <title>Mercadopago Node</title>
+    <style>
+        img{
+            width: 100%;
+        }
+    </style>
+    <script src="https://www.mercadopago.com/v2/security.js" view="item" output="deviceId"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="display">Itens em Ofertas</h2>
+        <div class="row" id="row">
+        </div>
+
+    </div>
+    <script>
+        var resp = [];
+        var productos = [];
+        var device_id = "armor.cef5002e9e36719a1e9d4c06dfecc3fb8c32d7609e643780cc8f6ddf0b6c3e69f9ab56928b43ed235a6b2a656a1c5feecd59c533540f1b22dd39d362931507c54af75f8fc72b3783aa63fd307bc3e6f5.7a39ef52b0d8f8e9ef14ce2de10511fc";
+        //console.log(item['deviceId']);
+        var httpRequest;
+        function makeRequest()  {
+            if (window.ActiveXObject){
+                httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                
+            }
+            else if (window.XMLHttpRequest)
+            {
+            
+                httpRequest = new XMLHttpRequest();
+            }
+
+            if (!httpRequest) {
+              alert('Giving up :( Cannot create an XMLHTTP instance');
+              return false;
+            }
+                httpRequest.onreadystatechange = alertContents;
+                //httpRequest.Header.add({'Authorization':'TEST-270067533223318-060213-d1388d2bc6e3ff688eff730f4feb34ba-121817330'});
+                httpRequest.open('GET', 'https://api.mercadopago.com/v1/payments/1237777428');
+                httpRequest.send();
+            }
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+              if (httpRequest.status === 200) {
+                var resps = JSON.parse(httpRequest.responseText);
+                console.log(resps);
+               // carregar();
+                
+              } else {
+                alert('There was a problem with the request.');
+              }
+            }
+          }     
+        window.onload = function(){
+              //console.log(<%=idcategoria%>);  
+              console.log("verificar");      
+         makeRequest();
+  
+        }
+        function carregar(){
+
+        for (let i = 0; i < productos.length; i++) {  
+            const row = document.getElementById('row');
+            let col = document.createElement('div');
+            col.classList.add('col-md-4');
+            row.appendChild(col)
+                let card = document.createElement('div');
+                card.classList.add('card');
+                col.appendChild(card);
+
+                let cardHeader = document.createElement('div');
+                cardHeader.classList.add('card-header');
+                card.appendChild(cardHeader);
+                cardHeader.innerHTML = `<h3> ${productos[i].nomeproduto} </h3>`
+
+                let cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
+                card.appendChild(cardBody);
+                cardBody.innerHTML = `<img src="${productos[i].urlimagem}">`
+                let priceBox = document.createElement('h4');
+                cardBody.appendChild(priceBox);               
+                priceBox.innerHTML = `R\$  ${productos[i].precovenda}`;
+                priceBox.classList.add('mt-2');
+
+                let boton = document.createElement('button');
+                boton.classList.add('btn', 'btn-primary', 'btn-block');
+                boton.onclick = function() {
+                   //alert(`${productos[i].titulo}`);
+                   carrinho(`${productos[i].idanuncio}`,`${productos[i].idanuncioitem}`,`${productos[i].codprodfornec}`,`${productos[i].precovenda}`);
+                };
+                cardBody.appendChild(boton);
+                boton.innerText = "Carrinho";
+
+                let botonC = document.createElement('button');
+                botonC.classList.add('btn', 'btn-primary', 'btn-block');
+                botonC.onclick = function() {
+                   //alert(`${productos[i].titulo}`);
+                   comprar(`${productos[i].nomeproduto}`,1,`${productos[i].precovenda}`,`${productos[i].descricao}`);
+                };
+                cardBody.appendChild(botonC);
+                botonC.innerText = "Pagar";
+        }
+
+        }
+        function comprar(title,qtd,prc,dsc){
+            //alert(prc);
+            var vForm = document.getElementById('venda');
+                vForm.qtd.value = qtd;
+                vForm.price.value = prc;
+                vForm.title.value = title;
+                vForm.describe.value = dsc;
+                vForm.action="http://10.0.0.109:3100/checkout";
+                vForm.method="POST";
+                vForm.submit();
+                return;
+        }   
+        function carrinho(idanuncio,idanuncioitem,codprodfornec,prc){
+            //alert(prc);
+            var vForm = document.getElementById('venda');
+                vForm.qtd.value = idanuncio;
+                vForm.price.value = prc;
+                vForm.title.value = idanuncioitem;
+                vForm.describe.value = codprodfornec;
+                vForm.action="";
+                vForm.method="POST";
+                vForm.submit();
+                return;
+        }     
+    
+    </script>
+     
+    <form action="http://10.0.0.109:3100/checkout" method="POST" id="venda" name="venda">
+        <input type="hidden" name="title" value="">
+        <input type="hidden" name="price" value=""> 
+        <input type="hidden" name="qtd" value="">   
+        <input type="hidden" name="describe" value="">    
+        <input type="hidden" name="iddevice" id="iddevice" value="<%=deviceId%>">                        
+        <!--input type="submit" value="Comprar ahora" class="btn btn-primary btn-block"-->
+    </form>
+</body>
+</html>

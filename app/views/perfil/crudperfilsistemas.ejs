@@ -1,0 +1,218 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de PerfilSistemas</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+		function nomeSistema(Sis,id){
+			for (var i = Sis.length - 1; i >= 0; i--) {
+				if (Sis[i].idsistema == id){
+					return Sis[i].nomesistema;
+				}
+			}
+		}
+		</script>
+		<script type="text/javascript">
+			var wPerfilSistemas = [];
+			function carregar(PerfilSistemas,Sistemas,Perfis){
+				for (var i = PerfilSistemas.length - 1; i >= 0; i--) {
+					wPerfilSistemas[i] = PerfilSistemas[i].perfil;
+				}
+				var wsishtm = "<OPTION value =0 selected>Selecione sistema</OPTION>" ;
+						for (var i = Sistemas.length - 1; i >= 0; i--) {
+							if (Sistemas[i].nomesistema != undefined){
+								wsishtm+="<OPTION value ="+Sistemas[i].idsistema+">"+Sistemas[i].nomesistema+"</OPTION>";
+							}
+						}
+				var vForm = document.getElementById('persis');
+				vForm.idsistema.innerHTML = wsishtm;	
+				wperhtm = "<OPTION value =0 selected>Selecione perfil</OPTION>" ;
+						for (var i = Perfis.length - 1; i >= 0; i--) {
+							if (Perfis[i].perfil != undefined){
+								wperhtm+="<OPTION value ="+Perfis[i].idperfil+">"+Perfis[i].perfil+"</OPTION>";
+							}
+						}
+				//var vForm = document.getElementById('persis');
+				vForm.idperfil.innerHTML = wperhtm;			
+			}
+			
+			function Acao(tp,idperfilsistema,idperfil,idsistema)
+			{
+				var vForm = document.getElementById('persis');
+				vForm.idperfil.focus();  
+				if (tp == "Ed"){
+					vForm.idperfilsistema.value=idperfilsistema;
+					vForm.idperfil.value = idperfil;
+					vForm.idsistema.value=idsistema;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	//vForm.action="/validarUsuario";
+			    	//vForm.method="post";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.idperfilsistema.value="0";
+						vForm.idperfil.value = "0";
+						vForm.idsistema.value="0";
+						vForm.action="/validarperfilsistema";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.idperfil.value="";
+							vForm.idperfilsistema.value = "";							
+							
+							vForm.idsistema.disabled =true;
+							vForm.action="/pesquisarperfil";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+							vForm.idperfilsistema.value=idperfilsistema;
+							vForm.idperfil.value = idperfil;
+							vForm.idsistema.value=idsistema;
+							vForm.idperfil.disabled=true;
+							vForm.idsistema.disabled =true;
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/excperfilsistema";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}	 
+				 
+			}
+		</script>
+	</head>
+
+	<body onload="carregar(<%=JSON.stringify(PerfilSistemas)%>,<%=JSON.stringify(Sistemas)%>,<%=JSON.stringify(Perfis)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="img/transacao.png" class="img-responsive img-center" />PerfilSistemas
+									<br />
+									<P id="mensagem"></P>
+									<form action="/validarperfilsistema" method="post" id="persis" name="persis">
+										<div class="form-group">											
+										</div>
+										<div class="form-group autocomplete">
+											<input type="hidden" name="idperfilsistema" id="idperfilsistema">
+										</div>
+										<div class="form-group">
+											<SELECT id="idperfil" name="idperfil">
+												<OPTION value =0 selected>Ativo</OPTION>
+												<OPTION value=1>Desativado</OPTION>								
+											</SELECT>
+										</div>
+										<div class="form-group">
+											<SELECT id="idsistema" name="idsistema">
+												<OPTION value =0 selected>Ativo</OPTION>
+												<OPTION value=1>Desativado</OPTION>								
+											</SELECT>
+										</div>
+										<div class="form-group">										
+										<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+										</div>									
+									</form>
+								
+								</div>
+								<div id="lista" name="lista">
+
+<accordion-group heading="listagem de sistemas por perfil" >
+
+			<h4>Lista de Perfil/Sistemas</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv',0,0,0,)">Novo</button>&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('Psq',0,0,0)" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados" disabled="">Pesquisar</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				    <tr class="login-header">
+				        <th style="min-width: 60px;">Sequencial</th>
+
+				        <th style="min-width: 60px;">Nome perfil</th>
+
+				        <th style="min-width: 60px;">Sistema</th>
+
+                        <th style="min-width: 40px;">&nbsp;A c o e s</th>
+                     </tr>
+				</thead>
+				<tbody>
+					<% var wSistemas = JSON.stringify(Sistemas);
+					
+					if(PerfilSistemas.length > 0) { %>
+	    				<%   var sisAnt = 0;    					
+	    				for(var i = 0; i < PerfilSistemas.length; i++) {%>
+							<tr >
+								<td nowrap><%=PerfilSistemas[i].idperfilsistema%></td>
+								<%if (sisAnt == PerfilSistemas[i].idperfil){%>
+									<td></td><%
+								}else{%>
+									<td><%=PerfilSistemas[i].idperfil%>&nbsp;-&nbsp;<%=PerfilSistemas[i].perfil.perfil%></td>
+								<%sisAnt = PerfilSistemas[i].idperfil}%>				           					           
+					            <td ><%=PerfilSistemas[i].idsistema%>&nbsp;-&nbsp;
+					            	<% for(var a = 0; a < Sistemas.length; a++) {
+					            			if (PerfilSistemas[i].idsistema == Sistemas[a].idsistema){%>
+					            			&nbsp;-&nbsp;<%=Sistemas[a].nomesistema%>
+					            		<%}
+					            		}%>
+					            </td>
+								<td nowrap>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=PerfilSistemas[i].idperfilsistema%>,<%=PerfilSistemas[i].idperfil%>,<%=PerfilSistemas[i].idsistema%>)">editar</button>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex',<%=PerfilSistemas[i].idperfilsistema%>,<%=PerfilSistemas[i].idperfil%>,<%=PerfilSistemas[i].idsistema%>)">excluir</button>
+								</td>
+							</tr>
+						<% }%>
+					<% } %>
+				</tbody>
+			</table>
+	
+	</accordion-group>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+	
+</html>

@@ -1,0 +1,351 @@
+body { background:#FFF; color:#000; margin:0; padding:0; font-family:Verdana, Tahoma, "Helvetica CE", Helvetica, sans-serif;text-align:left; font-size:12px}
+h1 {color:#ef9832;font-size:1.7em;margin:0 0 5px 0;font-weight:bold;display:block;border-bottom:1px dotted #00659f}
+h2 {font-size:1.2em;margin:10px 0 2px 0;padding:0;color:#00659f}
+h3 {font-size:1em;color:#ef9832;margin:0}
+p {text-align:justify}
+form { margin:0;padding:0; }
+
+fieldset { padding-bottom:4px; }
+legend { font-family:Verdana,Tahoma,Arial;font-size:12px; }
+
+errors { text-color:red; font-weight:bold; }
+
+.message-box-info { border:1px solid #135A24; background-color: #C3D7F5; font-weight:bold; padding: 4px 2px; margin-bottom:10px; }
+.message-box-error { border:1px solid #850D0D; background-color: #FFDBDB; color:#AB3838; font-weight:bold; padding: 4px 2px; margin-bottom:10px; }
+
+#appid{
+	clear:both;
+	text-align:left;
+	height:30px;
+	font-family:Arial,Helvetica,Geneva,sans-serif;
+    font-size:12pt;
+    font-weight:bold;
+    color:#009933
+}
+
+#body { margin-left:20px; text-align:justify; padding: 5px; font-family:Verdana,Tahoma,Arial; }
+
+.pageTitle { background-color:#78798E !important;color:#fff;font-weight:bold;font-size:13px;text-align:center; padding:6px; }
+
+.pagina {
+	width:750px;     
+	margin:0 auto;
+	text-align:left;
+	border: 1px;
+	background-color: #660000;
+}
+
+#rodape {
+   width: 100%;
+   background-color:#C1C1C1;
+  
+   position:fixed;
+   bottom:0;
+   left:0;
+   right:0;
+   height: 23px;
+   z-index:2999;
+}
+
+* html #rodape {
+	position:absolute;
+	width: 100%;/*IE5.5*/
+    bottom: 0;
+    left: 0;
+    overflow: visible;
+    top: expression(eval(document.compatMode && document.compatMode=='CSS1Compat') ? documentElement.scrollTop +(documentElement.clientHeight-this.clientHeight) : document.body.scrollTop +(document.body.clientHeight-this.clientHeight));
+}
+
+.bottom-col-left { width:49%; }
+.bottom-col-right { text-align:right; }
+
+.menu-select { font-family:Verdana,Tahoma,Arial; background-color: #DFDFDF; border-color:#78798E; color:#78798E; }
+.menu-select a { font-family:Verdana,Tahoma,Arial; color:#78798E !important; }
+
+.rich-page { border:0px solid; width:100%; }
+.rich-page-body { border:0px solid;padding:0;margin:0; }
+
+.rich-menu-list-bg { background-image:none; background-color:#ED7A7F; color:#FFF; }
+.rich-menu-item { font-family:Verdana,Tahoma,Arial !important; color:#FFF !important; }
+.rich-menu-item-label a { font-family:Verdana,Tahoma,Arial !important; color:#FFF !important; }
+
+.field-label-form { text-align:right; width:40%; vertical-align:top; padding-right:5px; }
+.field-edit-form { vertical-align:middle; }
+
+.message-info { border: 1px solid #FFCC00; padding: 5px; margin-top: 5px; margin-bottom: 5px; background-color: #C0CBFF; font-size: 12px; }
+.message-error { border: 1px solid #FFCC00; padding: 5px; margin-top: 5px; margin-bottom: 5px; background-color: #FFC0CB; font-size: 12px; }
+.required { font-weight:bold; color:red; font-size:10pt; font-family:Tahoma,Verdana,Arial; }
+
+.transacao { font-family:Verdana,Tahoma,Arial,Helvetica !important;font-weight:bold; font-size:14px; }
+
+.rich-text-general, .rich-input, .rich-messages, .rich-toolbar, .rich-button, .rich-table, .pageTitle, .rich-table-cell { font-family:Verdana,Tahoma,Arial,Helvetica !important; }
+
+.rich-table-caption, .rich-table-header, .rich-table-headercell {
+	font-family:Verdana,Tahoma,Arial;
+	font-size:14px;
+	font-weight:bold;
+	background-image:none;
+	background-color:#dfdfdf;
+	color:#fff !important;
+}
+
+.oddRow { background-color:#dfdfdf; }
+.evenRow { background-color:#FFF; }
+
+.rich-table-subheader { background-image:none; background-color:#dfdfdf; color:#fff !important; }
+.rich-table-subheadercell { font-family:Verdana,Tahoma,Arial; text-align:left; color:#fff; }
+
+.rich-input { 
+	font-size:11px !important;	
+	padding: 3px 3px;
+	border:1px solid #C3D7F5 !important;
+}
+
+.rich-toolbar {	
+	background-image:none;
+	height: 30px;	
+	background-color: #D1D1D1;
+	border:0px solid #919191;	
+}
+
+.rich-panel-header {
+	background-image:none;
+	background-color: #D1D1D1;
+	border:1px solid #919191;	
+}
+
+.rich-button{
+	background-image: none;
+	background-color: #CECECE;
+}
+
+.rich-tab-inactive {
+	background-image:none;
+}
+
+.rich-tab-active{
+	background-image:none;
+    font-weight: bold;
+}
+
+.rich-messages dl { padding:1px 1px; }
+.rich-messages dt { margin-left:10px; margin-top:3px; margin-bottom:3px; }
+.rich-messages-marker { width:26px; }
+
+}
+.MenuMouserOver
+{
+    FONT-SIZE: 11px;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: left
+}
+.MenuMouserOut
+{
+    FONT-SIZE: 11px;
+    CURSOR: hand;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    BACKGROUND-COLOR: #99cc99;
+    TEXT-ALIGN: left
+}
+.SubMenuTituloOver
+{
+    FONT-SIZE: 11px;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: left
+}
+.SubMenuTituloOut
+{
+    FONT-SIZE: 11px;
+    CURSOR: hand;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    BACKGROUND-COLOR: #99cc99;
+    TEXT-ALIGN: left
+}
+.ItemMenuTituloOver
+{
+    FONT-SIZE: 11px;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    BACKGROUND-COLOR: #99cc99;
+    TEXT-ALIGN: left
+}
+.ItemMenuTituloOut
+{
+    FONT-SIZE: 11px;
+    CURSOR: hand;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    BACKGROUND-COLOR: #a1caa1;
+    TEXT-ALIGN: left
+}
+.ButtonOver
+{
+    BORDER-RIGHT: #2E3295 1px solid;
+    BORDER-TOP: #2E3295 1px solid;
+    FONT-SIZE: 11px;
+    BACKGROUND: url(../images/ButtonOver.gif);
+    BORDER-LEFT: #2E3295 1px solid;
+    WIDTH: 80px;
+    CURSOR: hand;
+    BORDER-BOTTOM: #2E3295 1px solid;
+    HEIGHT: 20px
+}
+.ButtonOut
+{
+    BORDER-RIGHT: #2E3295 1px solid;
+    BORDER-TOP: #2E3295 1px solid;
+    FONT-SIZE: 11px;
+    BACKGROUND: url(../images/ButtonOut.gif);
+    BORDER-LEFT: #2E3295 1px solid;
+    WIDTH: 80px;
+    CURSOR: hand;
+    BORDER-BOTTOM: #2E3295 1px solid;
+    HEIGHT: 20px
+}
+.TextAlignLeft
+{
+    FONT-SIZE: 11px;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: left
+}
+.TextAlignRight
+{
+    FONT-SIZE: 11px;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: right;
+    align:right
+}
+.TextBox
+{
+    BORDER-RIGHT: black 1px solid;
+    BORDER-TOP: black 1px solid;
+    FONT-SIZE: 11px;
+    BORDER-LEFT: black 1px solid;
+    BORDER-BOTTOM: black 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    HEIGHT: 18px;
+    TEXT-ALIGN: left
+}
+.textos
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    TEXT-ALIGN: center
+}
+.textosleft
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+	CURSOR: hand;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left
+	
+}
+.textosleftn
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left
+}
+.textosright
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, helvetica;
+    TEXT-ALIGN: right
+}
+.DivGrid
+{
+    LEFT: 0px;
+    WIDTH: 100%;
+    POSITION: relative;
+    HEIGHT: 100%
+}
+.TabelaGrid
+{
+    BORDER-RIGHT: 0px;
+    BORDER-TOP: 0px;
+    LEFT: 0px;
+    BORDER-LEFT: 0px;
+    WIDTH: 100%;
+    BORDER-BOTTOM: 0px;
+    POSITION: relative;
+    TOP: 0px
+}
+.ToolBar_1
+{
+    BORDER-TOP: 1px solid;
+    FONT-SIZE: 11px;
+    BACKGROUND-IMAGE: url(../images/toolBar.gif);
+    VERTICAL-ALIGN: middle;
+    BORDER-LEFT: 1px solid;
+    WIDTH: 10%;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: right
+}
+.ToolBar_2
+{
+    BORDER-RIGHT: 1px solid;
+    BORDER-TOP: 1px solid;
+    BACKGROUND-IMAGE: url(../images/toolBar.gif);
+    VERTICAL-ALIGN: middle;
+    WIDTH: 90%;
+    BORDER-BOTTOM: 1px solid
+}
+.Grid
+{
+    BORDER-RIGHT: #336666 1px double;
+    BORDER-TOP: #336666 1px double;
+    FONT-SIZE: 8pt;
+    BORDER-LEFT: #336666 1px double;
+    WIDTH: 100%;
+    BORDER-BOTTOM: #336666 1px double;
+    FONT-FAMILY: Tahoma;
+    BORDER-COLLAPSE: collapse;
+    BACKGROUND-COLOR: white
+}
+.CabecalhoGrid
+{
+    COLOR: white;
+    BACKGROUND-COLOR: cadetblue
+}
+.linkOver
+{
+    FONT-SIZE: 8pt;
+    CURSOR: hand;
+    COLOR: black;
+    FONT-FAMILY: Verdana
+}
+.portalTextos
+{
+    FONT-SIZE: 8pt;
+    COLOR: black;
+    FONT-FAMILY: Verdana
+}
+.LinhaGrid
+{
+    COLOR: #333333;
+    BACKGROUND-COLOR: white
+}
+.RodapeGrid
+{
+    COLOR: white;
+    BACKGROUND-COLOR: #336666;
+    align: Center
+}

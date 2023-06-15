@@ -1,0 +1,126 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Categorias</title>
+    <style>
+        img{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="display">Lista de Categorias</h2>
+        <div class="row" id="row">
+        </div>
+
+    </div>
+    <script>
+        var resp = [];
+        var productos = [];
+        var textovegano = "Nao sou vegano";
+        var httpRequest;
+       
+        function makeRequest()  {
+            if (window.ActiveXObject){
+                httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                
+            }
+            else if (window.XMLHttpRequest)
+            {
+            
+                httpRequest = new XMLHttpRequest();
+            }
+
+        if (!httpRequest) {
+          alert('Giving up :( Cannot create an XMLHTTP instance');
+          return false;
+        }
+            httpRequest.onreadystatechange = alertContents;
+            httpRequest.open('GET', 'http://10.0.0.109:5050/CategoriasComAnuncio');
+            httpRequest.send();
+        }
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+              if (httpRequest.status === 200) {
+                productos = JSON.parse(httpRequest.responseText)
+                carregar();
+                
+              } else {
+                alert('There was a problem with the request.');
+              }
+            }
+          }     
+        window.onload = function(){
+              
+         makeRequest();
+  
+        }
+        function carregar(){
+
+        for (let i = 0; i < productos.length; i++) {  
+            souVegano(productos[i].vegano);
+            console.log(productos[i]);
+            const row = document.getElementById('row');
+            let col = document.createElement('div');
+            col.classList.add('col-md-4');
+            row.appendChild(col)
+                let card = document.createElement('div');
+                card.classList.add('card');
+                col.appendChild(card);
+
+                let cardHeader = document.createElement('div');
+                cardHeader.classList.add('card-header');
+                card.appendChild(cardHeader);
+                cardHeader.innerHTML = `<h3> ${productos[i].denominacao} </h3>`
+
+                let cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
+                card.appendChild(cardBody);
+                cardBody.innerHTML = `<img src="${productos[i].url}">`
+                let vegano = document.createElement('h4');
+                cardBody.appendChild(vegano);               
+                vegano.innerHTML = textovegano;
+                vegano.classList.add('mt-2');
+
+                let boton = document.createElement('button');
+                boton.classList.add('btn', 'btn-primary', 'btn-block');
+                boton.onclick = function() {
+                   //alert(`${productos[i].titulo}`);
+                   listarItens(`${productos[i].idcategoria}`,1,`${productos[i].idsubcategoria}`);
+                };
+                cardBody.appendChild(boton);
+                boton.innerText = "Ver";
+        }
+
+        }
+        function souVegano(y){
+            textovegano= "Não Sou vegano";
+            if(y){
+                textovegano= "Sou vegano";
+            }
+            
+        }
+        function listarItens(id,idsub){
+            //alert(prc);
+            var vForm = document.getElementById('venda');
+                vForm.idcategoria.value = id;
+                vForm.idsubcategoria.value = idsub;
+                vForm.action="/mercadopago";
+                vForm.method="GET";
+                vForm.submit();
+                return;
+        }    
+    
+    </script>
+     
+    <form action="/mercadopago" method="GET" id="venda" name="venda">
+        <input type="hidden" name="idcategoria" value="">
+        <input type="hidden" name="idsubcategoria" value="">   
+        <input type="hidden" name="deviceid" value="<%=deviceId%>">                        
+    </form>
+</body>
+</html>

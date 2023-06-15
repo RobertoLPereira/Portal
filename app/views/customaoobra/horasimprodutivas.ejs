@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+	<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de sistemas</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+	 function Acao(tp,HorasCentesimais,codigo,codigodahora,descricao,empresa,horasano,numerodedias,status,)
+			{
+				var vForm = document.getElementById("frm");
+				//vForm.nomesistema.focus();  
+				if (tp == "Ed"){
+					vForm.HorasCentesimais.value=HorasCentesimais;
+					vForm.codigo.value=codigo;
+					vForm.codigodahora.value=codigodahora;
+					vForm.descricao.value=descricao;
+					vForm.empresa.value=empresa;
+					vForm.horasano.value=horasano;
+					vForm.numerodedias.value=numerodedias;
+					vForm.status.value=status;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	vForm.action="/atualizasistema";
+			    	vForm.method="put";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.HorasCentesimais.value="";
+						vForm.codigo.value="";
+						vForm.codigodahora.value="";
+						vForm.descricao.value="";
+						vForm.empresa.value="";
+						vForm.horasano.value="";
+						vForm.numerodedias.value="";
+						vForm.status.value="";
+						vForm.action="/validarSistema";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.HorasCentesimais.value="";
+							vForm.codigo.value="";
+							vForm.codigodahora.value="";
+							vForm.descricao.value="";
+							vForm.empresa.value="";
+							vForm.horasano.value="";
+							vForm.numerodedias.value="";
+							vForm.status.value="";
+							vForm.action="/pesquisarsistema";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+					vForm.HorasCentesimais.value=HorasCentesimais;
+					vForm.codigo.value=codigo;
+					vForm.codigodahora.value=codigodahora;
+					vForm.descricao.value=descricao;
+					vForm.empresa.value=empresa;
+					vForm.horasano.value=horasano;
+					vForm.numerodedias.value=numerodedias;
+					vForm.status.value=status;
+			    	vForm.btn_ok.innerHTML = "Excluir";
+					vForm.action="/excsistema";
+					vForm.method="delete";
+					vForm.btn_ok.disabled = false;
+				}	 
+				 
+			}
+		</script></head>
+
+	<body>
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="img/sistemas.png" class="img-responsive img-center" />
+									<br />
+									<P id="mensagem"></P>
+									<form action="/atualizahorasimprodutivas" method="put" id="frm" name="frm"><div class="form-group">
+										<input type="text" name="HorasCentesimais" id="HorasCentesimaiso" class="form-control" placeholder="Informe HorasCentesimais" value=""></div>
+									<div class="form-group">
+													<input type="hidden" name="codigo" id="codigoo" class="form-control" placeholder="codigo" value=""></div>
+									<div class="form-group">
+														<input type="text" name="codigodahora" id="codigodahorao" class="form-control" placeholder="Informe codigodahora" value=""></div>
+									<div class="form-group">
+														<input type="text" name="descricao" id="descricaoo" class="form-control" placeholder="Informe descricao" value=""></div>
+									<div class="form-group">
+														<input type="text" name="empresa" id="empresao" class="form-control" placeholder="Informe empresa" value=""></div>
+									<div class="form-group">
+														<input type="text" name="horasano" id="horasanoo" class="form-control" placeholder="Informe horasano" value=""></div>
+									<div class="form-group">
+														<input type="text" name="numerodedias" id="numerodediaso" class="form-control" placeholder="Informe numerodedias" value=""></div>
+									<div class="form-group">
+										<input type="text" name="status" id="statuso" class="form-control" placeholder="Informe status" value="">
+									</div>
+									<div class="form-group">										
+											<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+										</div>
+									</form>
+								
+								</div>
+									<div id="lista" name="lista">
+				<accordion-group heading="listagem de horasimprodutivas" >
+
+			<h4>Lista de Horas Improdutivas</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv','','','','','','','','')">Novo</button>&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('Psq','','','','','','','','')" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				<tr class="login-header">
+				<th style="min-width: 60px;">Horas Centesimais</th><th style="min-width: 60px;">Codigo da Hora</th><th style="min-width: 60px;">Denominação</th><th style="min-width: 60px;">Empresa</th><th style="min-width: 60px;">Horas Ano</th><th style="min-width: 60px;">Número de Dias</th><th style="min-width: 60px;">Situação</th>
+				</tr>
+				</thead>
+				<tbody>
+					<% situacao = [];
+					situacao[0]= 'Ativo';
+					situacao[1]= 'Inativo';
+					if(Horasimprodutivas.length > 0) { %>
+	    				<% for(var i = 0; i < Horasimprodutivas.length; i++) {%>
+							<tr>
+								<td><%=Horasimprodutivas[i].HorasCentesimais%></td>
+								<td><%=Horasimprodutivas[i].codigodahora%></td>
+								<td><%=Horasimprodutivas[i].descricao%></td>
+								<td><%=Horasimprodutivas[i].empresa%></td>
+								<td><%=Horasimprodutivas[i].horasano%></td>
+								<td><%=Horasimprodutivas[i].numerodedias%></td>
+								<td><%=situacao[Horasimprodutivas[i].status]%></td>					
+								<td><%if (Horasimprodutivas[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=Horasimprodutivas[i].HorasCentesimais%>','<%=Horasimprodutivas[i].codigo%>','<%=Horasimprodutivas[i].codigodahora%>','<%=Horasimprodutivas[i].descricao%>','<%=Horasimprodutivas[i].empresa%>','<%=Horasimprodutivas[i].horasano%>','<%=Horasimprodutivas[i].numerodedias%>','<%=Horasimprodutivas[i].status%>')">Editar</button>
+									<%}else{%>
+											<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=Horasimprodutivas[i].HorasCentesimais%>','<%=Horasimprodutivas[i].codigo%>','<%=Horasimprodutivas[i].codigodahora%>','<%=Horasimprodutivas[i].descricao%>','<%=Horasimprodutivas[i].empresa%>','<%=Horasimprodutivas[i].horasano%>','<%=Horasimprodutivas[i].numerodedias%>','<%=Horasimprodutivas[i].status%>')">Ativar</button>
+									<% } %>
+									<%if (Horasimprodutivas[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex','<%=Horasimprodutivas[i].HorasCentesimais%>','<%=Horasimprodutivas[i].codigo%>','<%=Horasimprodutivas[i].codigodahora%>','<%=Horasimprodutivas[i].descricao%>','<%=Horasimprodutivas[i].empresa%>','<%=Horasimprodutivas[i].horasano%>','<%=Horasimprodutivas[i].numerodedias%>','<%=Horasimprodutivas[i].status%>')">Excluir</button>
+									<% } %>
+								</td>
+
+							</tr>
+						<% } %>
+					<% } %>
+				</tbody>
+			</table>
+	
+	</accordion-group>
+				</div>
+											
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+</html>

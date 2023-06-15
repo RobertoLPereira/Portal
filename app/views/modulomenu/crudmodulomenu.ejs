@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de ModuloMenu</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+			var wModuloMenu = [];
+			function carregar(ModuloMenu,Sistemas){
+				for (var i = ModuloMenu.length - 1; i >= 0; i--) {
+					wModuloMenu[i] = ModuloMenu[i].denominacao;
+				}
+				var wsishtm = "<OPTION value =0 selected>Selecione sistema</OPTION>" ;
+				//console.log(Sistemas);
+						for (var i = Sistemas.length - 1; i >= 0; i--) {
+							if (Sistemas[i].nomesistema != undefined){
+								wsishtm+="<OPTION value ="+Sistemas[i].idsistema+">"+Sistemas[i].nomesistema+"</OPTION>";
+							}
+						}
+				var vForm = document.getElementById('mmnu');
+				vForm.idsistema.innerHTML = wsishtm;				
+			}
+			
+			function Acao(tp,idmodulomenu,denominacao,urlmenu,urlservico,idsistema)
+			{
+				var vForm = document.getElementById('mmnu');
+				vForm.idsistema.focus();  
+				if (tp == "Ed"){
+					vForm.idmodulomenu.value=idmodulomenu;
+					vForm.denominacao.value = denominacao;
+					vForm.urlmenu.value =urlmenu;
+					vForm.urlservico.value=urlservico;
+					vForm.idsistema.value=idsistema;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	//vForm.action="/validarUsuario";
+			    	//vForm.method="post";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.idmodulomenu.value="";
+						vForm.denominacao.value = "";
+						vForm.urlmenu.value =0;
+						vForm.urlservico.value="";
+						vForm.idsistema.value=0;
+						vForm.action="/validarModuloMenu";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.idmodulomenu.value="";
+							vForm.denominacao.value = "";
+							vForm.urlmenu.value =0;
+							vForm.urlservico.value="";
+							vForm.idsistema.value=0;
+							vForm.urlmenu.disabled =true;
+							vForm.urlservico.disabled =true;
+							vForm.idsistema.disabled =true;
+							vForm.action="/pesquisarModuloMenu";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+							vForm.idmodulomenu.value=idmodulomenu;
+							vForm.denominacao.value = denominacao;
+							vForm.urlmenu.value =urlmenu;
+							vForm.urlservico.value=urlservico;
+							vForm.idsistema.value=idsistema;
+							vForm.denominacao.disabled=true;
+							vForm.urlmenu.disabled =true;
+							vForm.urlservico.disabled =true;
+							vForm.idsistema.disabled =true;
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/excModuloMenu";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}	 
+				 
+			}
+		</script>
+	</head>
+
+	<body onload="carregar(<%=JSON.stringify(ModuloMenus)%>,<%=JSON.stringify(Sistemas)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="img/sidebar-menu.png" class="img-responsive img-center" />Menus
+									<br />
+									<P id="mensagem"></P>
+									<form action="/validarmodulomenu" method="post" id="mmnu" name="mmnu">
+										<div class="form-group">
+											<SELECT id="idsistema" name="idsistema"></SELECT>
+										</div>
+										<div class="form-group autocomplete">
+											<input type="hidden" name="idmodulomenu" id="idmodulomenu">
+											<input type="text" name="denominacao" id="denominacao" class="form-control" placeholder="Nome do modulo menu" value="">
+										</div>
+										<div class="form-group">
+											<input type="text" name="urlmenu" id="urlmenu" class="form-control" placeholder="Url do menu"></textarea>
+										</div>
+										<div class="form-group">
+											<input type="text" name="urlservico" id="urlservico" class="form-control" placeholder="Url do servico"></textarea>
+										</div>
+										<div class="form-group">										
+										<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+										</div>									
+									</form>
+								
+								</div>
+								<div id="lista" name="lista">
+
+						<accordion-group heading="listagem de Modulo Menu" >
+
+									<h4>Lista de ModuloMenu</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv',0,'','','',0)">Novo</button>&nbsp;
+									<button class="btn btn-primary btn-login" onclick="Acao('Psq',0,'','','',0)" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+									<table class="table table-striped table-condensed">
+										<thead>
+										    <tr class="login-header">
+										        <th style="min-width: 60px;">Sistema</th>
+
+										        <th style="min-width: 60px;">Denominacao</th>
+
+										        <th style="min-width: 60px;">Url Menu</th>
+
+										        <th style="min-width: 60px;">Url Servico</th>
+
+						                        <th style="min-width: 40px;">&nbsp;A c o e s</th>
+						                     </tr>
+										</thead>
+										<tbody>
+											<% if(ModuloMenus.length > 0) { %>
+							    				<%  var sisAnt = "";
+							    				for(var i = 0; i < ModuloMenus.length; i++) {%>
+													<tr >
+														<%if (sisAnt == ModuloMenus[i].sistema.nomesistema){%>
+															<td></td><%
+														}else{%>
+															<td align="center"><%=ModuloMenus[i].sistema.nomesistema%></td>
+														<%sisAnt = ModuloMenus[i].sistema.nomesistema}%>
+											            <td nowrap><%=ModuloMenus[i].idmodulomenu%>&nbsp;-&nbsp; <%=ModuloMenus[i].denominacao%></td>
+											            <td><%=ModuloMenus[i].urlmenu%></td>
+											            <td ><%=ModuloMenus[i].urlservico%></td>					   			
+														<td nowrap><%if (ModuloMenus[i].urlmenu == 0) {%>
+															<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=ModuloMenus[i].idmodulomenu%>,'<%=ModuloMenus[i].denominacao%>','<%=ModuloMenus[i].urlmenu%>','<%=ModuloMenus[i].urlservico%>',<%=ModuloMenus[i].idsistema%>)">editar</button>
+															<%}else{%>
+																	<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=ModuloMenus[i].idmodulomenu%>,'<%=ModuloMenus[i].denominacao%>','<%=ModuloMenus[i].urlmenu%>','<%=ModuloMenus[i].urlservico%>',<%=ModuloMenus[i].idsistema%>)">Ativar</button>
+															<% } %>
+															<%if (ModuloMenus[i].urlmenu == 0) {%>
+															<button class="btn btn-primary btn-login" onclick="Acao('Ex',<%=ModuloMenus[i].idModuloMenu%>,'<%=ModuloMenus[i].denominacao%>','<%=ModuloMenus[i].urlmenu%>','<%=ModuloMenus[i].urlservico%>',<%=ModuloMenus[i].idsistema%>)">excluir</button>
+															<% } %>
+														</td>
+
+													</tr>
+												<% }%>
+											<% } %>
+										</tbody>
+									</table>
+							
+							</accordion-group>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+	<script type="text/javascript">
+		//chama a funcao de auto preenchimento do campo passando o nome do campo e o array com os conteudos de pesquisa
+		autocomplete(document.getElementById("denominacao"), wModuloMenu);
+
+	</script>
+</html>

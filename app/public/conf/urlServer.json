@@ -1,0 +1,10 @@
+{"Portal": {"url": "http://localhost:36213/PortalNegocio"},
+  "ServicosWeb": {"url": "http://localhost:36213/ServicoWebrest"},
+  "Pessoa": {"url": "http://localhost:36213/CadastroUnicoPessoa"},
+  "Sindirepa": {"url": "http://localhost:36213/sgi/rest"},
+  "Apoio": {"url": "http://localhost:36213/Apoio"},
+  "Gerador": {"url": "http://localhost:8080"},
+  "Sistemas": {"url": "http://localhost:36213/Sistemas"},
+  "OrdemServico": {"url": "http://localhost:36213/OrdemServico"},
+  "Angularjs":{"url": "http://localhost:8080/GeradorAngular"}
+}

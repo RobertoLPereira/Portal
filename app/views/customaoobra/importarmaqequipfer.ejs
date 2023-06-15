@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Importar Lista do Almoxarifado</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script language="JavaScript">
+      function Acao(argument) {
+        var vForm = document.getElementById("frm");
+        vForm.wpath.value=argument.replace("C:\\fakepath","");
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Rotina de Importação de Itens</h1>
+    <p>Escolha um arquivo do tipo (xls ou xlsx)</p>
+    <form action="/Customaoobrauplmaqequipferramentas" method="post" name="frm" id="frm">
+      <input type="file" id="filetoupload" onchange="Acao(this.value)"><br>
+      Informe o caminho onde o arquivo se encontra:<input type="text" id="bpath" name="bpath"value="">
+      <input type="hidden" id="wpath" name="wpath">
+      <input type="submit" id="btn_ok" class="btn btn-primary btn-login">
+    </form>
+  </body>
+</html>

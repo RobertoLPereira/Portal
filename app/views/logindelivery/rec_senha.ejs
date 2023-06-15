@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+	<title>Recuperar Senha do Usuário</title>
+	<link rel="stylesheet" type="text/css" href="css/style_menu.css">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://www.mercadopago.com/v2/security.js" view="checkout" output="deviceId"></script>
+</head>
+<body>
+	<img class="wave" src="img/wave.png">
+	<div class="container">
+		<div class="img">
+			<img src="img/bg.svg">
+		</div>
+		<div class="login-content">
+			<form action="/recuperasenha" method="post">
+				<img src="img/avatar.svg">
+				<h1 class="title">Recuperar Senha</h1>
+				<div class="div">
+						<% if(validacao.length > 0){ %>
+								<div class="alert alert-danger">
+									<strong>Aten&ccedil;&atilde;o!</strong>
+									<ul>
+										<% for(var i = 0; i < validacao.length; i++) {%>
+											<li><%=validacao[i].msg%></li>
+										<% } %>
+									</ul>
+								</div>
+							<% } %>
+					</div>
+           		<div class="input-div one">
+           		   <div class="i">
+           		   		<i class="fas fa-user"></i>
+           		   </div>
+           		   
+           		   <div class="div">
+           		   		<h5>Identifica&ccedil;&atilde;o</h5>
+           		   		<input type="text" class="input" name="usuario" id="usuario">
+           		   </div>
+           		</div>
+				   <div class="input-div one">
+					<div class="i">
+							<i class="fas fa-user"></i>
+					</div>
+					
+					<div class="div">
+							<h5>Nome completo</h5>
+							<input type="text" class="input" name="nomeusuario" id="nomeusuario">
+					</div>
+				 </div>
+           		<div class="input-div one">
+           		   <div class="i">
+           		    	<i class="fas fa-user"></i>
+           		   </div>
+           		   <div class="div">
+           		    	<h5>Celular</h5>
+           		    	<input type="text" class="input" name="cel" id="cel">
+            	   </div>
+            	</div>
+                <div class="input-div pass">
+                    <div class="i">
+                         <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="div">
+                         <h5>Nova Senha</h5>
+                         <input type="password" class="input" name="senha" id="senha">
+                 </div>
+              </div>
+              <a href="/loginCompreaki">Login</a>
+            	<input type="submit" class="btn" value="Confirmar">
+            	<div class="div">
+					
+					<input type="hidden" class="input" name="deviceId" id="deviceId">
+       		   </div>
+            	<input type="hidden" name="paginar" id="paginar" value="">
+            </form>
+        </div>
+    </div>
+    <script type="text/javascript" src="js/main.js"></script>
+</body>
+</html>

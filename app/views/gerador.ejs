@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html ng-app="gerador">
+<title>Gerador de Código</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">       
+<link rel="stylesheet" href="./css/w3.css">
+    <script src="./js/variaveisGlobais.js"></script>
+    <script src="./js/JsFunction.js"></script>
+    <script src="./js/angular.js"></script>
+    <script src="./js/geradorProjetoController.js"></script>
+<style>
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.button2 {background-color: #008CBA;} /* Blue */
+.button3 {background-color: #f44336;} /* Red */ 
+.button4 {background-color: #e7e7e7; color: black;} /* Gray */ 
+.button5 {background-color: #555555;} /* Black */
+</style>
+
+<body ng-controller="geradorProjetoController" class=scroll style="overflow:auto">
+<div class="w3-container">
+  <h4>Gerador de Código</h2>
+  <p>As abas servem para que você possa configurar seu projeto antes de mandar gerá-lo!</p>
+</div>
+
+<div class="w3-bar w3-blue">
+  <button class="w3-bar-item w3-button" onclick="openAba('Banco')">Banco de Dados</button>
+  <button class="w3-bar-item w3-button" onclick="openAba('Tabelas')">Tabelas e Campos</button>
+  <button class="w3-bar-item w3-button" onclick="openAba('Configuracao')">Configurar Títulos</button>
+  <button class="w3-bar-item w3-button" onclick="openAba('Ajustes')">Ajustar CSS</button>
+  <button class="w3-bar-item w3-button" onclick="openAba('Gerar')">Gerar Código</button>
+</div>
+<form id="inf" name="inf">
+<div id="Banco" class="w2-half w3-container aba">
+  <h3>parâmetros para que seja conectado à base de dados desejada</h2>
+  <div class="col-md-2 col-md-offset-1">
+  	<table>
+  		<tr>
+                    <td><label>Sigla do projeto:</label></td>
+                    <td><input type="text"  name="nomeProj" id="nomeProj" size="50" value=""></td>
+	  	</tr>
+		<tr><td>Diretório para Gerar o Fonte:</td>
+                    <td><input type="text" size="46" id="Dbase" name="Dbase" value="C:\Trabalho\projetosjava\paginasGeradas\Projetos"></td>
+                </tr>
+		<tr><td><label>Driver:</label></td>
+                    <td>
+                        <select class="form-control" id="driveCon1" ng-model="driveCon.drive" 
+                                ng-options="drive.drive for drive in driveCon">
+                                <option value="">--Selecione o Tipo do driver--</option>
+                        </select>                                               
+                        <input type="text" name="driveCon" id="driveCon" size="33" value="org.postgresql.Driver">
+                    </td>
+                </tr>
+		<tr>
+                    <td><label>Url para Conectar ao Banco:</label></td>
+                    <td><input type="text" name="url" id="url" size="32" value="jdbc:postgresql://localhost:5432/"></td>
+                </tr>
+		<tr>
+                    <td>
+                        <label>Nome do Banco de Dados:</label>
+                    </td>
+                    <td>
+                        <input type="text" list="bco" ng-model="bco" ng-change="conectar()">
+                        <datalist id="bco">
+                          <option ng-repeat="dbs in databases.databases" value="{{dbs.name}}">{{dbs.name}}</option>
+                        </datalist>
+                    </td>
+                </tr>
+		<tr><td><label>Usuario:</label></td><td><input type="text" name="user" id="user" size="40" value="postgres"></td></tr>
+		<tr><td><label>Senha:</label></td><td><input type="password" name="sen" id="sen" size="20" value="rlp562"></td></tr>
+                <tr><td colspan="5"><button class=" button button2" ng-click="conectar()">Conectar</button>&nbsp;
+                <button class=" button button2"  ng-click="obterTabelas()">Escrever</button></tr>
+	</table>
+  </div>   
+</div>
+<div id="Tabelas" class="w3-container aba" style="display:none">
+  <h3>Selecione tabelas ou a não sele&ccedil;ão significa o desejo de gerar para todas</h2>
+  <table>
+  	<tr>
+            <td><select name="SelectList" id="SelectList" size="15" multiple='multiple' style='width: 350px'>
+		</select>
+                <button class="btn btn-primary" ng-click="addIt();buscarAtributos()">Carregar</button>
+		<input type="submit" value="Ok" id="Cadastrar" name="Cadastrar" Class="bt"  onmouseout="this.className='bt'" onmouseover="this.className='bthover'"  onclick="schema('inf');">
+		<br/><input type="button" value="->" onclick="JavaScript:addIt();buscarAtributos();">
+		<br/>&nbsp;&nbsp;&nbsp;<input type="button" value="<-" onclick="JavaScript:delIt();">
+		<br />
+		<select name="PickList" id="PickList" size="5" multiple="multiple" style="width: 350px"></select>
+		<input type="submit" value="Ok" id="Cadastrar" name="Cadastrar" Class="bt"  onmouseout="this.className='bt'" onmouseover="this.className='bthover'"  onclick="delIt();buscarAtributos();">
+            </td>                                                   
+  	</tr>
+        <tr>
+            <td align="left" valign="top" width="10%" colspan="2" height="200">
+                <div class="DivGrid" style='overflow:auto; width:377; height:231'>
+                    <table width=40% class="TabelaGrid" cellspacing="0" cellpadding="4">
+                        <tr>
+                           <td>
+                              <table cellspacing="0" cellpadding="0" rules="all" class="Grid" border="0" width="80%">
+                                    <tr class="LinhaGrid"  id="linha2">
+                                        <td ><div id="lis" ></div></td>
+                                    </tr>
+                              </table>
+                           </td>
+                        </tr>
+                   </table>
+                </div>
+            </td>
+        </tr>
+  </table>  
+</div>
+
+<div id="Configuracao" class="w3-container aba" style="display:none">
+  <h3>Configuração de Títulos</h2>
+  <table>
+  	<tr>  		
+            <td width="30%" >Objetivo:<p>Sigla 
+                            Sistema:<p>Nome do pacote:<p>
+                    Nome interno do formulário:<p>Tabela de domínio?:<p>
+                            Classe responsável pela ação do formulário:<p>
+                    Chave primária:<p>Campo que faz a diferença no ato 
+                            da inclusão:<p>Classe de consulta:<p>
+                    Nome da Página de Saída:<p>Nome do Caso de Uso:<p>
+                            Vacabulário:<p>
+            </td>
+            <td width="30%" >
+                <input  style="HEIGHT: 20 ; width:189"  id="Objetivo" name="Objetivo" maxlength=100 size=50 value="" >
+                <p><input  style="HEIGHT: 20 ; width:189"  id="sistema" name="sistema" maxlength=10 size=10 value="" >
+                <p><input  style="HEIGHT: 17 ; width:186"  id="Pacote" name="Pacote" maxlength=100 size=50 value="br.com.rlp" title="Informe a raiz dos pacotes!">
+                <p></p>
+                <p><input  style="HEIGHT: 17px "  id="Formulario" name="Formulario" maxlength=40 size=30  value="" ></p>
+                <p><input type="checkbox" id="tbD" name="tbD"></p>
+                <p><input style="HEIGHT: 17px "  id="Acao" name="Acao" size=50  value="" ></p>
+                <p><input  style="HEIGHT: 17px "  id='Chave' name='Chave' maxlength=40 size=30 value="" ></p>
+                <p><input  style="HEIGHT: 17px "  id='Difere' name='Difere' maxlength=40 size=30 value="" ></p>
+                <p><input  style="HEIGHT: 17px "  id="Lista" name="Lista" maxlength=40 size=30 value="" ></p>
+                <p>
+                    <input  type='file' ng-style='HEIGHT: 21 ; width:219'  id="Pagina" name="Pagina"  size=50 value="C:\Trabalho\projetosjava\paginasGeradas\View" ></p>
+                <p><input  style="HEIGHT: 17px "  id="CasoUso" name="CasoUso"  size=50 value="" ></p>
+                <p>&nbsp; 
+                    <select id="Vocabulario" name="Vocabulario">
+                        <option value="" selected>Selecione</option>
+                        <option value="a">Feminino</option>
+                        <option value="o">Masculino</option>
+                    </select>
+            </td>
+        </tr>
+        <tr><td>Model</td><td><input type="text" size="60" id="Model" name="Model" value="C:\Trabalho\projetosjava\paginasGeradas\Servlet\Model"></td></tr>
+        <tr><td>View</td><td><input type="text" size="60" id="View" name="View" value="C:\Trabalho\projetosjava\paginasGeradas\Servlet\View"></td></tr>
+        <tr><td>Controller</td><td><input type="text" size="60" id="Controller" name="Controller" value="C:\Trabalho\projetosjava\paginasGeradas\Servlet\Controller"></td>
+        </tr>        
+    </table>
+</div>
+
+<div id="Ajustes" class="w3-container aba" style="display:none">
+  <h2>Ajustes</h2>
+  <div>             
+        <fieldset style="padding: 2">
+            <legend>Configurações</legend>
+            <div id="confAtr">
+                <FORM id='frm01' name='frm01'>
+<TABLE WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+<TR>
+    <td class='tit' nowrap align="center"><b>Inclusão do LayOut do Formulário</b></td>
+</TR>
+ <TR>
+     <TD align='center' valign='top'>
+         <TABLE class='tab' ng-style='width="100%" BORDER=0 bordercolor="#008000" CELLSPACING=1 CELLPADDING=1'>
+             
+             <TR>
+                 <td>
+                     <table WIDTH=100% CELLSPACING=0 CELLPADDING=0>
+                         <TR class=textosright>
+                                <td>Sigla do Sistema:&nbsp;</td>
+                                <td class='textosleft'>
+                                    <input type="text" list="Siglas" ng-model="EstTela.Dad_Sigla">
+                                    <datalist id="Siglas">
+                                      <option ng-repeat="db in wDataset.databases" value="{{db.name}}">{{db.name}}</option>
+                                    </datalist>
+                                </td>
+                                  </tr>
+                                  <TR class=textosright>
+                                        <td>Formulário:&nbsp;</td>
+                                        <td class='textosleft'>
+                                             <input type="text" list="NomeTabelas" ng-model="EstTela.Dad_Tabela">                                                            
+                                            <datalist id="NomeTabelas">
+                                              <option ng-repeat="va in wTab" value="{{va}}">{{va}}</option>
+                                            </datalist>                                                                                                               
+                                        </td>
+                                </TR>
+                                <TR class=textosright>
+                                        <td>Nome do Atributo:&nbsp;</td>
+                                        <td class='textosleft'>
+                                            <input type="text" list="Atributos" ng-model="EstTela.Dad_Atributos">                                                            
+                                            <datalist id="Atributos">
+                                              <option ng-repeat="v in wTabAtr" value="{{v}}">{{v}}</option>
+                                            </datalist>   								  
+                                        </td>
+                                        <td>Sufixo do Atributo:&nbsp;</td>
+                                        <td class='textosleft'>
+                                                <input style="HEIGHT: 15px " id=Sufixo name=Sufixo maxlength=5 size=5 ng-model="EstTela.Dad_Sufixo">
+                                        </td>
+                                </TR>
+                                <TR class=textosright>
+                                    <td>Tamanho do Atributo:&nbsp;</td>
+                                    <td class='textosleft'>
+                                            <Input style="height: 15px" id=Picture Name=Picture maxlength=3 size=3 ng-model="EstTela.Dad_Picture">
+                                    </td>
+                                    <td>Importância do Atributo:&nbsp;</td>
+                                    <td class='textosleft'>
+                                            <Select id="Importancia" Name="Importancia" ng-model="EstTela.Dad_Importancia">									
+                                                    <Option value="" Selected>Selecione</Option>
+                                                    <Option value="A">Acessório</Option>
+                                                    <Option value="C">Crítico</Option>
+                                                    <Option value="I">Importante</Option>
+
+                                            </Select>
+                                    </td>
+                                </TR>
+                                <TR class=textosright>
+                                        <td>Sequência no Formulário:&nbsp;</td>
+                                        <td class='textosleft'>
+                                                <Input style="height: 15px" id=Sequencia Name=Sequencia  maxlength=2 size=1 ng-model="EstTela.Dad_Sequencia">
+                                        </td>
+                                        <td>Tabela de Origem:&nbsp;</td>
+                                        <td class='textosleft'>
+                                                <Input style="height: 15px" id=TabelaOri Name=TabelaOri maxlength=30 size=30 ng-model="EstTela.Dad_TabelaOri">
+                                        </td>
+                                </TR>
+                                <TR class=textosright>
+                                        <td>Label:&nbsp;</td>
+                                        <td class='textosleft'>
+                                                <Input style="height: 15px" id=Titulo Name=Titulo  maxlength=50 size=40 ng-model="EstTela.Dad_Titulo">
+                                        </td>
+                                        <td>Quebrar Linha Após:&nbsp;</td>
+                                        <td class='textosleft'>
+                                                <Select id=QbrLinha name=QbrLinha ng-model="EstTela.Dad_QbrLinha">
+                                                        <Option value="N" selected>Não</Option>
+                                                        <Option value="S">Sim</Option>
+                                                </Select>
+                                        </td>
+                                </TR>
+                                <TR class=textosright>
+                                        <td>Permite Caracter Especial:&nbsp;</td>
+                                        <td class='textosleft'>
+                                                <Select id=CaracEsP name=CaracEsP ng-model="EstTela.Dad_CaracEsP">
+                                                        <Option value="N" selected>Não</Option>
+                                                        <Option value="S">Sim</Option>
+                                                </Select>
+                                        </td>
+                                        <td>Atributo Tipo Moeda:&nbsp;</td>
+                                        <td class='textosleft'>
+                                                <Select id=Moeda name=Moeda ng-model="EstTela.Dad_Moeda">
+                                                        <Option value="N" selected>Não</Option>
+                                                        <Option value="S">Sim</Option>
+                                                </Select>
+                                        </td>
+                                </TR>
+                                <TR class=textosright>
+                                        <td>Campo com Seleção:&nbsp;</td>
+                                        <td class='textosleft'>
+                                                <Select id=IdcSelect name=IdcSelect ng-model="EstTela.Dad_IdcSelect">
+                                                        <Option value="N" selected>Não</Option>
+                                                        <Option value="S">Sim</Option>
+                                                </Select>
+                                        </td>
+                                </TR>
+
+                                <TR>
+                                        <td class='textosright'>
+                                                <div id=divvalue name=divvalue  ng-style="display:none">Valores Padrão:
+                                                </div>
+                                        </td>
+                                        <td class='textosleft'>
+                                                <div id=divvalue1 name=divvalue1  ng-style="display:none">
+                                                        <TEXTAREA rows=2 cols=25 id=VlrPadrao name=VlrPadrao></TEXTAREA>
+                                                </div>
+                                        </td>
+                                        <td class='textosright'>
+                                                <div id=divDescr name=divDescr  ng-style="display:none">Descrição Padrão:
+                                                </div>
+                                        </td>
+                                        <td>
+                                                <div id=divDescr1 name=divDescr1  ng-style="display:none">
+                                                        <TEXTAREA rows=2 cols=25 id=DcrPadrao name=DcrPadrao></TEXTAREA>
+                                                </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                             </td>
+                        </TR>
+                        <TR>
+                            <td colspan='4' align='center'>
+                                <table>
+                                    <tr>
+                                        <td align='middle' >
+                                            <button class=" button button2" ng-click="incluirAtr()">Incluir</button>
+                                            <!--input type='Button' value='Incluir' id=Cadastrar name=Cadastrar class=" button button2"  onclick="Validacao()"-->
+                                        </td>
+                                        <td align='middle' >
+                                           <input type='reset' value='Limpar' class=" button button2" id=reset1 name=reset1>
+                                        </td>
+                                        <td align='middle' class=" button button2" onclick=" javascript:self.location='Conteudo.htm'">Sair</td>
+                                        
+                                    </tr>
+				</table>
+                            </td>
+                        </TR>
+                        <tr>
+                            <td width="820">
+			   <div style="position:relative; width:100%; height:200; overflow:auto; visibility:visible">
+				<TABLE WIDTH="100%" BORDER=0 CELLSPACING=2 CELLPADDING=1>
+					<TR class=TEXTOS>
+						<TD bgcolor=#ffffff class=border  nowrap>Sistema</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Tabela</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Nome Atributo</TD>
+                                                <TD bgcolor=#ffffff class=border  nowrap>Sufixo</td>
+                                                <TD bgcolor=#ffffff class=border  nowrap>Tamanho</td>
+						<TD bgcolor=#ffffff class=border nowrap>Importância</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Sequencia na Tela</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Tabela Estrangeira</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Label</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Quebra Linha</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Caracter Esp.</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Tp Moeda</TD>
+						<TD bgcolor=#ffffff class=border  nowrap>Seleção?</TD>
+					</TR>
+
+                                    <tr ng-repeat="et in EstruturaTela">						
+                                    <!--TR onmouseout="javascript:this.className='textos' onmouseover=javascript:this.className='btpesq2' onclick='self.location=&quot;Ads_IncLayForm.asp?Codigo="  & wcod & RsFormDados("Plr_Codigo&Sequencial=Dad_Sequencial")  & "&Atributo=Dad_Atributo&Sufixo=Dad_Sufixo&TipoAtributo=Dad_TipoAtributo&Picture=Dad_Inteiro") + RsFormDados("Dad_Decimal&Importancia=Dad_Importancia&Natureza=Dad_Natureza&TipoPessoa=Dad_TipoPessoa&Sigla=Sis_Sigla&Somar=S" &  "&quot'-->
+                                        <TD class=textos  nowrap align="center"> {{et.Dad_Sigla}}</TD>
+                                        <TD class=textos  nowrap align="center">  {{et.Dad_Tabela}}</TD>
+                                        <TD class=textos  nowrap align="center"> {{et.Dad_Atributos}}</TD>
+                                         <TD class=textos  nowrap align="center">{{et.Dad_Sufixo}}</TD>
+                                        <TD class=textos  nowrap align="center"> {{et.Dad_Picture}}</TD>
+                                        <TD class=textos nowrap align="center"> {{et.Dad_Importancia}}</TD>
+                                        <TD class=textos  nowrap align="center">{{et.Dad_Sequencia}}</TD>
+                                        <TD class=textos  nowrap align="center">{{et.Dad_TabelaOri}}</TD>
+                                        <TD class=textos nowrap align="center"> {{et.Dad_Titulo}}</TD>
+                                        <TD class=textos  nowrap align="center"> {{et.Dad_QbrLinha}}</TD>
+                                        <TD class=textos  nowrap align="center">{{et.Dad_CaracEsP}} </TD>
+                                        <TD class=textos  nowrap align="center"> {{et.Dad_Moeda}}</TD>
+                                        <TD class=textos  nowrap align="center">{{et.Dad_IdcSelect}}</TD>
+                                    </TR>
+	    			</table>
+			   </div>
+			  </td>
+			</tr>
+                        <TR>
+                            <td colspan='4'>
+                                <div id=DivHelp name=DivHelp ng-style='overflow:auto'>
+                                    <section>
+                                       
+                                    </section>
+                                </div>
+                            </td>
+                         </TR>
+                         <TR>
+                            <td colspan='4'>
+                                    <div id=DivErro name=DivErro ng-style='overflow:auto' ></div>
+                            </td>
+                         </TR>
+		  </table>
+     </td>
+ </tr>
+</table>
+<script language="JavaScript">
+var myObj, i, j, x = "";
+myObj = {
+    "Pilar": [
+    {"name":"Entrevista"},
+    {"name":"Identificação"},
+    {"name":"Localização"}
+  ],
+  "Sigla":[{"name":"Apoio"},{"name":"CUP"},{"name":"Carta"},{"name":"Segur"}]
+  
+}
+ x += "<Option value=0 selected>Selecione</Option>" ;
+for (i in myObj.Pilar) {
+  x += "<Option value="+i+">"+myObj.Pilar[i].name+"</Option><br>";
+  }
+ // alert(x);
+//document.getElementById("NomeFormula").innerHTML = x;
+ x = "<Option value=0 selected>Selecione</Option>" ;
+for (i in myObj.Sigla) {
+  x += "<Option value="+i+">"+myObj.Sigla[i].name+"</Option><br>";
+  }
+ // alert(x);
+document.getElementById("Sigla").innerHTML = x;
+
+</script>
+
+            </div>                           
+        </fieldset>
+  </div>
+</div>
+
+<div id="Gerar" class="w3-container aba" style="display:none">
+  <h2>Gerar Códigos</h2>
+  	<input type="hidden" id="tabelas" name="tabelas">
+	<input type="hidden" id="CamposTela" name="CamposTela">
+	<input type="hidden" id="CamposLista" name="CamposLista">
+	<input type="hidden" id="nomePrograma" name="nomePrograma">                                
+    <button class=" button button2"  ng-click="obterTabelas()">Escrever</button>
+    <button class="button" value="Redefinir" name="B2" >Redefinir</button>  
+    <input type="hidden" id="ht" name="ht" >
+    <p></p>
+    <p><label id="mensagem"></label></p>
+                                
+</div>
+<script>
+function openAba(abaName) {
+  var i;
+  var x = document.getElementsByClassName("aba");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.display = "none";  
+  }
+  document.getElementById(abaName).style.display = "block";  
+}
+</script>
+</form>
+</body>
+</html>

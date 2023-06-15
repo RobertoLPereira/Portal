@@ -1,0 +1,349 @@
+.menuOut0
+{
+    BORDER-RIGHT: #545454 1px solid;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 7pt;
+    CURSOR: hand;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif
+}
+.menuOver0
+{
+    BACKGROUND-POSITION: left 0px;
+    BORDER-TOP: #545454 1px solid;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 7pt;
+    BACKGROUND-IMAGE: url(images/bg_menu_top1.gif);
+    VERTICAL-ALIGN: middle;
+    BORDER-LEFT: #545454 1px solid;
+    CURSOR: hand;
+    COLOR: #000000;
+    BACKGROUND-REPEAT: repeat-x;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    background-attachmet: fixed
+}
+.menuportalover
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    CURSOR: hand;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    BACKGROUND-COLOR: #d6dfd6;
+    TEXT-ALIGN: left
+}
+.menuOut
+{
+    BORDER-RIGHT: #545454 1px solid;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 7pt;
+    BORDER-LEFT: #ffff99 1px solid;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif
+}
+.menuOver
+{
+    BACKGROUND-POSITION: left 0px;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 7pt;
+    BACKGROUND-IMAGE: url(images/bg_menu_top1.gif);
+    VERTICAL-ALIGN: middle;
+    BORDER-LEFT: #545454 1px solid;
+    CURSOR: hand;
+    COLOR: #000000;
+    BACKGROUND-REPEAT: repeat-x;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    background-attachmet: fixed
+}
+.bt
+{
+    BORDER-RIGHT: #008000 1px solid;
+    BORDER-TOP: #008000 1px solid;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    BACKGROUND: url(images/bg_menu_top.gif) #c0c0c0 fixed left top;
+    BORDER-LEFT: #008000 1px solid;
+    WIDTH: 80px;
+    CLIP: rect(40px 40px 40px 40px);
+    CURSOR: hand;
+    BORDER-BOTTOM: #008000 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center
+}
+.bthover
+{
+    BORDER-RIGHT: #008000 1px solid;
+    BACKGROUND-POSITION: center center;
+    BORDER-TOP: #008000 1px solid;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    BACKGROUND-ATTACHMENT: fixed;
+    BACKGROUND-IMAGE: url(images/bg_menu_top1.gif);
+    BORDER-LEFT: #008000 1px solid;
+    WIDTH: 80px;
+    CURSOR: hand;
+    COLOR: #000000;
+    BORDER-BOTTOM: #008000 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    HEIGHT: 20px;
+    TEXT-ALIGN: center;
+    BACKGROUND-: repeat
+}
+.tit
+{
+    BACKGROUND-POSITION: left top;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 10pt;
+    BACKGROUND-ATTACHMENT: fixed;
+    BACKGROUND-IMAGE: url(images/bg_menu_top.gif);
+    WIDTH: 100%;
+    COLOR: #1e5127;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    BACKGROUND-COLOR: #008000;
+    TEXT-ALIGN: center;
+    valign: middle
+}
+.tit2
+{
+    BACKGROUND-POSITION: left top;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 10pt;
+    BACKGROUND-ATTACHMENT: fixed;
+    BACKGROUND-IMAGE: url(images/bg_menu_top2x.gif);
+    WIDTH: 100%;
+    COLOR: #000000;
+    BORDER-BOTTOM: black 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    BACKGROUND-COLOR: #008000;
+    TEXT-ALIGN: center;
+    valign: middle
+}
+.textos
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    TEXT-ALIGN: center
+}
+.Submet
+{
+    BORDER-RIGHT: #008000 1px solid;
+    BORDER-TOP: #008000 1px solid;
+    FONT-SIZE: 8pt;
+    BORDER-LEFT: #008000 1px solid;
+    WIDTH: 50px;
+    CURSOR: hand;
+    COLOR: #ffffff;
+    BORDER-BOTTOM: #008000 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    BACKGROUND-COLOR: #006a35;
+    TEXT-ALIGN: center
+}
+.bg
+{
+    BACKGROUND-POSITION: left top;
+    BACKGROUND-ATTACHMENT: fixed;
+    BACKGROUND-IMAGE: url(images/bg_sis.jpg);
+    BACKGROUND-REPEAT: repeat-y
+}
+.tab
+{
+    BORDER-RIGHT: #008000 1px double;
+    BORDER-TOP: #008000 1px double;
+    BORDER-LEFT: #008000 1px double;
+    BORDER-BOTTOM: #008000 1px double;
+    BACKGROUND-COLOR: #c9dcd2;
+    TEXT-ALIGN: center
+}
+.tab2
+{
+    BORDER-RIGHT: #008000 1px double;
+    BORDER-TOP: #008000 1px double;
+    BORDER-LEFT: #008000 1px double;
+    BORDER-BOTTOM: #008000 1px double;
+    BACKGROUND-COLOR: #ffffff;
+    TEXT-ALIGN: center
+}
+.btFechar
+{
+    BACKGROUND-IMAGE: url(images/x.gif);
+    CURSOR: hand;
+    COLOR: black;
+    TEXT-ALIGN: right;
+    src: images/botfechar2.gif
+}
+.border
+{
+    BORDER-RIGHT: green 1px solid;
+    BORDER-TOP: green 1px solid;
+    BORDER-LEFT: green 1px solid;
+    BORDER-BOTTOM: green 1px solid
+}
+.textosleft
+{
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left
+}
+.textoslinha
+{
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left;
+    BORDER-BOTTOM:1PX solid red
+}
+.textosleftn
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left
+}
+.textosright
+{
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, helvetica;
+    TEXT-ALIGN: right
+}
+.noticias
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial;
+    TEXT-ALIGN: justify
+}
+.noticiasb
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial;
+    TEXT-ALIGN: justify
+}
+.destaque
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 14pt;
+    COLOR: black;
+    FONT-FAMILY: Tahoma, Verdana, Arial;
+    TEXT-ALIGN: center
+}
+.submenu
+{
+    BORDER-RIGHT: #616061 1px solid;
+    BORDER-TOP: #616061 1px solid;
+    BACKGROUND: url(images/bg_menu_L.gif) #ffffff fixed repeat-y left top;
+    FILTER: alpha(opacity="90");
+    VISIBILITY: hidden;
+    FONT: bold 7pt/24px tahoma;
+    BORDER-LEFT: #616061 1px solid;
+    WIDTH: 115px;
+    CURSOR: hand;
+    BORDER-BOTTOM: #616061 1px solid;
+    POSITION: absolute;
+    TOP: 55px
+}
+.submenuover
+{
+    BACKGROUND: url(images/bg_menu_top1.gif) fixed left top;
+    FILTER: alpha(opacity="200");
+    WIDTH: 115px;
+    CURSOR: hand
+}
+.stdata
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 9px;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif
+}
+.stitulo
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 10px;
+    COLOR: #ffffff;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif
+}
+.scroll
+{
+    SCROLLBAR-FACE-COLOR: #c9dcd2;
+    SCROLLBAR-HIGHLIGHT-COLOR: #ffffff;
+    SCROLLBAR-SHADOW-COLOR: green;
+    SCROLLBAR-3DLIGHT-COLOR: green;
+    SCROLLBAR-ARROW-COLOR: black;
+    SCROLLBAR-TRACK-COLOR: #c9dcd2;
+    SCROLLBAR-DARKSHADOW-COLOR: #000000
+}
+.btpesq
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    CURSOR: hand;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    BACKGROUND-COLOR: #99cc99
+}
+.btpesq2
+{
+    BORDER-RIGHT: green 1px solid;
+    BORDER-TOP: green 1px solid;
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    BORDER-LEFT: green 1px solid;
+    CURSOR: hand;
+    COLOR: #000000;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    BACKGROUND-COLOR: #99cc99
+}
+.btpesq3
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    CURSOR: hand;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    BACKGROUND-COLOR: #99cc99
+}
+.btpesq4
+{
+    FONT-SIZE: 8pt;
+    CURSOR: hand;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    BACKGROUND-COLOR: #99cc99
+}
+.textosn
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 8pt;
+    COLOR: black;
+    FONT-FAMILY: Tahoma, Arial, Verdana
+}
+.portalTextos
+{
+    FONT-SIZE: 8pt;
+    COLOR: black;
+    FONT-FAMILY: Verdana
+}
+A:hover
+{
+    COLOR: blue;
+    FONT-FAMILY: Tahoma;
+    BACKGROUND-COLOR: #c0c0c0;
+    TEXT-DECORATION: underline
+}
+A
+{
+    FONT-SIZE: 8pt;
+    COLOR: black;
+    FONT-FAMILY: Tahoma;
+    TEXT-DECORATION: none
+}

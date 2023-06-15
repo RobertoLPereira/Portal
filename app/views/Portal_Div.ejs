@@ -1,0 +1,170 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+  <head>
+    <meta http-equiv="content-type" context="text/html; charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  </head>
+<link rel="stylesheet" type="text/css" href="css/css2.css">
+<script language="javascript" src="JavaScript/AjaxBrowser.js" type="text/javascript"></script>
+<!--script language="javascript" src="JavaScript/AjaxTarefasPortal.js" type="text/javascript"></script-->
+<script language="javascript" src="JavaScript/DataHoraCabecalho.js" type="text/javascript"></script>
+<script language="javascript">
+var timerIDh = null;
+var timerRunningh = false;
+
+var browserName=navigator.appName;
+var vForm;
+var f;
+var campo;
+
+var vstat;
+var vjan;
+vstat = 0;
+function Pesquisar(nForm){
+//alert(nForm);
+        var txt = document.frm1.op.value;
+        txt = txt.replace("-","0");
+        txt = txt.replace(" ","0");
+        if (document.frm1.tpop.value =='0'){
+            alert("Selecione o que deseja acessar!");
+            document.frm1.tpop.focus();
+            wTxt = true;
+            return false;
+        }
+        if (document.frm1.op.value == '' && (document.frm1.tpop.value !='2' && document.frm1.tpop.value !='7' && document.frm1.tpop.value !='8' && document.frm1.tpop.value !='9')){
+               alert("Informe o conteúdo do campo de pesquisa");
+               document.frm1.op.focus();
+               wTxt = true;
+               return false;
+        }
+       //alert(isNaN(document.frm1.op.value));
+       if (document.frm1.tpop.value =='6'){
+            if (isNaN(document.frm1.op.value)){
+                alert("Informe o número de identificação da entrevista");
+                document.frm1.tpop.focus();
+                return false;
+            }else{
+                document.frm1.action = "manterTarefas.jsp?IdEntrevista="+document.frm1.op.value;
+                document.frm1.submit();
+            }
+        }
+        if (document.frm1.tpop.value =='4'){
+            document.frm1.action = "/pesquisarpessoa?Nome="+document.frm1.op.value;
+            document.frm1.submit();
+        }
+        if (document.frm1.tpop.value =='5'){
+                document.frm1.action = "AjaxPessoaJuridica.jsp?Nome="+document.frm1.op.value;
+                document.frm1.submit();
+        }
+        if (document.frm1.tpop.value =='1'){
+                alert(isNaN(txt));
+                 if (isNaN(txt)){
+                    document.frm1.action = "consultaEntrevista.jsp?Nome="+document.frm1.op.value+"&Tel=";
+                 }else{
+                    document.frm1.action = "/api/pessoas?Nome="+"&Tel="+document.frm1.op.value;
+                }
+                document.frm1.submit();
+        }
+        if (document.frm1.tpop.value == '2'){
+                document.frm1.action = "/todospessoa";
+                document.frm1.submit();
+                return true;
+        }
+        if (document.frm1.tpop.value == '3'){
+                document.frm1.action = "/api/pessoajuridica";
+                document.frm1.submit();
+                return true;
+        }
+        if (document.frm1.tpop.value == '7'){
+                    document.frm1.action = "/todospessoa";
+                     document.frm1.tpop.value = 0;
+                      document.frm1.tpop.focus();
+                    document.frm1.submit();
+                   
+        }
+        if (document.frm1.tpop.value == '8'){
+                    document.frm1.action = "/CustoMaoObra";
+                     document.frm1.tpop.value = 0;
+                      document.frm1.tpop.focus();
+                    document.frm1.submit();
+                   
+        }
+         if (document.frm1.tpop.value == '9'){
+                    document.frm1.action = "/CustomaoobraClientes";
+                     document.frm1.tpop.value = 0;
+                      document.frm1.tpop.focus();
+                    document.frm1.submit();
+                   
+        }else{
+
+               // alert("Desculpe-me mas essa op�ao nao est� funcionando");
+               // document.frm1.tpop.focus();
+               // return false;
+            }
+    }
+
+</script>
+
+<title>Portal Corporativo de Negocios</title>
+</head>
+
+<body onload='startclock();startlertarefa("portal","IdPessoa");'>
+<form id=frm1 name=frm1 target="principal" method="get" action="">
+	<table border="1" cellpadding="0" cellspacing="0" style="WIDTH: 1325px; BORDER-COLLAPSE: collapse; HEIGHT: 635px" bordercolor="#111111">
+	  <tr>
+	    <td width="13%" onclick="parent.location='http://Localhost'" style="CURSOR: hand" height="47">
+		<img src="img/ponte_hercilio_luz1.jpg" lowsrc="img/ponte_hercilio_luz1.jpg" width="166" height="44"></td>
+	    <td height="47">&nbsp;
+	       <A href="inicial.asp" ><font face="Verdana" size=2 COLOR=black><b>\\Portal de Negocios</b></font></A>&nbsp;<font face="Arial" size=1>&nbsp;&nbsp;Versao: 1,0 - Desenvolvimento - 15/04/2020&nbsp;&nbsp;</font>
+	    </td>
+	  </tr>
+	  <tr>
+	    <td height="35"><input type=hidden id=IdPessoa name=IdPessoa value=1>
+			<SELECT id=tpop name=tpop onchange="Pesquisar(this.value)" >
+				<OPTION value =0 selected>Selecionar filtro</OPTION>
+				<OPTION value=1>Entrevista</OPTION>	
+				<OPTION value=2>Cadastrar pessoa</OPTION>	
+				<OPTION value=3>Cadastrar empresa</OPTION>	
+				<OPTION value=4>Consultar pessoa por nome</OPTION>
+				<OPTION value=5>Consultar empresa por razao social</OPTION>
+				<OPTION value=6>Tarefas</OPTION>
+        <OPTION value=7>Listar Pessoas</OPTION>
+        <OPTION value=8>Listar Custo Mao de Obra</OPTION>
+        <OPTION value=9>Listar Clientes Custo Mao de Obra</OPTION>
+			</SELECT>
+		</td>
+		<td height="35">
+		    <table>
+		     <tr>
+	          <td width="78">
+				      <INPUT id=op name=op style="BORDER-RIGHT: #c0c0c0 1px solid; BORDER-TOP: #c0c0c0 1px solid; BORDER-LEFT: #c0c0c0 1px solid; BORDER-BOTTOM: #c0c0c0 1px solid" size=30>
+            </td>
+			  <td width="32" title="Pesquisar">
+				<img border="0" src="img/bt_ok.gif" width="40" height="25" style="CURSOR: hand"  onclick="JavaScript:Pesquisar(frm1);"></td>
+			  <script>document.frm1.tpop.focus();</script>
+			  <td class=portalTextos ALIGN=left nowrap style="FONT-SIZE: 10pt"><font color="black" ><b>Usuário: </b><%= usuario%>&nbsp;&nbsp;<b>Lotação: </b>001-9 Centro</font></td>
+			  <td valign="center" align="left" height="100%" class="portalTextos" nowrap style="FONT-SIZE: 10pt"><font color="black">&nbsp;<script language="JavaScript">diaSEMA();</script>&nbsp;&nbsp;<input style="BORDER-RIGHT: 0px; BORDER-TOP: 0px; FONT-SIZE: 10pt; BORDER-LEFT: 0px; COLOR: black; BORDER-BOTTOM: 0px; FONT-FAMILY: verdana" size="14" id="face" name="face" readonly></font></td>
+			</tr>
+		  </table>
+	   </td>
+	</tr>
+	<tr>
+	    <td width="13%">&nbsp;
+        <iframe src="/menu" frameborder="0" name="menu" width="93%" height="100%"></iframe>
+      </td>
+	    <td width="86%">
+		    <iframe src="/conteudo" frameborder="0" name="principal" width="100%" height="99%" bgcolor="#A5002A">
+            
+        </iframe>
+		  </td>
+	</tr>
+ </table>
+ <table width="1324" height="61">
+ 	<tr>
+ 		<TD width=90% STYLE="FONT-family:VERDANA;FONT-SIZE:9pt">Tarefas:<div id=refer name=refer></div></td>
+  	</tr>
+ </table>
+</form>
+</body>
+</html>

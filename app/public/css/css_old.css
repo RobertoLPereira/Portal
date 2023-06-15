@@ -1,0 +1,208 @@
+BODY
+{
+    SCROLLBAR-FACE-COLOR: #c9dcd2;
+    FONT-SIZE: 11px;
+    BACKGROUND-IMAGE: none;
+    SCROLLBAR-HIGHLIGHT-COLOR: #c9dcd2;
+    SCROLLBAR-SHADOW-COLOR: #c9dcd2;
+    COLOR: black;
+    SCROLLBAR-3DLIGHT-COLOR: #c9dcd2;
+    SCROLLBAR-ARROW-COLOR: #008000;
+    SCROLLBAR-TRACK-COLOR: #c9dcd2;
+    BACKGROUND-REPEAT: repeat;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    SCROLLBAR-DARKSHADOW-COLOR: #c9dcd2;
+    BACKGROUND-COLOR: mediumslateblue;
+    topmargin: 0px;
+    leftmargin: 0px;
+    scroll: no;
+    link: #008000
+}
+UNKNOWN
+{
+    src: url('http://localhost/Restritivos_Local/images/plus.gif')
+}
+.MenuMinus
+{
+    src: url('http://localhost/Restritivos_Local/images/minus.gif')
+}
+.MenuMouserOver
+{
+    FONT-SIZE: 11px;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: left
+}
+.MenuMouserOut
+{
+    FONT-SIZE: 11px;
+    CURSOR: hand;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    BACKGROUND-COLOR: #99cc99;
+    TEXT-ALIGN: left
+}
+.SubMenuTituloOver
+{
+    FONT-SIZE: 11px;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: left
+}
+.SubMenuTituloOut
+{
+    FONT-SIZE: 11px;
+    CURSOR: hand;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    BACKGROUND-COLOR: #99cc99;
+    TEXT-ALIGN: left
+}
+.ItemMenuTituloOver
+{
+    FONT-SIZE: 11px;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    BACKGROUND-COLOR: #99cc99;
+    TEXT-ALIGN: left
+}
+.ItemMenuTituloOut
+{
+    FONT-SIZE: 11px;
+    CURSOR: hand;
+    COLOR: black;
+    BORDER-BOTTOM: green 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    BACKGROUND-COLOR: #a1caa1;
+    TEXT-ALIGN: left
+}
+.ButtonOver
+{
+    BORDER-RIGHT: #008000 1px solid;
+    BORDER-TOP: #008000 1px solid;
+    FONT-SIZE: 11px;
+    BACKGROUND: url(../images/ButtonOver.gif);
+    BORDER-LEFT: #008000 1px solid;
+    WIDTH: 80px;
+    CURSOR: hand;
+    BORDER-BOTTOM: #008000 1px solid;
+    HEIGHT: 20px
+}
+.ButtonOut
+{
+    BORDER-RIGHT: #008000 1px solid;
+    BORDER-TOP: #008000 1px solid;
+    FONT-SIZE: 11px;
+    BACKGROUND: url(../images/ButtonOut.gif);
+    BORDER-LEFT: #008000 1px solid;
+    WIDTH: 80px;
+    CURSOR: hand;
+    BORDER-BOTTOM: #008000 1px solid;
+    HEIGHT: 20px
+}
+.TextAlignLeft
+{
+    FONT-SIZE: 11px;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: left
+}
+.TextAlignRight
+{
+    FONT-SIZE: 11px;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    TEXT-ALIGN: right
+}
+.TextBox
+{
+    BORDER-RIGHT: black 1px solid;
+    BORDER-TOP: black 1px solid;
+    FONT-SIZE: 11px;
+    BORDER-LEFT: black 1px solid;
+    BORDER-BOTTOM: black 1px solid;
+    FONT-FAMILY: Tahoma, Verdana, Sans-Serif;
+    HEIGHT: 18px;
+    TEXT-ALIGN: left
+}
+.textos
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    TEXT-ALIGN: center
+}
+.textosleft
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left
+}
+.textosleftn
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left
+}
+.textosright
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 8pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, helvetica;
+    TEXT-ALIGN: right
+}
+.DivGrid
+{
+    LEFT: 0px;
+    WIDTH: 100%;
+    POSITION: relative;
+    HEIGHT: 100%
+}
+.TabelaGrid
+{
+    BORDER-RIGHT: 0px;
+    BORDER-TOP: 0px;
+    LEFT: 0px;
+    BORDER-LEFT: 0px;
+    WIDTH: 100%;
+    BORDER-BOTTOM: 0px;
+    POSITION: relative;
+    TOP: 0px
+}
+.Grid
+{
+    BORDER-RIGHT: #336666 1px double;
+    BORDER-TOP: #336666 1px double;
+    FONT-SIZE: 8pt;
+    BORDER-LEFT: #336666 1px double;
+    WIDTH: 100%;
+    BORDER-BOTTOM: #336666 1px double;
+    FONT-FAMILY: Tahoma;
+    BORDER-COLLAPSE: collapse;
+    BACKGROUND-COLOR: white
+}
+.CabecalhoGrid
+{
+    COLOR: white;
+    BACKGROUND-COLOR: cadetblue
+}
+.LinhaGrid
+{
+    COLOR: #333333;
+    BACKGROUND-COLOR: white
+}
+.RodapeGrid
+{
+    COLOR: white;
+    BACKGROUND-COLOR: #336666;
+    align: Center
+}

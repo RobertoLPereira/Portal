@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de sistemas</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+			var wSistemas = [];
+			function carregar(sistemas){
+				for (var i = sistemas.length - 1; i >= 0; i--) {
+					wSistemas[i] = sistemas[i].nomesistema;
+				}
+			}
+			
+			function Acao(tp,idsistema,nomesistema,sigla,versao,url)
+			{
+				var vForm = document.getElementById('sis');
+				//vForm.nomesistema.focus();  
+				if (tp == "Ed"){
+					vForm.idsistema.value=idsistema;
+					vForm.nomesistema.value = nomesistema;
+					vForm.sigla.value =sigla;
+					vForm.url.value=url;
+					vForm.versao.value=versao;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	vForm.action="/atualizasistema";
+			    	vForm.method="put";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.idsistema.value="";
+						vForm.nomesistema.value = "";
+						vForm.sigla.value="";
+						vForm.url.value="";
+						vForm.versao.value="";
+						vForm.action="/validarSistema";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.idsistema.value="";
+							vForm.nomesistema.value = "";
+							vForm.sigla.value="";
+							vForm.sigla.disabled= true;
+							vForm.url.value="";
+							vForm.url.disabled = true;
+							vForm.versao.value="";
+							vForm.versao.disabled = true;
+							vForm.action="/pesquisarsistema";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+							vForm.idsistema.value=idsistema;
+							vForm.nomesistema.value = nomesistema;
+							vForm.nomesistema.disabled= true;
+							vForm.sigla.value =sigla;
+							vForm.sigla.disabled= true;
+							vForm.url.value=url;
+							vForm.url.disabled= true;
+							vForm.versao.value=versao;
+							vForm.versao.disabled= true;
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/excsistema";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}	 
+				 
+			}
+		</script>
+	</head>
+
+	<body onload="carregar(<%=JSON.stringify(Sistemas)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="img/sistemas.png" class="img-responsive img-center" />
+									<br />
+									<P id="mensagem"></P>
+									<form action="/atualizasistema" method="put" id="sis" name="sis">
+										<div class="form-group autocomplete">
+											<input type="hidden" name="idsistema" id="idsistema">
+											<input type="text" name="nomesistema" id="nomesistema" class="form-control" placeholder="Nome do sistema" value="">
+										</div>
+										<div class="form-group">
+											<input type="text" name="sigla" id="sigla" class="form-control" placeholder="Sigla do sistema">
+										</div>
+										<div class="form-group">
+											<input type="text" name="versao" id="versao" class="form-control" placeholder="Versão do sistema">
+										</div>
+										<div class="form-group">
+											<input type="text" name="url" id="url" class="form-control" placeholder="Url de acesso ao sistema no servidor">
+										</div>
+										<div class="form-group">
+											<SELECT id="status" name="status">
+												<OPTION value =0 selected>Ativo</OPTION>
+												<OPTION value=1>Desativado</OPTION>								
+											</SELECT>
+										</div>
+										<div class="form-group">										
+										<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+										</div>									
+									</form>
+								
+								</div>
+								<div id="lista" name="lista">
+
+<accordion-group heading="listagem de possiveisachados" >
+
+			<h4>Lista de Sistemas</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv',0,'','','','')">Novo</button>&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('Psq',0,'','','','')" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				    <tr class="login-header">
+				        <th style="min-width: 60px;">Codigo</th>
+
+				        <th style="min-width: 60px;">Nome Sistema</th>
+
+				        <th style="min-width: 60px;">Sigla</th>
+
+				        <th style="min-width: 60px;">Versao</th>
+
+				        <th style="min-width: 60px;">Url</th>
+
+                        <th style="min-width: 40px;">&nbsp;A c o e s</th>
+                     </tr>
+				</thead>
+				<tbody>
+					<% if(Sistemas.length > 0) { %>
+	    				<% for(var i = 0; i < Sistemas.length; i++) {%>
+							<tr>
+
+								<td align="center"><%=Sistemas[i].idsistema%></td>
+					            <td><%=Sistemas[i].nomesistema%></td>
+					            <td><%=Sistemas[i].sigla%></td>
+					            <td><%=Sistemas[i].versao%></td>
+					            <td><%=Sistemas[i].url%></td>
+					
+								<td><%if (Sistemas[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=Sistemas[i].idsistema%>,'<%=Sistemas[i].nomesistema%>','<%=Sistemas[i].sigla%>','<%=Sistemas[i].versao%>','<%=Sistemas[i].url%>')">editar</button>
+									<%}else{%>
+											<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=Sistemas[i].idsistema%>,'<%=Sistemas[i].nomesistema%>','<%=Sistemas[i].sigla%>','<%=Sistemas[i].versao%>','<%=Sistemas[i].url%>')">Ativar</button>
+									<% } %>
+									<%if (Sistemas[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex',<%=Sistemas[i].idsistema%>,'<%=Sistemas[i].nomesistema%>','<%=Sistemas[i].sigla%>','<%=Sistemas[i].versao%>','<%=Sistemas[i].url%>')">excluir</button>
+									<% } %>
+								</td>
+
+							</tr>
+						<% } %>
+					<% } %>
+				</tbody>
+			</table>
+	
+	</accordion-group>
+	<!--script src="js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script-->
+								</div>
+								
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+	<script type="text/javascript">
+		//chama a funcao de auto preenchimento do campo passando o nome do campo e o array com os conteudos de pesquisa
+		autocomplete(document.getElementById("nomesistema"), wSistemas);
+
+	</script>
+</html>

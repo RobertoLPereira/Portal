@@ -1,0 +1,92 @@
+body
+{
+	FONT-FAMILY			: Tahoma, Verdana, Sans-Serif;
+	FONT-SIZE			: 11px;
+	COLOR				: Black;
+	TOPMARGIN			: 0px;
+	LEFTMARGIN			: 0px;
+	SCROLL				: no;
+}
+.PnlAlert
+{
+	BORDER-RIGHT			: #e4db00 1px solid;
+	BORDER-TOP			: #e4db00 1px solid;
+	LEFT				: 3px;
+	BORDER-LEFT			: #e4db00 1px solid;
+	WIDTH				: 369px;
+	BORDER-BOTTOM			: #e4db00 1px solid;
+	POSITION			: absolute;
+	TOP				: 3px;
+	HEIGHT				: 34px;
+	BACKGROUND-COLOR		: #faf8c8
+}
+.PnlConfirm
+{
+	BORDER-RIGHT			: #8fb1d6 1px solid;
+	BORDER-TOP			: #8fb1d6 1px solid;
+	LEFT				: 3px;
+	BORDER-LEFT			: #8fb1d6 1px solid;
+	WIDTH				: 369px;
+	BORDER-BOTTOM			: #8fb1d6 1px solid;
+	POSITION			: absolute;
+	TOP				: 3px;
+	HEIGHT				: 34px;
+	BACKGROUND-COLOR		: #e4f0fd
+}
+.PnlInfor
+{
+	BORDER-RIGHT			: #8fb1d6 1px solid;
+	BORDER-TOP			: #8fb1d6 1px solid;
+	LEFT				: 3px;
+	BORDER-LEFT			: #8fb1d6 1px solid;
+	WIDTH				: 369px;
+	BORDER-BOTTOM			: #8fb1d6 1px solid;
+	POSITION			: absolute;
+	TOP				: 3px;
+	HEIGHT				: 34px;
+	BACKGROUND-COLOR		: #e4f0fd
+}
+.PnlError
+{
+	BORDER-RIGHT			: #ff5f5f 1px solid;
+	BORDER-TOP			: #ff5f5f 1px solid;
+	LEFT				: 3px;
+	BORDER-LEFT			: #ff5f5f 1px solid;
+	WIDTH				: 369px;
+	BORDER-BOTTOM			: #ff5f5f 1px solid;
+	POSITION			: absolute;
+	TOP				: 3px;
+	HEIGHT				: 34px;
+	BACKGROUND-COLOR		: #ffbaba
+}
+.PnlHelp
+{
+	BORDER-RIGHT			: #5b35ff 1px solid;
+	BORDER-TOP			: #5b35ff 1px solid;
+	LEFT				: 3px;
+	BORDER-LEFT			: #5b35ff 1px solid;
+	WIDTH				: 369px;
+	BORDER-BOTTOM			: #5b35ff 1px solid;
+	POSITION			: absolute;
+	TOP				: 3px;    
+	HEIGHT				: 34px;   
+	BACKGROUND-COLOR		: #ffbaba 
+}
+.ButtonOver
+{
+    	BORDER				: 1px solid #008000;
+    	FONT-SIZE			: 11px;
+    	BACKGROUND			: url('../images/ButtonOver.gif');
+    	WIDTH				: 80px;
+    	CURSOR				: hand;
+    	HEIGHT				: 20px;
+}
+.ButtonOut
+{
+    	BORDER				: 1px solid #008000;
+    	FONT-SIZE			: 11px;
+    	BACKGROUND			: url('../images/ButtonOut.gif');
+    	WIDTH				: 80px;
+    	CURSOR				: hand;
+    	HEIGHT				: 20px;
+}

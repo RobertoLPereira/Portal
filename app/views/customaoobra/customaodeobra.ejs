@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+	<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de sistemas</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+	 function Acao(tp,amort,chsinicial,chssemlucro,comencargos,created_at,custo1,custo2,custo3,custo4,deprec,despmensal,empresa,hsmes,id,imob,iss,lucr,maodeobracomlucro,somasubtotal,updated_at,)
+			{
+				var vForm = document.getElementById("frm");
+				//vForm.nomesistema.focus();  
+				if (tp == "Ed"){
+					vForm.amort.value=amort;
+					vForm.chsinicial.value=chsinicial;
+					vForm.chssemlucro.value=chssemlucro;
+					vForm.comencargos.value=comencargos;
+					vForm.created_at.value=created_at;
+					vForm.custo1.value=custo1;
+					vForm.custo2.value=custo2;
+					vForm.custo3.value=custo3;
+					vForm.custo4.value=custo4;
+					vForm.deprec.value=deprec;
+					vForm.despmensal.value=despmensal;
+					vForm.empresa.value=empresa;
+					vForm.hsmes.value=hsmes;
+					vForm.id.value=id;
+					vForm.imob.value=imob;
+					vForm.iss.value=iss;
+					vForm.lucr.value=lucr;
+					vForm.maodeobracomlucro.value=maodeobracomlucro;
+					vForm.somasubtotal.value=somasubtotal;
+					vForm.updated_at.value=updated_at;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	vForm.action="/atualizasistema";
+			    	vForm.method="put";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.amort.value="";
+						vForm.chsinicial.value="";
+						vForm.chssemlucro.value="";
+						vForm.comencargos.value="";
+						vForm.created_at.value="";
+						vForm.custo1.value="";
+						vForm.custo2.value="";
+						vForm.custo3.value="";
+						vForm.custo4.value="";
+						vForm.deprec.value="";
+						vForm.despmensal.value="";
+						vForm.empresa.value="";
+						vForm.hsmes.value="";
+						vForm.id.value="";
+						vForm.imob.value="";
+						vForm.iss.value="";
+						vForm.lucr.value="";
+						vForm.maodeobracomlucro.value="";
+						vForm.somasubtotal.value="";
+						vForm.updated_at.value="";
+						vForm.action="/validarSistema";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.amort.value="";
+							vForm.chsinicial.value="";
+							vForm.chssemlucro.value="";
+							vForm.comencargos.value="";
+							vForm.created_at.value="";
+							vForm.custo1.value="";
+							vForm.custo2.value="";
+							vForm.custo3.value="";
+							vForm.custo4.value="";
+							vForm.deprec.value="";
+							vForm.despmensal.value="";
+							vForm.empresa.value="";
+							vForm.hsmes.value="";
+							vForm.id.value="";
+							vForm.imob.value="";
+							vForm.iss.value="";
+							vForm.lucr.value="";
+							vForm.maodeobracomlucro.value="";
+							vForm.somasubtotal.value="";
+							vForm.updated_at.value="";
+							vForm.action="/pesquisarsistema";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+							vEx
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/excsistema";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}	 
+				 
+			}
+		</script></head>
+
+	<body onload="carregar(<%=JSON.stringify(view_customaodeobras)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="img/sistemas.png" class="img-responsive img-center" />
+									<br />
+									<P id="mensagem"></P>
+									<form action="/atualizaview_customaodeobras" method="put" id="frm" name="frm"><div class="form-group">
+					<input type="text" name="amort" id="amorto" class="form-control" placeholder="Informe amort" value=""></div>
+<div class="form-group">
+					<input type="text" name="chsinicial" id="chsinicialo" class="form-control" placeholder="Informe chsinicial" value=""></div>
+<div class="form-group">
+					<input type="text" name="chssemlucro" id="chssemlucroo" class="form-control" placeholder="Informe chssemlucro" value=""></div>
+<div class="form-group">
+					<input type="text" name="comencargos" id="comencargoso" class="form-control" placeholder="Informe comencargos" value=""></div>
+<div class="form-group">
+					<input type="text" name="created_at" id="created_ato" class="form-control" placeholder="Informe created_at" value=""></div>
+<div class="form-group">
+					<input type="text" name="custo1" id="custo1o" class="form-control" placeholder="Informe custo1" value=""></div>
+<div class="form-group">
+					<input type="text" name="custo2" id="custo2o" class="form-control" placeholder="Informe custo2" value=""></div>
+<div class="form-group">
+					<input type="text" name="custo3" id="custo3o" class="form-control" placeholder="Informe custo3" value=""></div>
+<div class="form-group">
+					<input type="text" name="custo4" id="custo4o" class="form-control" placeholder="Informe custo4" value=""></div>
+<div class="form-group">
+					<input type="text" name="deprec" id="depreco" class="form-control" placeholder="Informe deprec" value=""></div>
+<div class="form-group">
+					<input type="text" name="despmensal" id="despmensalo" class="form-control" placeholder="Informe despmensal" value=""></div>
+<div class="form-group">
+					<input type="text" name="empresa" id="empresao" class="form-control" placeholder="Informe empresa" value=""></div>
+<div class="form-group">
+					<input type="text" name="hsmes" id="hsmeso" class="form-control" placeholder="Informe hsmes" value=""></div>
+<div class="form-group">
+				<input type="hidden" name="id" id="ido" class="form-control" placeholder="id" value=""></div>
+<div class="form-group">
+					<input type="text" name="imob" id="imobo" class="form-control" placeholder="Informe imob" value=""></div>
+<div class="form-group">
+					<input type="text" name="iss" id="isso" class="form-control" placeholder="Informe iss" value=""></div>
+<div class="form-group">
+					<input type="text" name="lucr" id="lucro" class="form-control" placeholder="Informe lucr" value=""></div>
+<div class="form-group">
+					<input type="text" name="maodeobracomlucro" id="maodeobracomlucroo" class="form-control" placeholder="Informe maodeobracomlucro" value=""></div>
+<div class="form-group">
+					<input type="text" name="somasubtotal" id="somasubtotalo" class="form-control" placeholder="Informe somasubtotal" value=""></div>
+<div class="form-group">
+					<input type="text" name="updated_at" id="updated_ato" class="form-control" placeholder="Informe updated_at" value=""></div>
+</form>
+								
+								</div>
+									<div id="lista" name="lista">
+				<accordion-group heading="listagem de view_customaodeobras" >
+
+			<h4>Lista de view_customaodeobrass</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv','','','','','','','','','','','','','','','','','','','','')">Novo</button>&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('Psq','','','','','','','','','','','','','','','','','','','','')" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				<tr class="login-header">
+				<th style="min-width: 60px;">amort</th><th style="min-width: 60px;">chsinicial</th><th style="min-width: 60px;">chssemlucro</th><th style="min-width: 60px;">comencargos</th><th style="min-width: 60px;">created_at</th><th style="min-width: 60px;">custo1</th><th style="min-width: 60px;">custo2</th><th style="min-width: 60px;">custo3</th><th style="min-width: 60px;">custo4</th><th style="min-width: 60px;">deprec</th><th style="min-width: 60px;">despmensal</th><th style="min-width: 60px;">empresa</th><th style="min-width: 60px;">hsmes</th><th style="min-width: 60px;">id</th><th style="min-width: 60px;">imob</th><th style="min-width: 60px;">iss</th><th style="min-width: 60px;">lucr</th><th style="min-width: 60px;">maodeobracomlucro</th><th style="min-width: 60px;">somasubtotal</th><th style="min-width: 60px;">updated_at</th>
+				</tr>
+				</thead>
+				<tbody>
+					<% if(view_customaodeobras.length > 0) { %>
+	    				<% for(var i = 0; i < view_customaodeobras.length; i++) {%>
+							<tr>
+								<td><%=view_customaodeobras[i].amort%></td><td><%=view_customaodeobras[i].chsinicial%></td><td><%=view_customaodeobras[i].chssemlucro%></td><td><%=view_customaodeobras[i].comencargos%></td><td><%=view_customaodeobras[i].created_at%></td><td><%=view_customaodeobras[i].custo1%></td><td><%=view_customaodeobras[i].custo2%></td><td><%=view_customaodeobras[i].custo3%></td><td><%=view_customaodeobras[i].custo4%></td><td><%=view_customaodeobras[i].deprec%></td><td><%=view_customaodeobras[i].despmensal%></td><td><%=view_customaodeobras[i].empresa%></td><td><%=view_customaodeobras[i].hsmes%></td><td><%=view_customaodeobras[i].id%></td><td><%=view_customaodeobras[i].imob%></td><td><%=view_customaodeobras[i].iss%></td><td><%=view_customaodeobras[i].lucr%></td><td><%=view_customaodeobras[i].maodeobracomlucro%></td><td><%=view_customaodeobras[i].somasubtotal%></td><td><%=view_customaodeobras[i].updated_at%></td>					
+								<td><%if (view_customaodeobras[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=view_customaodeobras[i].amort%>','<%=view_customaodeobras[i].chsinicial%>','<%=view_customaodeobras[i].chssemlucro%>','<%=view_customaodeobras[i].comencargos%>','<%=view_customaodeobras[i].created_at%>','<%=view_customaodeobras[i].custo1%>','<%=view_customaodeobras[i].custo2%>','<%=view_customaodeobras[i].custo3%>','<%=view_customaodeobras[i].custo4%>','<%=view_customaodeobras[i].deprec%>','<%=view_customaodeobras[i].despmensal%>','<%=view_customaodeobras[i].empresa%>','<%=view_customaodeobras[i].hsmes%>','<%=view_customaodeobras[i].id%>','<%=view_customaodeobras[i].imob%>','<%=view_customaodeobras[i].iss%>','<%=view_customaodeobras[i].lucr%>','<%=view_customaodeobras[i].maodeobracomlucro%>','<%=view_customaodeobras[i].somasubtotal%>','<%=view_customaodeobras[i].updated_at%>')">editar</button>
+									<%}else{%>
+											<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=view_customaodeobras[i].amort%>','<%=view_customaodeobras[i].chsinicial%>','<%=view_customaodeobras[i].chssemlucro%>','<%=view_customaodeobras[i].comencargos%>','<%=view_customaodeobras[i].created_at%>','<%=view_customaodeobras[i].custo1%>','<%=view_customaodeobras[i].custo2%>','<%=view_customaodeobras[i].custo3%>','<%=view_customaodeobras[i].custo4%>','<%=view_customaodeobras[i].deprec%>','<%=view_customaodeobras[i].despmensal%>','<%=view_customaodeobras[i].empresa%>','<%=view_customaodeobras[i].hsmes%>','<%=view_customaodeobras[i].id%>','<%=view_customaodeobras[i].imob%>','<%=view_customaodeobras[i].iss%>','<%=view_customaodeobras[i].lucr%>','<%=view_customaodeobras[i].maodeobracomlucro%>','<%=view_customaodeobras[i].somasubtotal%>','<%=view_customaodeobras[i].updated_at%>')">Ativar</button>
+									<% } %>
+									<%if (view_customaodeobras[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex','<%=view_customaodeobras[i].amort%>','<%=view_customaodeobras[i].chsinicial%>','<%=view_customaodeobras[i].chssemlucro%>','<%=view_customaodeobras[i].comencargos%>','<%=view_customaodeobras[i].created_at%>','<%=view_customaodeobras[i].custo1%>','<%=view_customaodeobras[i].custo2%>','<%=view_customaodeobras[i].custo3%>','<%=view_customaodeobras[i].custo4%>','<%=view_customaodeobras[i].deprec%>','<%=view_customaodeobras[i].despmensal%>','<%=view_customaodeobras[i].empresa%>','<%=view_customaodeobras[i].hsmes%>','<%=view_customaodeobras[i].id%>','<%=view_customaodeobras[i].imob%>','<%=view_customaodeobras[i].iss%>','<%=view_customaodeobras[i].lucr%>','<%=view_customaodeobras[i].maodeobracomlucro%>','<%=view_customaodeobras[i].somasubtotal%>','<%=view_customaodeobras[i].updated_at%>')">excluir</button>
+									<% } %>
+								</td>
+
+							</tr>
+						<% } %>
+					<% } %>
+				</tbody>
+			</table>
+	
+	</accordion-group>
+				</div>
+											
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+	<script type="text/javascript">
+		//chama a funcao de auto preenchimento do campo passando o nome do campo e o array com os conteudos de pesquisa
+		autocomplete(document.getElementById("nomesistema"), wview_customaodeobras);
+
+	</script>
+</html>

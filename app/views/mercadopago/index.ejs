@@ -1,0 +1,138 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Mercadopago Node</title>
+    <style>
+        img{
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="display">Itens em Ofertas</h2>
+        <div class="row" id="row">
+        </div>
+
+    </div>
+    <script>
+        var resp = [];
+        var productos = [
+            {titulo: "Remera de dama", precio: 2600, imagen: "assets/34.jpg","descricao": " "},
+            {titulo: "Pantalon", precio: 2500, imagen: "assets/200.jpg","descricao": " "},
+            {titulo: "Blusa de dama", precio: 1600, imagen: "assets/34.jpg","descricao": " "},
+            {titulo: "Pantalon Jean", precio: 1200, imagen: "assets/122.jpg","descricao": " "},
+            {titulo: "Maçã Argentina", precio: 499,imagen:"https://10.0.0.109:3000/images/produtos/apples.png","descricao": " "}
+        ];
+        
+        var httpRequest;
+        function makeRequest(id)  {
+            if (window.ActiveXObject){
+                httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                
+            }
+            else if (window.XMLHttpRequest)
+            {
+            
+                httpRequest = new XMLHttpRequest();
+            }
+
+            if (!httpRequest) {
+              alert('Giving up :( Cannot create an XMLHTTP instance');
+              return false;
+            }
+                httpRequest.onreadystatechange = alertContents;
+                httpRequest.open('GET', 'http://10.0.0.109:5050/AnuncioItemCateg/'+id);
+                httpRequest.send();
+            }
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+              if (httpRequest.status === 200) {
+                resp = JSON.parse(httpRequest.responseText)
+                for (var i=0; i< resp.length; i++){
+                                      
+                    if(i>4){
+                        //console.log(productos);
+                        productos.push({"titulo" :resp[i].nomeproduto,"precio": resp[i].precovenda,"imagen": resp[i].urlimagem.trim(),"descricao":resp[i].descricao});
+                    }else{ productos[i].titulo = resp[i].nomeproduto;
+                    productos[i].precio = resp[i].precovenda;
+                    productos[i].imagen = resp[i].urlimagem.trim();
+                    productos[i].descricao = resp[i].descricao;
+                   // console.log(resp[i].descricao);
+                    }
+                }
+                carregar();
+                
+              } else {
+                alert('There was a problem with the request.');
+              }
+            }
+          }     
+        window.onload = function(){
+              console.log(<%=idcategoria%>);
+         makeRequest(<%=idcategoria%>);
+  
+        }
+        function carregar(){
+
+        for (let i = 0; i < productos.length; i++) {  
+            const row = document.getElementById('row');
+            let col = document.createElement('div');
+            col.classList.add('col-md-4');
+            row.appendChild(col)
+                let card = document.createElement('div');
+                card.classList.add('card');
+                col.appendChild(card);
+
+                let cardHeader = document.createElement('div');
+                cardHeader.classList.add('card-header');
+                card.appendChild(cardHeader);
+                cardHeader.innerHTML = `<h3> ${productos[i].titulo} </h3>`
+
+                let cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
+                card.appendChild(cardBody);
+                cardBody.innerHTML = `<img src="${productos[i].imagen}">`
+                let priceBox = document.createElement('h4');
+                cardBody.appendChild(priceBox);               
+                priceBox.innerHTML = `Precio $ ${productos[i].precio}`;
+                priceBox.classList.add('mt-2');
+
+                let boton = document.createElement('button');
+                boton.classList.add('btn', 'btn-primary', 'btn-block');
+                boton.onclick = function() {
+                   //alert(`${productos[i].titulo}`);
+                   comprar(`${productos[i].titulo}`,1,`${productos[i].precio}`,`${productos[i].descricao}`);
+                };
+                cardBody.appendChild(boton);
+                boton.innerText = "Comprar";
+        }
+
+        }
+        function comprar(title,qtd,prc,dsc){
+            //alert(prc);
+            var vForm = document.getElementById('venda');
+                vForm.qtd.value = qtd;
+                vForm.price.value = prc;
+                vForm.title.value = title;
+                vForm.describe.value = dsc;
+                vForm.action="http://localhost:3100/checkout";
+                vForm.method="POST";
+                vForm.submit();
+                return;
+        }    
+    
+    </script>
+     
+    <form action="http://localhost:3100/checkout" method="POST" id="venda" name="venda">
+        <input type="hidden" name="title" value="">
+        <input type="hidden" name="price" value=""> 
+        <input type="hidden" name="qtd" value="">   
+        <input type="hidden" name="describe" value="">                            
+        <!--input type="submit" value="Comprar ahora" class="btn btn-primary btn-block"-->
+    </form>
+</body>
+</html>

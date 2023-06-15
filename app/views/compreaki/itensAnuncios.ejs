@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    <title>Itens</title>
+    <style>
+        img{
+            width: 100%;
+        }
+    </style>
+    <script src="https://www.mercadopago.com/v2/security.js" view="item" output="deviceId"></script>
+    <script language="javascript" src="JavaScript/AjaxBrowser.js"></script>
+</head>
+<body>
+
+    <div class="container">
+        <h2 class="display">Itens em Ofertas</h2>
+        <div class="row" id="row">
+        </div>
+
+    </div>
+    <script>
+        var categ = 0;
+        var resp = [];
+        var productos = [];
+        var device_id = "armor.cef5002e9e36719a1e9d4c06dfecc3fb8c32d7609e643780cc8f6ddf0b6c3e69f9ab56928b43ed235a6b2a656a1c5feecd59c533540f1b22dd39d362931507c54af75f8fc72b3783aa63fd307bc3e6f5.7a39ef52b0d8f8e9ef14ce2de10511fc";
+        //console.log(item['deviceId']);
+        var httpRequest;
+        function makeRequest(id)  {
+            if (window.ActiveXObject){
+                httpRequest = new ActiveXObject("Microsoft.XMLHTTP");                
+            }
+            else if (window.XMLHttpRequest)
+            {            
+                httpRequest = new XMLHttpRequest();
+            }
+
+            if (!httpRequest) {
+              alert('Giving up :( Cannot create an XMLHTTP instance');
+              return false;
+            }
+                httpRequest.onreadystatechange = alertContents;
+                httpRequest.open('GET', 'http://10.0.0.109:5050/AnuncioItemCateg/'+id);
+                httpRequest.send();
+            }
+        function alertContents() {
+            if (httpRequest.readyState === XMLHttpRequest.DONE) {
+              if (httpRequest.status === 200) {
+                productos = JSON.parse(httpRequest.responseText)
+                carregar();
+                
+              } else {
+                alert('There was a problem with the request.');
+              }
+            }
+          }     
+        window.onload = function(){
+            categ = <%=idcategoria%>;      
+         makeRequest(<%=idcategoria%>);
+  
+        }
+        function carregar(){
+
+        for (let i = 0; i < productos.length; i++) {  
+            const row = document.getElementById('row');
+            let col = document.createElement('div');
+            col.classList.add('col-md-4');
+            row.appendChild(col)
+                let card = document.createElement('div');
+                card.classList.add('card');
+                col.appendChild(card);
+
+                let cardHeader = document.createElement('div');
+                cardHeader.classList.add('card-header');
+                card.appendChild(cardHeader);
+                cardHeader.innerHTML = `<h3> ${productos[i].nomeproduto} </h3>`
+
+                let cardBody = document.createElement('div');
+                cardBody.classList.add('card-body');
+                card.appendChild(cardBody);
+                cardBody.innerHTML = `<img src="${productos[i].urlimagem}">`
+                let priceBox = document.createElement('h4');
+                cardBody.appendChild(priceBox);               
+                priceBox.innerHTML = `R\$  ${productos[i].precovenda}  x (1-${productos[i].unidademedida})`;
+                priceBox.classList.add('mt-2');
+
+                let boton = document.createElement('button');
+                boton.classList.add('btn', 'btn-primary', 'btn-block');
+                boton.onclick = function() {
+                   carrinho(`${productos[i].idanuncio}`,`${productos[i].idanuncioitem}`,`${productos[i].unidademedida}`,productos[i].precovenda,`${productos[i].nomeproduto}`);
+                };
+                cardBody.appendChild(boton);
+                boton.innerText = "Comprar";
+
+                let botonC = document.createElement('button');
+                botonC.classList.add('btn', 'btn-primary', 'btn-block');
+                botonC.onclick = function() {
+                   //alert(`${productos[i].titulo}`);
+                   comprar(`${productos[i].nomeproduto}`,1,`${productos[i].precovenda}`,`${productos[i].descricao}`);
+                };
+                cardBody.appendChild(botonC);
+                botonC.innerText = "Ir ao Carrinho";
+        }
+
+        }
+        var m = new Date();
+        var dataHoje = m.getUTCFullYear();
+        if((m.getUTCMonth()+1) < 10){
+            dataHoje += "-0"+(m.getUTCMonth()+1);
+        }else{
+            dataHoje += (m.getUTCMonth()+1);
+        }
+        if(m.getUTCDate() < 10){
+            dataHoje +="-0"+ m.getUTCDate();
+        }else{
+            dataHoje+="-"+ m.getUTCDate();
+        }
+        
+        function comprar(title,qtd,prc,dsc){
+            //alert(prc);
+            var vForm = document.getElementById('venda');
+                vForm.qtd.value = qtd;
+                vForm.price.value = prc;
+                vForm.title.value = title.trim();
+                vForm.describe.value = dsc.trim();
+                //vForm.action="http://10.0.0.109:3200/CheckoutMP";
+                //vForm.method="POST";
+                //vForm.action="/PagarMP";
+                vForm.action="/Carrinho";
+                vForm.method="GET";
+                vForm.submit();
+                return;
+        }   
+        function carrinho(idanuncio,idanuncioitem,unidademedida,precovenda,nomeproduto){
+            //alert(idanuncio,idanuncioitem,unidademedida,precovenda,nomeproduto);
+            var vForm = document.getElementById('venda');
+            vForm.action="http://10.0.0.109:5050/Item";
+            var pedidoitem = {
+                idanuncioitem: idanuncioitem,
+                name: nomeproduto,
+                quantidade: 1,
+                unidade: 1,
+                valor: precovenda,
+                checked: 0,
+                created: dataHoje,
+                categoria: categ,
+                idpessoa : parseInt(vForm.idpessoa.value)
+            }            
+            //console.log(pedidoitem);
+            ajax = httpRequest;	   
+            if (ajax == undefined){
+                ajax = new XMLHttpRequest();
+            }         
+            //var url = "http://10.0.0.109:5050/Pedidoitems";
+            var url = "http://10.0.0.109:5050/Item";
+            ajax.open("POST",url,true);
+            ajax.setRequestHeader('Content-Type', 'application/json');
+            ajax.onreadystatechange = verResposta;
+            ajax.send(JSON.stringify(pedidoitem));
+            
+        }     
+        function verResposta(){
+            if (ajax.readyState === ajax.DONE) {
+              if (ajax.status === 200) {
+                var pedido = JSON.parse(ajax.responseText)
+                //console.log(pedido); 
+                alert(pedido.msg);               
+              } else {
+                alert('Tratar o retorno da inclusão do pedido');
+                console.log(ajax.responseText);
+              }
+            }
+        }
+    </script>
+     
+    <form action="" method="POST" id="venda" name="venda">
+        <input type="hidden" name="title" value="">
+        <input type="hidden" name="price" value=""> 
+        <input type="hidden" name="qtd" value="">   
+        <input type="hidden" name="describe" value="">   
+        <input type="hidden" name="idpessoa" value="<%=idpessoa%>"> 
+        <input type="hidden" name="iddevice" id="iddevice" value="<%=deviceId%>">                        
+        <!--input type="submit" value="Comprar ahora" class="btn btn-primary btn-block"-->
+    </form>
+</body>
+</html>

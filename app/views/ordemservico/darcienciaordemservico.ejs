@@ -1,0 +1,410 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Registrar Aceite ou recusa de Ordem de Serviço</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+		<link rel='stylesheet' type='text/css' href='css/PDCalendario.css'>
+		<script language='JavaScript' src='js/jquery-2.2.1.js' type='text/javascript'></script>
+		<script language="JavaScript" src="JavaScript/ActionValidation.js" type="text/javascript"></script>
+		<script language="javascript" src="JavaScript/AjaxBrowser.js" type="text/javascript"></script>
+		<script language="JavaScript" src="JavaScript/OrdemServicoRN.js" type="text/javascript"></script>
+		<script language="JavaScript" src="JavaScript/JsFunction.js" type="text/javascript"></script>
+		<script language='JavaScript' src='JavaScript/PDCalendario.js' type='text/javascript'></script>																
+		<script language='JavaScript' src='JavaScript/ValidaData.js' type='text/javascript'></script>
+		<script language='JavaScript' src='JavaScript/GmUtil.js' type='text/javascript'></script>
+		
+		<script language='JavaScript' src='JavaScript/AjaxSistemas.js' type='text/javascript'></script>
+		
+		<title>Cadastro de Ordem de Serviço</title>
+		<script type="text/javascript">
+		function nomeSistema(Sis,id){
+			for (var i = Sis.length - 1; i >= 0; i--) {
+				if (Sis[i].idsistema == id){
+					return Sis[i].nomesistema;
+				}
+			}
+		}
+		function AcaoOs(tp,idordemservico,datacadastro,datainiciovalidade,datafimvalidade,idusuario,corpo)
+			{
+				var vForm = document.getElementById('Cados');
+				if (tp == "Ed"){
+					vForm.idOrdemServico.value=idordemservico;
+					vForm.dataCadastro.value = datacadastro.substring(5,7) + "/"+datacadastro.substring(8,10)+"/"+datacadastro.substring(0,4);
+					vForm.dataInicioValidade.value=datainiciovalidade.substring(5,7) + "/"+datainiciovalidade.substring(8,10)+"/"+datainiciovalidade.substring(0,4);
+					vForm.dataFimValidade.value=datafimvalidade.substring(5,7) + "/"+datafimvalidade.substring(8,10)+"/"+datafimvalidade.substring(0,4);
+					vForm.idusuario.value=idusuario;
+					vForm.corpo.value=corpo;
+					vForm.status.value = 0;
+			    	vForm.btn_ok.innerHTML = "Aceitar";
+			    	vForm.btn_ok.disabled = false;
+			    	vForm.action="/incordemservicociencia";
+			    	vForm.method="post";
+			    	buscaOrdemServicoUsuario('Cados',idordemservico);
+			    	buscaOrdemServicoPerfil('Cados',idordemservico);
+			    	return;
+				}else{
+					vForm.idOrdemServico.value=idordemservico;
+					vForm.dataCadastro.value = datacadastro.substring(5,7) + "/"+datacadastro.substring(8,10)+"/"+datacadastro.substring(0,4);
+					vForm.dataInicioValidade.value=datainiciovalidade.substring(5,7) + "/"+datainiciovalidade.substring(8,10)+"/"+datainiciovalidade.substring(0,4);
+					vForm.dataFimValidade.value=datafimvalidade.substring(5,7) + "/"+datafimvalidade.substring(8,10)+"/"+datafimvalidade.substring(0,4);
+					vForm.idusuario.value=idusuario;
+					vForm.corpo.value=corpo;
+					vForm.status.value = 1;
+						vForm.dataInicioValidade.disabled=true;
+						vForm.dataFimValidade.disabled =true;
+						vForm.idusuario.disabled =true;
+						vForm.corpo.disabled =true;
+						vForm.idsistema.disabled =true;
+						vForm.btn_ok.innerHTML = "Excluir";
+						vForm.action="/excordemservicociencia";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						buscaOrdemServicoUsuario('Cados',idordemservico);
+			    		buscaOrdemServicoPerfil('Cados',idordemservico);
+					}	 
+			}
+			function buscaOrdemServicoUsuario(nForm,cmp)
+		{//alert(nForm+cmp);
+		    var vForm = document.getElementById(nForm);
+		    var f = vForm;  
+		    var campo = cmp;
+		    //console.log(campo);
+		    //campo = "Roberto%20Lima";
+		    if (cmp > 0){
+			   ajax = openAjax();	   
+			   if (ajax == undefined){
+			   		ajax = new XMLHttpRequest();
+			   }        
+		        var url = "http://localhost:8083/api/todos/ordemservicousuarios?idordemservico="+cmp;
+			   	ajax.open("GET",url,false);
+		       	ajax.onreadystatechange = atualizarOSUsuarios;
+			   	ajax.send();
+			}
+		}
+function atualizarOSUsuarios(){	
+	//alert(ajax.readyState);
+	if (ajax.readyState==4){
+		//alert(ajax.status);
+		if (ajax.status == 200) {
+			//debugger;
+            var wusuarios = JSON.parse(ajax.responseText);
+            console.log(wusuarios);
+            var rslta = new Array(wusuarios.length);
+            var html = "";
+            try {
+            	for (rnum = 0; rnum < wusuarios.length ; rnum++){
+            	    var usr = document.getElementById('codigousuariorede').value;
+            	    console.log(usr);   
+		            if (wusuarios[rnum].nome != null ){
+		            	if (wusuarios[rnum].codigousuariorede.toUpperCase() === usr.toUpperCase()){
+		            	html+= '<input type="text" list="idpessoa" name="idpessoa[]"  maxlength="40" size="40"';
+		            	html+= 'value='+wusuarios[rnum].idpessoa+"-"+ wusuarios[rnum].nome.replace(" ","_").replace(" ","_").replace(" ","_")+' readonly="true"/><br>'	          
+		            	}  
+		        	}
+				}	
+					document.getElementById('origem').innerHTML=html;		        
+            }catch(Exception){
+                  console.log("Erro try catch = "+Exception);
+            }			
+    		 
+	    }else{wMenu.innerHTML="Ocorreu erro 500 no servidor! Codigo="+ajax.readyState;}     	 
+	}	   
+}
+function buscaOrdemServicoPerfil(nForm,cmp)
+		{//alert(nForm+cmp);
+		    var vForm = document.getElementById(nForm);
+		    var f = vForm;  
+		    var campo = cmp;
+		    //console.log(campo);
+		    //campo = "Roberto%20Lima";
+		    if (cmp > 0){
+			   ajax = openAjax();	   
+			   if (ajax == undefined){
+			   		ajax = new XMLHttpRequest();
+			   }        
+		        var url = "http://localhost:8083/api/todos/ordemservicoperfil?idordemservico="+cmp;
+			   	ajax.open("GET",url,true);
+		       	ajax.onreadystatechange = atualizarOSPerfis;
+			   	ajax.send();
+			}
+		}
+function atualizarOSPerfis(){	
+	if (ajax.readyState==4){
+		if (ajax.status == 200) {
+            var wperfis = JSON.parse(ajax.responseText);
+            console.log(wperfis);
+            whtml ='';//<input type="text" list="idperfil" name="idperfil[]"  maxlength="40" size="40" readonly="true" />'
+            try {
+            	for (i = 0; i < wperfis.length; i++){			            
+		            if (wperfis[i].idperfilsistema > 0){
+		            	//duplicarCampos('origemp','destinop',wperfis[i].idperfilsistema+"-"+wperfis[i].nomesistema.replace(" ","_") + " " + wperfis[i].nomeperfil.replace(" ","_"));		            		  
+		            	whtml+='<input type="text" list="idperfil" name="idperfil[]"  maxlength="40" size="40" readonly="true"';
+		            	whtml+= 'value='+wperfis[i].idperfilsistema+"-"+wperfis[i].nomesistema.replace(" ","_").replace(" ","_").replace(" ","_") + " - " + wperfis[i].nomeperfil + 'readonly="true"/><br>'
+		        	}
+				}
+				document.getElementById('origemp').innerHTML=whtml;		        
+            }catch(Exception){
+                console.log("Erro try catch = "+Exception);
+            }			
+    		 
+	    }else{
+	    	wMenu.innerHTML="Ocorreu erro 500 no servidor! Codigo="+ajax.readyState;
+	    }     	 
+	}	   
+}
+		</script>
+		</head>
+	<body onload="buscaSistemas('Cados')">
+	<form id="Cados" name="Cados" method="post" action="/incordemservicociencia">
+		<table>
+			<tr class=titulo>
+				<TD colspan=4 style="BORDER-BOTTOM: blue 1px  solid" class=titulo><b>º Cadastro de Ordem de Serviço</b></TD>					    
+			</tr>
+			<div class="container home">
+				<% if(msg != undefined){ %>
+					<div class="alert alert-success">
+							<strong>Atenção!</strong>
+							<ul>
+								<li><%=msg%></li>
+							</ul>
+						</div>
+					<% } %>
+				<% if(validacao.length > 0){ %>
+						<div class="alert alert-danger">
+							<strong>Atenção!</strong>
+							<ul>
+								<% for(var i = 0; i < validacao.length; i++) {%>
+									<li><%=validacao[i].msg%></li>
+								<% } %>
+							</ul>
+						</div>
+					<% } %>
+			</div>
+            <div class="row">
+                <div class="col-md-2"></div>
+			<tr>
+			    <td class="TextAlignRight" nowrap><b>Início da validade:&nbsp;</b></td>
+			    <td colspan=3>
+	<input id="dataInicioValidade" name="dataInicioValidade" maxlength=10 size=10 value="" title='Opcional - Digite a data a partir de quando a ordem de serviço será válida no formato DD/MM/AAAA' readonly="true">
+                    <img src='../img/PDCalendario.gif' align='middle' onclick="return showCalendar('dataInicioValidade', 'dd/mm/y');javascript:Valida_data(dataInicioValidade,dataInicioValidade,'Anterior','','','');" WIDTH='16' HEIGHT='16' onblur="javascript:Valida_data(dataInicioValidade,dataInicioValidade,'Anterior','','','')">
+                    <input type="hidden" id="HidTypeAction" name="HidTypeAction" value="0">
+                    <input type="hidden" id=dataCadastro name=dataCadastro value="">
+            		<input type="hidden" id="idOrdemServico" name="idOrdemServico" value="0">
+            		<input type="hidden" id="idusuario" name="idusuario" value="">
+            		<input type="hidden" id="codigousuariorede" name="codigousuariorede" value="<%=Usuario%>">
+	            </td>
+		  	</tr>
+		  	<tr>
+			    <td class="TextAlignRight" nowrap><b>Fim da validade:&nbsp;</b></td>
+			    <td colspan=3><input id="dataFimValidade" name="dataFimValidade" maxlength=10 size=10 value="" title='Opcional - Digite a data de quando a ordem de serviço perderá a válida no formato DD/MM/AAAA' readonly="true">
+                              <img src='../img/PDCalendario.gif' align='middle' onclick="return showCalendar('dataFimValidade', 'dd/mm/y');javascript:Valida_data(dataFimValidade,dataFimValidade,'Anterior','<','dataInicioValidade','Data anterior ao inicio da validade');" WIDTH='16' HEIGHT='16'>
+	            </td>
+		  	</tr>
+		  	<tr>
+		  		<td class="TextAlignRight" nowrap><b>Texto da ordem de serviço:&nbsp;</b></td>
+				<td colspan=3>
+					<textarea id=corpo name=corpo rows=3 cols=80 readonly="true"></textarea>
+				</td>
+		  	</tr>
+		  	<tr>
+		  		<div id="container" style="width:700px;">
+    			</div>
+		  	</tr>
+		  	<TR>
+		  		<TD class="TextAlignRight" nowrap><b>Usuarios a compor a ordem de serviço:&nbsp;</b></td>
+		  		<td colspan=3>
+			  		<div id="origem" >
+					
+				</TD>
+		  	</TR>		  	
+		  	
+			<TR>
+		  		<TD class="TextAlignRight" nowrap><b>Perfil a compor a ordem de serviço:&nbsp;</b></td>
+		  		<td colspan=3>
+			  		<div id="origemp" >
+					
+				</TD>
+		  	</TR>	
+		  	<div class="form-group">
+				<SELECT id="status" name="status">
+					<option value="" selected>Selecione a açao</option>
+					<OPTION value =0>Aceito</OPTION>
+					<OPTION value=1>Recusado</OPTION>								
+				</SELECT>
+			</div>	  		  		  		  
+		  	<tr>
+			    <td width="100%" colspan="4">
+			    <div align="center">
+			      <center>
+			      <table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" id="AutoNumber2">
+			        <tr>
+			          
+			          <td ><input  type="button" class='btn-primary' onmouseout="this.className='btn-primary'" onmouseover="this.className='btn-primary'" onclick="ActionType(3,'dataInicioValidade','Cados');" id="BtnCancelar" name="BtnCancelar" value="Recusar">
+			          	<button type="submit" id="btn_ok" class="btn btn-primary btn-login">Confirmar</button>
+			          </td>
+			        </tr>
+			      </table>		                             
+			      </center>
+			    </div>
+			    </td>
+			</tr>
+			<table cellspacing='0' cellpadding='0' rules='all' class='Grid' bordercolor='#336666' border='0' width='100%' ID='Table2'>
+               	<tr height='18px' nowrap>
+                       <td class='BarraTitulo' colspan='8' width='100%' align='center' style='border-style: solid; border-width: 1'><b>:: Relação de ordem de serviços cadastradas ::</b></td>
+                </tr>
+                <tr>
+                	<td colspan=5><b>Texto:</b>&nbsp;
+						<input type=text id=vPesquisa name=vPesquisa size=50 title="Opcional">
+					 	<img src="../img/lupa.gif" align=middle onclick=Pesquisar();>
+					 	<img src="../img/limpar.gif" onclick=ClearPesquisa(); align=middle>					 	        	
+                	</td>
+                </tr>
+               	<tr class='CabecalhoGrid' nowrap>
+                    <td><b>Emissor</b></td>
+                    <td><b>Ordem de serviço</b></td>
+                    <td align='center'><b>Aceitar</b></td>
+                    <td align='center'><b>Recusar</b></td>
+                 </tr>
+                 <%
+                 for(var i = 0; i < OrdemServicos.length; i++) {%>
+                 	<tr>
+                 		<td><%=OrdemServicos[i].idusuario%></td>
+                 		<td><%=OrdemServicos[i].corpo%></td>
+                 		<td nowrap>	
+				<input type="button" class='btn-primary' align="center" onclick="AcaoOs('Ed',<%=OrdemServicos[i].idordemservico%>,'<%=OrdemServicos[i].datacadastro%>','<%=OrdemServicos[i].datainiciovalidade%>','<%=OrdemServicos[i].datafimvalidade%>','<%=OrdemServicos[i].idusuario%>','<%=OrdemServicos[i].corpo%>')"  value="Aceitar">							
+						</td>
+						<td>
+					<input type="button" class="btn-primary" align="center" onclick="AcaoOs('Ex',<%=OrdemServicos[i].idordemservico%>,'<%=OrdemServicos[i].datacadastro%>','<%=OrdemServicos[i].datainiciovalidade%>','<%=OrdemServicos[i].datafimvalidade%>','<%=OrdemServicos[i].idusuario%>','<%=OrdemServicos[i].corpo%>')" value="Recusar">
+						</td>
+					</tr>
+                 <%}%>
+            </table>
+		</table>
+	</form>
+<script type="text/javascript">
+
+	var idContador = 0;
+			
+	function exclui(id){
+		var campo = $("#"+id.id);
+		campo.hide(200);
+	}
+
+	$( document ).ready(function() {
+		
+		$("#btnAdicionaPessoa").click(function(e){
+			e.preventDefault();
+			var tipoCampo = "email";
+			adicionaCampo(tipoCampo);
+		})
+		
+		$("#btnAdicionaTelefone").click(function(e){
+			e.preventDefault();
+			var tipoCampo = "telefone";
+			adicionaCampo(tipoCampo);
+		})
+		
+		function adicionaCampo(tipo){
+
+			idContador++;
+			
+			var idCampo = "campoExtra"+idContador;
+			var idForm = "formExtra"+idContador;
+		
+			var html = "";
+			
+			html += "<div style='margin-top: 8px;' class='input-group' id='"+idForm+"'>";
+			html += "<input type='text' id='"+idCampo+"' class='form-control novoCampo' placeholder='Insira um "+tipo+"'/>";
+			html += "<span class='input-group-btn'>";
+			html +=	"<button class='btn' onclick='exclui("+idForm+")' type='button'><span class='glyphicon glyphicon-cog' aria-hidden=true'></span><span class='glyphicon-class'></span></button>";
+			html +=	"<button class='btn' onclick='exclui("+idForm+")' type='button'><span class='fa fa-trash'></span></button>";
+			html += "</span>";
+			html += "</div>";
+			
+			$("#imendaHTML"+tipo).append(html);
+		}
+		
+		$(".btnExcluir").click(function(){
+			console.log("clicou");
+			$(this).slideUp(200);
+		})
+		
+		$("#btnSalvar").click(function(){
+		
+		var mensagem = "";
+		var novosCampos = [];
+		var camposNulos = false;
+		
+			$('.campoDefault').each(function(){
+				if($(this).val().length < 1){
+					camposNulos = true;
+				}
+			});
+			$('.novoCampo').each(function(){
+				if($(this).is(":visible")){
+					if($(this).val().length < 1){
+						camposNulos = true;
+					}
+					//novosCampos.push($(this).val());
+					mensagem+= $(this).val()+"\n";
+				}
+			});
+			
+			if(camposNulos == true){
+				alert("Atenção: existem campos nulos");
+			}else{
+				alert("Novos campos adicionados: \n\n "+mensagem);
+			}
+			
+			novosCampos = [];
+		})
+		
+	});
+	function duplicarCampos(o,d,vlr){
+		var clone = document.getElementById(o).cloneNode(true);
+		var destino = document.getElementById(d);
+		destino.appendChild (clone);
+		// document.getElementById(d).write("<input border='0' src='../img/BtnGridDeletar.gif' name='idpessoaExc[]' type='image' value='0' onclick='removerCampos(this.value);''>)";
+		var camposClonados2 = destino.getElementsByTagName('img');
+		console.log(camposClonados2.length);
+		var camposClonados = clone.getElementsByTagName('input');
+		for(s=0; s<camposClonados.length;s++){
+			camposClonados[s].value = vlr;
+			console.log("331 "+camposClonados[s].value);
+			if (camposClonados2[idContador] != undefined){
+				camposClonados2[idContador].value = camposClonados[s].value;
+				idContador++;
+			}
+		}			
+		for(i=0; i<camposClonados2.length;i++){
+			if (camposClonados2[i] != undefined){
+				console.log("342"+camposClonados2[i].value);
+			}
+		}
+	}
+	function removerCampos(id){		
+		console.log(id);
+		var Things = document.getElementById('destino');
+		for (var i = Things.length - 1; i >= 0; i--) {
+			console.log(Things[i].value+Things[i].name);
+		}
+		//Things.removeChild(node1.childNodes[0]);
+	}
+	function removerCamposO(id){
+		var node1 = document.getElementById('destinop');
+		node1.removeChild(node1.childNodes[0]);
+	}
+	</script>
+</body>
+</html>

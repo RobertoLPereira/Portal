@@ -1,0 +1,227 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de SubTransacoesMenu</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+			var wSubTransacoesMenu = [];
+			function carregar(SubTransacoesMenu,Transacoes){
+				
+				console.log(Transacoes);
+				for (var i = SubTransacoesMenu.length - 1; i >= 0; i--) {
+					wSubTransacoesMenu[i] = SubTransacoesMenu[i].subtransacao;
+				}
+
+				var wsishtm = "<OPTION value =0 selected>Selecione a Transação</OPTION>" ;
+						for (var i = Transacoes.length - 1; i >= 0; i--) {
+							if (Transacoes[i].transacao != undefined){
+								wsishtm+="<OPTION value ="+Transacoes[i].idtransacoes+">"+Transacoes[i].nomesistema+"-"+Transacoes[i].transacao+"</OPTION>";
+							}
+						}
+				var vForm = document.getElementById('subtran');
+				vForm.idtransacoes.innerHTML = wsishtm;				
+			}
+			function nomeTransacao(id,Transacoes){
+				for (var i = Transacoes.length - 1; i >= 0; i--) {
+					if (Transacoes[i].idtransacoes == id){
+						return Transacoes[i].transacao
+					}
+				} 
+			}
+			function Acao(tp,idsubtransacaomenu,subtransacaomenu,rota,status,idtransacoes)
+			{
+				var vForm = document.getElementById('subtran');
+				vForm.idtransacoes.focus();  
+				if (tp == "Ed"){
+					vForm.idtransacoes.value=idsubtransacaomenu;
+					vForm.subtransacao.value = subtransacaomenu;
+					vForm.status.value =status;
+					vForm.rota.value=rota;
+					vForm.idtransacoes.value=idtransacoes;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	//vForm.action="/validarUsuario";
+			    	//vForm.method="post";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.idtransacoes.value="";
+						vForm.subtransacao.value = "";
+						vForm.status.value =0;
+						vForm.rota.value="";
+						vForm.idtransacoes.value=0;
+						vForm.action="/validarsubtransacao";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.idtransacoes.value="";
+							vForm.subtransacao.value = "";
+							vForm.status.value =0;
+							vForm.rota.value="";
+							vForm.idtransacoes.value=0;
+							vForm.status.disabled =true;
+							vForm.rota.disabled =true;
+							vForm.modulomenu.disabled =true;
+							vForm.action="/pesquisarsubtransacao";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+							vForm.idtransacoes.value=idsubtransacaomenu;
+							vForm.subtransacao.value = subtransacaomenu;
+							vForm.status.value =status;
+							vForm.rota.value=rota;
+							vForm.idtransacoes.value=idtransacoes;
+							vForm.subtransacao.disabled=true;
+							vForm.status.disabled =true;
+							vForm.rota.disabled =true;
+							vForm.idtransacoes.disabled =true;
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/excsubtransacao";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}	 
+				 
+			}
+		</script>
+	</head>
+
+	<body onload="carregar(<%=JSON.stringify(SubTransacaoMenu)%>,<%=JSON.stringify(Transacoes)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="img/sidebar-menu.png" class="img-responsive img-center" />Sub Transações de Menu
+									<br />
+									<P id="mensagem"></P>
+									<form action="/validarsubtransacaomenu" method="post" id="subtran" name="subtran">
+										<div class="form-group">
+											<SELECT id="idtransacoes" name="idtransacoes">						
+											</SELECT>
+										</div>
+										<div class="form-group autocomplete">
+											<input type="hidden" name="idsubtransacao" id="idsubtransacao">
+											<input type="text" name="subtransacao" id="subtransacao" class="form-control" placeholder="Nome da Sub Transação Menu" value="">
+										</div>
+										<div class="form-group">
+											<input type="text"  name="rota" id="rota" class="form-control" placeholder="Url da subtransação do menu" rows="4">
+										</div>
+										<div class="form-group">
+											<SELECT id="status" name="status">
+												<OPTION value =0 selected>Ativo</OPTION>
+												<OPTION value=1>Desativado</OPTION>								
+											</SELECT>
+										</div>
+										
+										<div class="form-group">										
+										<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+										</div>									
+									</form>
+								
+								</div>
+								<div id="lista" name="lista">
+
+			<accordion-group heading="listagem de possiveisachados" >
+
+			<h4>Lista de SubTransacoesMenu</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv',0,'','','',0)">Novo</button>&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('Psq',0,'','','',0)" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				    <tr class="login-header">
+				        <th style="min-width: 60px;">Transação</th>
+
+				        <th style="min-width: 60px;">Nome Sub Transacao de Menu</th>
+
+				        <th style="min-width: 60px;">Rota da Sub Transação de Menu</th>
+
+				        <th style="min-width: 60px;">Status</th>
+
+                        <th style="min-width: 40px;">&nbsp;A c o e s</th>
+                     </tr>
+				</thead>
+				<tbody>
+					<% if(SubTransacaoMenu.length > 0) { %>
+	    				<%   var sisAnt = "";
+	    				for(var i = 0; i < SubTransacaoMenu.length; i++) {%>
+							<tr >
+								<%if (sisAnt == SubTransacaoMenu[i].idmodulomenu+SubTransacaoMenu[i].idsubtransacao+SubTransacaoMenu[i].idtransacoes){%>
+									<td></td><%}else{%>
+									<td align="center"><%=SubTransacaoMenu[i].subtransacao%></td>
+								<%sisAnt =  SubTransacaoMenu[i].idmodulomenu+SubTransacaoMenu[i].subtransacao+SubTransacaoMenu[i].idtransacoes}%>
+					            <td nowrap><%=SubTransacaoMenu[i].idtransacoes%>&nbsp;-&nbsp; <%=SubTransacaoMenu[i].subtransacao%></td>
+					            <td><%=SubTransacaoMenu[i].rota%></td>
+					            <td ><%=SubTransacaoMenu[i].status%></td>
+								<td nowrap><%if (SubTransacaoMenu[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=SubTransacaoMenu[i].idsubtransacao%>,'<%=SubTransacaoMenu[i].subtransacao%>','<%=SubTransacaoMenu[i].rota%>',<%=SubTransacaoMenu[i].status%>,<%=SubTransacaoMenu[i].idtransacoes%>)">editar</button>
+									<%}else{%>
+											<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=SubTransacaoMenu[i].idsubtransacao%>,'<%=SubTransacaoMenu[i].subtransacao%>','<%=SubTransacaoMenu[i].rota%>',<%=SubTransacaoMenu[i].status%>,<%=SubTransacaoMenu[i].idtransacoes%>)">Ativar</button>
+									<% } %>
+									<%if (SubTransacaoMenu[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex',<%=SubTransacaoMenu[i].idsubtransacao%>,'<%=SubTransacaoMenu[i].subtransacao%>','<%=SubTransacaoMenu[i].rota%>',<%=SubTransacaoMenu[i].status%>,<%=SubTransacaoMenu[i].idtransacoes%>)">excluir</button>
+									<% } %>
+								</td>
+
+							</tr>
+						<% }%>
+					<% } %>
+				</tbody>
+			</table>
+	
+			</accordion-group>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+	<script type="text/javascript">
+		//chama a funcao de auto preenchimento do campo passando o nome do campo e o array com os conteudos de pesquisa
+		autocomplete(document.getElementById("subtransacao"), wSubTransacoesMenu);
+
+	</script>
+</html>

@@ -1,0 +1,57 @@
+<html>
+	<head>
+		<link rel='stylesheet' type='text/css' href='Style/MsgBox.css'>
+		<title>Mensagem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</title>
+		<script language="JavaScript" src="JavaScript/MsgBox.js" type="text/javascript"></script>
+	</head>
+	<body ms_positioning="GridLayout" onload="doInit()">
+		<form id="Form1" method="post" runat="server">
+			<div id="PnlAction" name="PnlAction" class="PnlAlert" ms_positioning="GridLayout" id="WindowAlerta">
+				<img id="ImgIcone" name="ImgIcone" style="Z-INDEX: 102; LEFT: 8px; POSITION: absolute; TOP: 0px" alt="" src="images/Confirmar.JPG">
+				<div style="DISPLAY: inline; Z-INDEX: 102; LEFT: 6px; WIDTH: 355px; POSITION: absolute; TOP: 8px; HEIGHT: 15px"	ms_positioning="FlowLayout" id="WindowTitulo"><center><p><b><script language="JavaScript">document.write(MsgTitle());</script></b></p></center></div>
+			</div>
+			<div style="BORDER-RIGHT: #339966 1px solid; BORDER-TOP: #339966 1px solid; Z-INDEX: 101; LEFT: 3px; BORDER-LEFT: #339966 1px solid; WIDTH: 370px; BORDER-BOTTOM: #339966 1px solid; POSITION: absolute; TOP: 42px; HEIGHT: 155px; BACKGROUND-COLOR: #ccffcc" ms_positioning="GridLayout">
+				<div style="BORDER-RIGHT: #339966 1px solid; BORDER-TOP: #339966 1px solid; Z-INDEX: 100; LEFT: 6px; BORDER-LEFT: #339966 1px solid; WIDTH: 356px; BORDER-BOTTOM: #339966 1px solid; POSITION: absolute; TOP: 31px; HEIGHT: 89px; BACKGROUND-COLOR: #ffffff" ms_positioning="GridLayout">
+					<table id="Table1" style="Z-INDEX: 103; LEFT: 6px; WIDTH: 372px; POSITION: absolute; TOP: 6px; HEIGHT: 75px; font-size: 11px;" cellspacing="0" cellpadding="0" width="372" border="0">
+						<tr>
+							<td colspan="3" align="center"><script language="JavaScript">document.write(MsgAction());</script></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+				<div style="DISPLAY: inline; Z-INDEX: 104; LEFT: 6px; WIDTH: 82px; POSITION: absolute; TOP: 6px; HEIGHT: 19px" ms_positioning="FlowLayout">Caro usuário(a):</div>
+				<div style="DISPLAY: inline; Z-INDEX: 102; LEFT: 94px; WIDTH: 298px; POSITION: absolute; TOP: 6px; HEIGHT: 19px" ms_positioning="FlowLayout"><b><%=Session("Usuario")%></b></div>
+				<div style="Z-INDEX: 103; LEFT: 6px; WIDTH: 386px; POSITION: absolute; TOP: 120px; HEIGHT: 37px" ms_positioning="GridLayout" id="DvAlert">
+					<center>
+						<table id="Table2" style="Z-INDEX: 101; LEFT: 42px; POSITION: absolute; TOP: 7px" cellspacing="0" cellpadding="0" width="300" border="0">
+							<tr>
+								<td style="WIDTH: 100px"></td>
+								<td style="WIDTH: 100px"><input type="button" class='ButtonOut' onmouseout="this.className='ButtonOut'" onmouseover="this.className='ButtonOver'" value="OK" onclick="doCancel()" id="AlertOK" name="AlertOK"></td>
+								<td style="WIDTH: 100px"></td>
+							</tr>
+						</table>
+					</center>
+				</div>
+				<div style="Z-INDEX: 102; LEFT: 6px; WIDTH: 386px; POSITION: absolute; TOP: 120px; HEIGHT: 37px" ms_positioning="GridLayout" id="DvConfirm">
+					<center>
+						<table id="Table3" style="Z-INDEX: 101; LEFT: 43px; POSITION: absolute; TOP: 7px" cellspacing="0" cellpadding="0" width="300" border="0">
+							<tr>
+								<td style="WIDTH: 100px"><input type="button" class='ButtonOut' onmouseout="this.className='ButtonOut'" onmouseover="this.className='ButtonOver'" value="OK" onclick="doOK()" id="ConfirmOK" name="ConfirmOK"></td>
+								<td style="WIDTH: 100px"></td>
+								<td style="WIDTH: 100px"><input type="button" class='ButtonOut' onmouseout="this.className='ButtonOut'" onmouseover="this.className='ButtonOver'" value="Cancelar" onclick="doCancel()" id="ConfirmCancel" name="ConfirmCancel"></td>
+							</tr>
+						</table>
+					</center>
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

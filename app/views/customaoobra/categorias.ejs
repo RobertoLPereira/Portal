@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+	<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de Categorias</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+	 function Acao(tp,categoria,codigo,descricao,)
+			{
+				var vForm = document.getElementById("frm");
+				//vForm.nomesistema.focus();  
+				if (tp == "Ed"){
+					vForm.categoria.value=categoria;
+					vForm.codigo.value=codigo;
+					vForm.descricao.value=descricao;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	vForm.action="/atualizasistema";
+			    	vForm.method="put";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.categoria.value=0;
+						vForm.codigo.value=0;
+						vForm.descricao.value="";
+						vForm.action="/validarSistema";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.categoria.value="";
+							vForm.codigo.value="";
+							vForm.descricao.value="";
+							vForm.action="/pesquisarsistema";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+							vEx
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/excsistema";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}	 
+				 
+			}
+		</script></head>
+
+	<body>
+		<!--body onload="carregar(<%=JSON.stringify(Categorias)%>)"-->
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+            <div class="col-md-2"></div>
+            
+            <div class="col-md-12 painel-login">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-12">
+
+								<img src="img/sistemas.png" class="img-responsive img-center" />
+								<br />
+								<P id="mensagem"></P>
+								<form action="/atualizacategorias" method="put" id="frm" name="frm"><div class="form-group">
+										<input type="text" name="categoria" id="categoriao" class="form-control" placeholder="Informe o código da Categoria" value="">
+								</div>
+								<div class="form-group">
+										<input type="hidden" name="codigo" id="codigoo" class="form-control" placeholder="codigo" value="">
+								</div>
+								<div class="form-group">
+										<input type="text" name="descricao" id="descricaoo" class="form-control" placeholder="Informe a denominação da categoria" value="">
+								</div>
+								<div class="form-group">										
+									<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+								</div>
+								</form>
+							
+							</div>
+							<div id="lista" name="lista">
+							<accordion-group heading="listagem de categorias" >
+
+			<h4>Lista de Categorias</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv','','','')">Novo</button>&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('Psq','','','')" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				<tr class="login-header">
+				<th style="min-width: 60px;">Categoria</th><th style="min-width: 60px;">Denominação</th>
+				</tr>
+				</thead>
+				<tbody>
+					<% if(Categorias.length > 0) { %>
+	    				<% for(var i = 0; i < Categorias.length; i++) {%>
+							<tr>
+								<td><%=Categorias[i].categoria%></td><td><%=Categorias[i].descricao%></td>					
+								<td><%if (Categorias[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=Categorias[i].categoria%>','<%=Categorias[i].codigo%>','<%=Categorias[i].descricao%>')">Editar</button>
+									<%}else{%>
+											<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=Categorias[i].categoria%>','<%=Categorias[i].codigo%>','<%=Categorias[i].descricao%>')">Ativar</button>
+									<% } %>
+									<%if (Categorias[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex','<%=Categorias[i].categoria%>','<%=Categorias[i].codigo%>','<%=Categorias[i].descricao%>')">Excluir</button>
+									<% } %>
+								</td>
+
+							</tr>
+						<% } %>
+					<% } %>
+				</tbody>
+			</table>
+	
+	</accordion-group>
+				</div>
+											
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+
+</html>

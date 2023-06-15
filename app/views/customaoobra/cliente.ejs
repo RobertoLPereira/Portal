@@ -1,0 +1,244 @@
+<!DOCTYPE HTML>
+	<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de Clientes</title>
+		
+		<!-- JQuery -->
+		<script src="../js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="../css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+	 function Acao(tp,cep,cidade,email,empresa,empresaoudepartamento,enderecodecobranca,estadoouprovincia,fax,ndotelefone,nomedaempresa,observacoes,pais,primeironomedocontato,ramal,sobrenomedocontato,titulodocontato,upsize_ts)
+			{
+				var vForm = document.getElementById("cli");
+				document.getElementById("corpo").style.display = "block";
+				//vForm.nomesistema.focus();  
+				if (tp == "Ed"){
+					vForm.cep.value=cep;
+					vForm.cidade.value=cidade;
+					vForm.email.value=email;
+					vForm.empresa.value=empresa;
+					vForm.empresaoudepartamento.value=empresaoudepartamento;
+					vForm.enderecodecobranca.value=enderecodecobranca;
+					vForm.estadoouprovincia.value=estadoouprovincia;
+					vForm.fax.value=fax;
+					vForm.ndotelefone.value=ndotelefone;
+					vForm.nomedaempresa.value=nomedaempresa;
+					vForm.observacoes.value=observacoes;
+					vForm.pais.value=pais;
+					vForm.primeironomedocontato.value=primeironomedocontato;
+					vForm.ramal.value=ramal;
+					vForm.sobrenomedocontato.value=sobrenomedocontato;
+					vForm.titulodocontato.value=titulodocontato;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	vForm.action ="/CmoatualizarCliente";
+			    	vForm.method ="put";
+			    	vForm.btn_ok.disabled = false;
+			    	vForm.nomedaempresa.focus();
+			    	return;
+				}
+				if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.cep.value="";
+						vForm.cidade.value="";
+						vForm.email.value="";
+						vForm.empresa.value="";
+						vForm.empresaoudepartamento.value="";
+						vForm.enderecodecobranca.value="";
+						vForm.estadoouprovincia.value="";
+						vForm.fax.value="";
+						vForm.ndotelefone.value="";
+						vForm.nomedaempresa.value="";
+						vForm.observacoes.value="";
+						vForm.pais.value="";
+						vForm.primeironomedocontato.value="";
+						vForm.ramal.value="";
+						vForm.sobrenomedocontato.value="";
+						vForm.titulodocontato.value="";
+						vForm.action="/CustomaoobraincCliente";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						vForm.nomedaempresa.focus();
+						return;
+				}
+				if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.cep.value="";
+							vForm.cidade.value="";
+							vForm.email.value="";
+							vForm.empresa.value="";
+							vForm.empresaoudepartamento.value="";
+							vForm.enderecodecobranca.value="";
+							vForm.estadoouprovincia.value="";
+							vForm.fax.value="";
+							vForm.ndotelefone.value="";
+							vForm.nomedaempresa.value="";
+							vForm.observacoes.value="";
+							vForm.pais.value="";
+							vForm.primeironomedocontato.value="";
+							vForm.ramal.value="";
+							vForm.sobrenomedocontato.value="";
+							vForm.titulodocontato.value="";
+							vForm.action="/CustomaoobrapesquisarCliente";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+				}else{
+							vEx
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/CustomaoobraexcCliente";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}	 
+				 
+			}
+			function carregar(Clientes){
+				console.log(Clientes);
+			}
+		</script>
+	</head>
+
+	<body onload="carregar(<%=JSON.stringify(Clientes)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="../img/cliente.png" class="img-responsive img-center" />
+									<br />
+									<P id="mensagem"></P>
+									<form  id="cli" name="cli">
+										<div id="corpo" style="display: none">
+											<div class="form-group">
+												<input type="hidden" name="empresa" id="empresao" class="form-control" placeholder="empresa" value="">
+											</div>
+											<div class="form-group">
+												<input type="text" name="nomedaempresa" id="nomedaempresao" class="form-control" placeholder="Informe o nome da empresa" value="">
+											</div>
+											<div class="form-group">
+												<input type="text" name="pais" id="paiso" class="form-control" placeholder="Informe o Pais" value=""></div>
+											<div class="form-group">
+												<input type="text" name="primeironomedocontato" id="primeironomedocontatoo" class="form-control" placeholder="Informe o primeiro nome do contato" value="">
+											</div>
+											<div class="form-group">
+												<input type="text" name="sobrenomedocontato" id="sobrenomedocontatoo" class="form-control" placeholder="Informe o sobrenome do contato" value="">
+											</div>
+											<div class="form-group">
+												<input type="text" name="email" id="emailo" class="form-control" placeholder="Informe O Sitio da Empresa (E-mail)" value="">
+											</div>
+											<div class="form-group">
+												<input type="text" name="cep" id="cepo" class="form-control" placeholder="Informe o código do CEP" value="">
+											</div>
+											<div class="form-group">
+												<input type="text" name="cidade" id="cidadeo" class="form-control" placeholder="Informe o Nome da Cidade da Sede da Empresa" value="">
+											</div>		
+											<div class="form-group">
+												<input type="text" name="estadoouprovincia" id="estadoouprovinciao" class="form-control" placeholder="Informe a UF" value="">
+											</div>	
+											<div class="form-group">
+												<input type="text" name="enderecodecobranca" id="enderecodecobrancao" class="form-control" placeholder="Informe o endereco para cobranca" value="">
+											</div>									
+											<div class="form-group">
+												<input type="text" name="titulodocontato" id="titulodocontatoo" class="form-control" placeholder="Informe o cargo do contato" value="">
+											</div>
+											<div class="form-group">
+												<input type="text" name="empresaoudepartamento" id="empresaoudepartamentoo" class="form-control" placeholder="Informe o nome do departamento" value="">
+											</div>																
+											<div class="form-group">
+												<input type="text" name="ndotelefone" id="ndotelefoneo" class="form-control" placeholder="Informe o Número do telefone" value="">
+											</div>	
+											<div class="form-group">
+												<input type="text" name="ramal" id="ramalo" class="form-control" placeholder="Informe o ramal" value="">
+											</div>	
+											<div class="form-group">
+												<input type="text" name="fax" id="faxo" class="form-control" placeholder="Informe o Número do Fax" value=""></div>						
+											<div class="form-group">
+												<input type="text" name="observacoes" id="observacoeso" class="form-control" placeholder="Informe observações" value="">
+											</div>
+																									
+											<div class="form-group">										
+												<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+											</div>	
+										</div>
+						</form>
+								
+								</div>
+									<div id="lista" name="lista">
+										<accordion-group heading="listagem de Clientes" >
+
+									<h4>Lista de Clientes</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv','','','','','','','','','','','','','','','','')">Novo</button>&nbsp;
+									<button class="btn btn-primary btn-login" onclick="Acao('Psq','','','','','','','','','','','','','','','','')" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+									<table class="table table-striped table-condensed">
+										<thead>
+										<tr class="login-header">
+											<th style="min-width: 60px;">Empresa</th>
+										<th style="min-width: 60px;">Razão Social</th><th style="min-width: 60px;">Cidade</th><th style="min-width: 60px;">E-mail</th><th style="min-width: 60px;">Telefone</th><th style="min-width: 60px;" align="center">Ação</th>
+										</tr>
+										</thead>
+										<tbody>
+											<% if(Clientes.length > 0) { %>
+							    				<% for(var i = 0; i < Clientes.length; i++) {%>
+													<tr><td><%=Clientes[i].empresa%></td>
+														<td nowrap><%=Clientes[i].nomedaempresa%></td><td><%=Clientes[i].cidade%></td><td><%=Clientes[i].email%></td><td><%=Clientes[i].ndotelefone%></td>					
+														<td>
+															<button class="btn btn-primary btn-login" onclick="Acao('Ed','<%=Clientes[i].cep%>','<%=Clientes[i].cidade%>','<%=Clientes[i].email%>','<%=Clientes[i].empresa%>','<%=Clientes[i].empresaoudepartamento%>','<%=Clientes[i].enderecodecobranca%>','<%=Clientes[i].estadoouprovincia%>','<%=Clientes[i].fax%>','<%=Clientes[i].ndotelefone%>','<%=Clientes[i].nomedaempresa%>','<%=Clientes[i].observacoes%>','<%=Clientes[i].pais%>','<%=Clientes[i].primeironomedocontato%>','<%=Clientes[i].ramal%>','<%=Clientes[i].sobrenomedocontato%>','<%=Clientes[i].titulodocontato%>')">editar</button>
+																														
+															<button class="btn btn-primary btn-login" onclick="Acao('Ex','<%=Clientes[i].cep%>','<%=Clientes[i].cidade%>','<%=Clientes[i].email%>','<%=Clientes[i].empresa%>','<%=Clientes[i].empresaoudepartamento%>','<%=Clientes[i].enderecodecobranca%>','<%=Clientes[i].estadoouprovincia%>','<%=Clientes[i].fax%>','<%=Clientes[i].ndotelefone%>','<%=Clientes[i].nomedaempresa%>','<%=Clientes[i].observacoes%>','<%=Clientes[i].pais%>','<%=Clientes[i].primeironomedocontato%>','<%=Clientes[i].ramal%>','<%=Clientes[i].sobrenomedocontato%>','<%=Clientes[i].titulodocontato%>')">excluir</button>
+														
+														</td>
+
+													</tr>
+												<% } %>
+											<% } %>
+										</tbody>
+									</table>
+							
+							</accordion-group>
+										</div>
+																	
+													</div>
+												</div>
+											</div>
+						                </div>
+
+						                <div class="col-md-2"></div>
+						            </div>
+						        </div>
+								
+							</body>
+							<script type="text/javascript">
+								//chama a funcao de auto preenchimento do campo passando o nome do campo e o array com os conteudos de pesquisa
+								autocomplete(document.getElementById("nomesistema"), Clientes);
+
+							</script>
+</html>

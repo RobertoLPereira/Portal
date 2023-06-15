@@ -1,0 +1,178 @@
+body {
+	margin: 1px 1px 1px 1px;
+	font-family: arial;
+	font-size: 12px;
+}
+
+#tabela {
+	margin: 1px 1px 1px 1px;
+	font-family: arial;
+	font-size: 8px;
+	width:600px;
+	height:5px;
+}
+#topo {
+	position:absolute;
+	left:0px;
+	top:0px;
+	//width: 1258px;
+	height: 80px;
+	background-color: #0099CC;
+}
+
+#menu {
+	position:absolute;
+	left:0px;
+	top:80px;
+	//width: 1258px;
+	height: 19px;
+	background-color: #00CCFF;
+	font-weight: bold;
+	text-align: right;
+}
+
+#esquerda {
+	position:absolute; 
+	left:0px;
+	top:100px;
+	width: 150px;
+	height: 439px;
+	background-color: #F0F0F0;
+}
+
+#principal {
+	position:absolute; 
+	left: 151px;
+	top: 102px;
+	//width: 1106px;
+	height: 409px;
+	background-color: #FCFCFC;
+}
+
+#logo {
+	font-size: 25px;
+	color: #FFFFFF;
+	font-weight: bold;
+	margin: 25px 0px 0px 20px;
+}
+#logoimg {
+	width="96";
+	height="26";
+}
+#lbl {
+	margin: 1px 1px 1px 1px;
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+}
+#lbl2 {
+	margin: 1px 1px 1px 15px;
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+}
+#lbl3 {
+	margin: 1px 1px 1px 55px;
+	font-family: arial;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+#cmp {
+	font-size: 25px;
+	color: #FFFFFF;
+	font-weight: bold;
+	margin: 25px 0px 0px 20px;
+}
+
+#titulos {
+	color: #000000;
+	background-color: #CCCCCC;
+	padding: 2px 2px 2px 4px;
+	font-size: 12px;
+	font-weight: bold;
+}
+#tdmq {
+    width=90%;
+    style="FONT-family:VERDANA";font-size:11pt
+}
+
+#mqmens1 {
+    height=24;
+    direction=up behavior=scroll scrollamout=1 scrolldelay=100000;
+}
+
+#mensagem {
+    position:absolute;
+	left:1px;
+	top:404px;
+	//width: 1106px;
+	height: 10px;
+	background-color: #0099CC;
+
+}
+
+#tbllogin {
+    position:absolute;
+	left:300px;
+	top:100px;
+	width: 344px;
+	height: 10px;
+	background-color: #0099CC; 
+
+}
+#option {
+   font-family: verdana;
+   font-size: 10px;
+   color: black
+}
+
+#option.uno {
+   background-color: #CCC
+}
+#option.dos {
+   background-color: #666
+}
+
+#SELECT { 
+   font-family: verdana; 
+   font-size: 10px; 
+   color: white; 
+}
+
+#textos {
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 7pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, Helvetica, sans-serif;
+    TEXT-ALIGN: center
+}
+
+#traba {
+   height=29;
+   style="background-repeat:no-repeat";
+}
+.textosleft
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 9pt;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left
+}
+.textosleftn
+{
+    FONT-WEIGHT: normal;
+    FONT-SIZE: 7pt;
+    COLOR: #000000;
+    FONT-FAMILY: tahoma, Verdana, Arial;
+    TEXT-ALIGN: left
+}
+.textosright
+{
+    FONT-WEIGHT: bold;
+    FONT-SIZE: 9pt;
+    COLOR: #000000;
+    FONT-FAMILY: Tahoma, Verdana, Arial, helvetica;
+    TEXT-ALIGN: right
+}

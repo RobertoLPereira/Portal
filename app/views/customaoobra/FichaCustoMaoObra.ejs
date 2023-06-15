@@ -1,0 +1,1585 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="pt-br">
+<meta name="GENERATOR" content="Microsoft FrontPage 6.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!--link rel='stylesheet' type='text/css' href='../css/edicao.css'>                                                
+<link rel='stylesheet' type='text/css' href='../css/PDCalendario.css'>                                                
+<script language='JavaScript' src="../JavaScript/ActionValidation.js" type='text/javascript'></script>                              
+<script language='JavaScript' src='../JavaScript/PDCalendario.js' type='text/javascript'></script>                                
+<script language='JavaScript' src='../JavaScript/GmUtil.js' type='text/javascript'></script>                                
+<script language='JavaScript' src='../JavaScript/JsFunction.js' type='text/javascript'></script-->                                                      
+<title>Pessoa física</title>
+</head>
+
+<style>
+  .bg_Ficha{background-repeat:repeat;background-image: url(images/FundoBASA.gif);}
+  .bg_Ficha1{background-repeat:repeat;background-image: url(images/zzz.gif);}
+  .class_td{BORDER-RIGHT: 1px solid;
+    PADDING-RIGHT: 1px;
+    PADDING-LEFT: 1px;
+    PADDING-BOTTOM: 1px;
+    BORDER-LEFT: 1px solid;
+    PADDING-TOP: 1px;
+    BORDER-BOTTOM: 1px solid  ;
+      }
+</style>
+<script language="javascript">
+    debugger;
+function imprime()
+  {
+    document.body.className='bg_Ficha1';
+    document.all('Impressao').style.display='none';
+    self.print();
+    self.location.href='#topo';
+    document.all('Impressao').style.display='block';
+    document.body.className='bg_Ficha';
+  }
+    var telfx = "";
+    var celulares="";
+    var idpessoa=0;
+    var xhr = new XMLHttpRequest();
+    var xhrEmp = new XMLHttpRequest();
+    var xhrCg = new XMLHttpRequest();
+    var xhrvecg = new XMLHttpRequest();
+    var xhrRenda= new XMLHttpRequest();
+    var wrendatotalgeral = 0.0;
+    /*
+        xhr.open("GET", "http://localhost:8081/api/fichaCadastral?idpessoa="+idpessoa+",true");
+        xhr.onreadystatechange = retorno;
+        xhr.send();
+    */
+        function retorno(){
+            
+            if(xhr.status === 200 && xhr.readyState==4){                
+                if (xhr.responseText != ""){
+                    var data = JSON.parse(xhr.responseText);
+                    console.log(data);
+                }
+                if (data != undefined){
+                    idpessoa= parseInt(data.identificacao[0].idpessoa);
+                    document.all('idp').innerHTML=data.identificacao[0].idpessoa;
+                    document.all('nome').innerHTML=data.identificacao[0].nome;
+                    document.all('cpf').innerHTML=mascaraCpf(data.identificacao[0].identificacaofiscal);
+                    document.all('email_2').innerHTML=data.identificacao[0].email;
+                    document.all('age').innerHTML=data.identificacao[0].idagencia;
+                    document.all('nasc').innerHTML=data.fisica[0].datanascimento.substr(8, 2)+"/"+data.fisica[0].datanascimento.substr(5, 2)+"/"+data.fisica[0].datanascimento.substr(0, 4);
+                    document.all('nat').innerHTML=data.fisica[0].idnaturalidade;
+                    document.all('ufnat').innerHTML=data.fisica[0].ufnaturalidade;
+                    document.all('pais').innerHTML=data.fisica[0].nacionalidade;
+                    document.all('sexo').innerHTML=data.fisica[0].idsexo;
+                    document.all('estadocivil').innerHTML=data.fisica[0].idestadocivil;
+                    //document.all('regime').innerHTML=data.pessoa[0].regimebem;
+                    document.all('dep').innerHTML=data.fisica[0].ndependente;
+                    document.all('profissao').innerHTML=data.fisica[0].profissao;
+                    document.all('pais').innerHTML=data.fisica[0].nacionalidade;
+                    document.all('ufrg').innerHTML=data.fisica[0].ufrg;
+                    document.all('ndoc').innerHTML=data.fisica[0].registrogeral;
+                    document.all('dtexp').innerHTML=data.fisica[0].dataregistrogeral.substr(8, 2)+"/"+data.fisica[0].dataregistrogeral.substr(5, 2)+"/"+data.fisica[0].dataregistrogeral.substr(0, 4);
+                    document.all('nomepai').innerHTML=data.fisica[0].nomepai;
+                    document.all('nomemae').innerHTML=data.fisica[0].nomemae;
+                    document.all('emissor').innerHTML=data.fisica[0].orgaoemissor;
+                    //document.all('rua').innerHTML=data.endereco[0]endereco[0].nomelogradouro;
+                    if (data.endereco.length > 0){
+                      for (i = 0; i <= data.endereco.length;i++){
+                         if (data.endereco[0].idtipores != undefined){
+                          endereco(data.endereco[i]);
+                        }
+                      }
+                    }
+                    if (data.telefones.length > 0){
+                      for (ii = 0; ii <= data.telefones.length;ii++){
+                          telefones(data.telefones[ii]);
+                      }
+                    }
+                    document.all('celular').innerHTML=celulares;
+                    document.all('tel_1').innerHTML=telfx;
+                }   
+                             
+            }
+            VinculoEmpregaticio(idpessoa);
+            Conjuge(idpessoa);
+            Renda(3,"p");    
+            BensImovel(idpessoa);   
+            BensMovel(idpessoa);        
+            participaEmpresa(idpessoa); 
+        }
+        function Renda(id,ww){
+          var ws=ww;
+          xhrRenda.open("GET", "http://localhost:8081/api/renda/"+id,true);
+          xhrRenda.onreadystatechange = retornoRenda;
+          xhrRenda.send();
+          function retornoRenda(){
+            if(xhrRenda.status === 200 && xhrRenda.readyState === 4){                
+                if (xhrRenda.responseText != ""){
+                    var data = JSON.parse(xhrRenda.responseText);
+                    //console.log(data);
+                }
+                if (data[0] != undefined){
+                  var wpsubrenda = 0.0;
+                  for (i=0;i <= data.length;i++){
+                    if (data[i] != undefined){
+                      document.all(ws+'rendavlr'+i).innerHTML="R$"+data[i].valor;
+                      document.all(ws+'tipocompr'+i).innerHTML=data[i].idtiporenda;
+                      document.all(ws+'datarenda'+i).innerHTML=data[i].valorizadaem;
+                      wpsubrenda+=parseFloat(data[i].valor);
+                      wrendatotalgeral+=parseFloat(data[i].valor);
+                      if (ws == "p"){
+                        document.all(ws+'rendatotal').innerHTML="R$"+wpsubrenda;
+                      }
+                      document.all('rendatotalgeral').innerHTML="R$"+wrendatotalgeral;
+                    }
+                  }
+                }
+            }
+
+          }
+        }
+        function endereco(end){
+          if (end != undefined){
+              if (parseInt(end.idtipores) === 2){
+                  document.all('rua_1').innerHTML=end.tipologradouro+" "+end.nomelogradouro+" , "+end.numerologradouro+" - "+end.complemento;
+                  document.all('bairro').innerHTML=end.nomebairro;
+                  document.all('cid').innerHTML=end.nomemunicipio;
+                  document.all('uf_1').innerHTML=end.siglauf;
+                  document.all('cep_1').innerHTML=end.cep;
+                  document.all('endcorresp').innerHTML=end.tipologradouro+" "+end.nomelogradouro+" , "+end.numerologradouro+" - "+end.complemento;
+                  document.all('temp_1').innerHTML=end.tempores+" meses";
+              }else{
+                   document.all('rua_2').innerHTML=end.tipologradouro+" "+end.nomelogradouro+" , "+end.numerologradouro+" - "+end.complemento;
+                  document.all('bairro_2').innerHTML=end.nomebairro;
+                  document.all('cid_2').innerHTML=end.nomemunicipio;
+                  document.all('uf_2').innerHTML=end.siglauf;
+                  document.all('cep_2').innerHTML=end.cep;
+                  document.all('temp_2').innerHTML=end.tempores+" meses";
+              }
+        }
+        }
+        function telefones(tel){
+          if (tel != undefined){
+            if (parseInt(tel.idccelular) === 1){
+                celulares+="("+tel.pais+") "+tel.ddd+" "+tel.numero+" / ";
+                document.all('ddd_cel').innerHTML+=tel.ddd;
+            }else{
+                telfx+="("+tel.pais+") "+tel.ddd+" "+tel.numero;
+                 document.all('ddd_1').innerHTML+=tel.ddd;
+            }
+        }
+        }
+        function mascaraCpf(valor) {
+          return valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g,"\$1.\$2.\$3\-\$4");
+        }
+        function VinculoEmpregaticio(id){
+          id=3;
+          xhrEmp.open("GET", "http://localhost:8081/api/vinc/empregador?idpessoa="+id);
+          xhrEmp.onreadystatechange = dadosComerciais;
+          xhrEmp.send();
+          function dadosComerciais(){
+              if(xhrEmp.status === 200 && xhrEmp.readyState==4){                
+                  if (xhrEmp.responseText != ""){
+                      var data = JSON.parse(xhrEmp.responseText);
+                      var end = data[0];
+                      //console.log(end);
+                  }
+                  if (end != undefined){
+                      document.all('dcrua').innerHTML=end.tipologradouro+" "+end.nomelogradouro+" , "+end.numerologradouro+" - "+end.complemento;
+                      document.all('dcbairro').innerHTML=end.nomebairro;
+                      document.all('dccidade').innerHTML=end.nomemunicipio;
+                      document.all('dcuf').innerHTML=end.siglauf;
+                      document.all('dccep').innerHTML=end.cep;
+                      document.all('dcemail').innerHTML=end.email;
+                      document.all('dcempresa').innerHTML=end.nome;
+                      document.all('dcadmissao').innerHTML=end.vinculadoem.substr(8, 2)+"/"+end.vinculadoem.substr(5, 2)+"/"+end.vinculadoem.substr(0, 4);
+                      document.all('dccargo').innerHTML=end.cargo;
+                      //document.all('dccontato').innerHTML=end.falarcom;
+                      document.all('dctelefone').innerHTML="("+end.pais+") "+end.ddd+ " "+end.numero+" falar com "+end.falarcom;
+                      document.all('dcddd').innerHTML=end.ddd;
+                  }
+              }
+          }
+      }
+      function Conjuge(id){
+        xhrCg.open("GET", "http://localhost:8081/api/conjuge?idpessoa=3");
+
+        xhrCg.onreadystatechange = retornoCg;
+        xhrCg.send();
+
+        function retornoCg(){
+            
+            if(xhrCg.status === 200 && xhrCg.readyState==4){                
+                if (xhrCg.responseText != ""){
+                    var data = JSON.parse(xhrCg.responseText);     
+                    var conj = data[0];              
+                }
+                if (conj != undefined){
+                   //console.log(conj);
+                    idpessoa= parseInt(conj.idpessoa);
+                    document.all('cgnome').innerHTML=conj.nome;
+                    if (conj.identificacaofiscal != undefined){
+                      document.all('cgcpf').innerHTML=mascaraCpf(conj.identificacaofiscal);
+                    }
+                    document.all('cgemail').innerHTML=conj.email;
+                    //document.all('age').innerHTML=data.idagencia;
+                    //console.log(conj.datanascimento);
+                    document.all('cgdtnasc').innerHTML=conj.datanascimento.substr(8, 2)+"/"+conj.datanascimento.substr(5, 2)+"/"+conj.datanascimento.substr(0, 4);
+                    document.all('cgcargo').innerHTML=conj.cargo;
+                    document.all('cgprofissao').innerHTML=conj.profissao;
+                    document.all('cgnumerodoc').innerHTML=conj.registrogeral;
+                    document.all('cgufrg').innerHTML=conj.ufrg;
+                    document.all('cgorgao').innerHTML=conj.orgaoemissor;
+                    document.all('cgdtexp').innerHTML=conj.dataregistrogeral.substr(8, 2)+"/"+conj.dataregistrogeral.substr(5, 2)+"/"+conj.dataregistrogeral.substr(0, 4);
+                }                
+            }
+            VinculoEmpregaticioCg(idpessoa);
+            Renda(idpessoa,"c");
+        }
+      }
+      function VinculoEmpregaticioCg(id){
+          id=7;
+          xhrvecg.open("GET", "http://localhost:8081/api/vinc/empregador?idpessoa="+id);
+          xhrvecg.onreadystatechange = dadosComerciaiscg;
+          xhrvecg.send();
+          function dadosComerciaiscg(){
+              if(xhrvecg.status === 200 && xhrvecg.readyState==4){                
+                  if (xhrvecg.responseText != ""){
+                      var data = JSON.parse(xhrvecg.responseText);
+                      var end = data[0];
+                      //console.log(end);
+                  }
+                  if (end != undefined){
+                      document.all('cgruatrab').innerHTML=end.tipologradouro+" "+end.nomelogradouro+" , "+end.numerologradouro+" - "+end.complemento;
+                      document.all('cgbairro').innerHTML=end.nomebairro;
+                      document.all('cgcidade').innerHTML=end.nomemunicipio;
+                      document.all('cguf').innerHTML=end.siglauf;
+                      document.all('cgcep').innerHTML=end.cep;
+                      document.all('cgemail').innerHTML=end.email;
+                      document.all('cgempresa').innerHTML=end.nome;
+                      document.all('cgdtadmisao').innerHTML=end.vinculadoem.substr(8, 2)+"/"+end.vinculadoem.substr(5, 2)+"/"+end.vinculadoem.substr(0, 4);
+                      document.all('cgcargo').innerHTML=end.cargo;
+                      //document.all('dccontato').innerHTML=end.falarcom;
+                      document.all('cgteltrab').innerHTML="("+end.pais+") "+end.ddd+ " "+end.numero+" falar com "+end.falarcom;
+                      //document.all('cgcddd').innerHTML=end.ddd;
+                  }
+              }
+          }
+      }
+      function BensImovel(id){
+          var xhrb = new XMLHttpRequest();
+          xhrb.open("GET", "http://localhost:8081/api/bensPessoa/"+id,true);
+          xhrb.onreadystatechange = retornoBemImovel;
+          xhrb.send();
+          function retornoBemImovel(){
+              if(xhrb.status === 200 && xhrb.readyState==4){                
+                if (xhrb.responseText != ""){
+                    var data = JSON.parse(xhrb.responseText);
+                    //console.log(data);
+                }
+                if (data[0] != undefined){
+                  for (i=0;i <= data.length;i++){
+                    if (i <=2 && data[i].idtipobem != undefined){
+                      document.all('Itipo'+i).innerHTML=data[i].idtipobem+" - "+data[i].descricao;
+                      document.all('Iend'+i).innerHTML=data[i].nomebem+" situado na "+data[i].nomelogradouro+","+data[i].numerologradouro+","+data[i].nomebairro+", CEP "+data[i].cep+","+data[i].siglauf;
+                      document.all('Imunicipio'+i).innerHTML=data[i].nomemunicipio;
+                      document.all('Icartorio'+i).innerHTML=data[i].nomecartorio;
+                      document.all('InroReg'+i).innerHTML="L"+data[i].numerolivro+" F"+data[i].numerofolha+" Reg."+data[i].numeroregistro;
+                      document.all('Ivalor'+i).innerHTML="R$"+data[i].valor;}        
+                    }
+                  }
+                }
+              }
+      }
+      function BensMovel(id){
+          var xhrm = new XMLHttpRequest();
+          xhrm.open("GET", "http://localhost:8081/api/bensmovelPessoa/"+id,true);
+          xhrm.onreadystatechange = retornoBemMovel;
+          xhrm.send();
+          function retornoBemMovel(){
+              if(xhrm.status === 200 && xhrm.readyState==4){                
+                if (xhrm.responseText != ""){
+                    var data = JSON.parse(xhrm.responseText);
+                    //console.log(data);
+                }
+                if (data[0] != undefined){
+                  for (i=0;i <= data.length;i++){
+                    if (i <=2 && data[i] != undefined){
+                      document.all('vMarca'+i).innerHTML=data[i].nomebem;
+                      document.all('vEspecie'+i).innerHTML=data[i].idmarca+" - "+data[i].nomemodelo;
+                      document.all('vAnoFab'+i).innerHTML=data[i].anofabricacao+"/"+data[i].anomodelo;
+                      document.all('vOnus'+i).innerHTML="Observa?o:"+data[i].observacao;
+                      document.all('vValor'+i).innerHTML="R$"+data[i].valor;
+                      }        
+                    }
+                  }
+                }
+              }
+      }
+      function participaEmpresa(id){
+          var xhrpe = new XMLHttpRequest();
+          xhrpe.open("GET", "http://localhost:8081/api/participacaoempresa?idpessoa="+id,true);
+          xhrpe.onreadystatechange = retornoPartEmp;
+          xhrpe.send();  
+          function retornoPartEmp(){
+            if(xhrpe.status === 200 && xhrpe.readyState==4){                
+                if (xhrpe.responseText != ""){
+                    var data = JSON.parse(xhrpe.responseText);
+                    console.log(data);
+                }
+                if (data[0] != undefined){
+                  for (i=0;i <= data.length;i++){
+                    if (i <=2 && data[i].idpessoa != undefined){
+                      document.all('pfirmanome'+i).innerHTML=data[i].nome;
+                      document.all('pfirmacnpj'+i).innerHTML=mascaraCpf(data[i].identificacaofiscal);
+                      document.all('pfirmacargo'+i).innerHTML=data[i].idnaturezatipo;
+                      document.all('pfirmacapital'+i).innerHTML="";                      
+                      }        
+                    }
+                  }
+                }
+          }
+      }
+      function novatab(bem){
+        whtml+="<table id=AutoNumber1 style='BORDER-COLLAPSE: collapse' borderColor=#111111 cellSpacing=0 cellPadding=0 width='100%' border=0> ";
+        whtml+="<tr>                                 ";
+        whtml+="  <td class='class_td' align=top borderColor=#000000 align=left width='15%' height=16>          ";
+        whtml+="  <p><b><font face=Arial size=1>&nbsp;<span lang=en-us>Tipo</SPAN></FONT></B></P></TD>";
+        whtml+="  <td class='class_td' align=top borderColor=#000000 align=left width='54%' height=16><span lang=en-us><b";
+        whtml+="  ><font face=Arial size=1>Localiza?o (Endere?)</FONT></B></SPAN></TD>";
+        whtml+="  <td class='class_td' align=top borderColor=#000000 align=left width='31%' height=16><span lang=en-us><b";
+        whtml+="  ><font face=Arial size=1>Munic?io</FONT></B></SPAN></TD></TR>";
+        whtml+="<tr>";
+        whtml+="<td class='class_td' align=top borderColor=#000000 align=left width='15%' height=16>";
+        whtml+="<p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>";
+        whtml+="<td class='class_td' align=top borderColor=#000000 align=left width='54%' height=16>";
+        whtml+="<p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>";
+        whtml+="<td class='class_td' align=top borderColor=#000000 align=left width='31%' height=16>";
+        whtml+="<p><b><font face=Arial size=1>&nbsp;&nbsp;</FONT></B></P></TD>";
+        whtml+="</TR>";
+        whtml+="</TABLE>";
+        whtml+="<table id=AutoNumber1 style='BORDER-COLLAPSE: collapse' borderColor=#111111 cellSpacing=0 cellPadding=0 width='100%' border=0>";
+        whtml+=" <tr>";
+        whtml+="   <td class='class_td' align=top borderColor=#000000 align=left width='25%' height=16>";
+        whtml+="     <p><b><font face=Arial size=1>&nbsp;<span lang=en-us>Valor</SPAN></FONT></B></P></TD>";
+        whtml+="   <td class='class_td' align=top borderColor=#000000 align=left width='25%' height=16><span lang=en-us><b";
+        whtml+="     ><font face=Arial size=1>Cart?io de registro</FONT></B></SPAN></TD>";
+        whtml+="   <td class='class_td' align=top borderColor=#000000 align=left width='31%' height=16><span lang=en-us><b";
+        whtml+="     ><font face=Arial size=1>N?ero do registro</FONT></B></SPAN></TD>";
+        whtml+="   <td class='class_td' align=top borderColor=#000000 align=left width='19%' height=16><span lang=en-us><b";
+        whtml+="     ><font face=Arial size=1>H??us?</FONT></B></SPAN></TD></TR>";
+        whtml+=" <tr>";
+        whtml+="   <td class='class_td' align=top borderColor=#000000 align=left width='25%' height=16>";
+        whtml+="     <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>";
+        whtml+="   <td";
+        whtml+="   class='class_td' align=top borderColor=#000000 align=left width='25%' height=16>";
+        whtml+="     <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>";
+        whtml+="   <td class='class_td' align=top borderColor=#000000 align=left width='31%' height=16>";
+        whtml+="     <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>";
+        whtml+="   <td class='class_td' align=top borderColor=#000000 align=left width='19%' height=16>";
+        whtml+="     <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>";
+        whtml+=" </TR>";
+        whtml+="</TABLE>";
+        document.all('maisImovel').innerHTML=whtml;
+
+      }
+      function carregar(custos){
+        //console.log(custos[0]);
+        //console.log(custos[0].maodeobracomlucro.toFixed(2));
+        document.all('maodeobracomlucro').innerHTML=custos[0].maodeobracomlucro.toFixed(2);
+        document.all('amort').innerHTML=custos[0].amort.toFixed(2);
+        document.all('amort1').innerHTML=custos[0].amort.toFixed(2)+"%";
+        document.all('chsinicial').innerHTML=custos[0].chsinicial.toFixed(2);
+        document.all('chssemlucro').innerHTML=custos[0].chssemlucro.toFixed(2);
+        document.all('comencargos').innerHTML=custos[0].comencargos.toFixed(2);
+        document.all('custo1').innerHTML=custos[0].custo1.toFixed(2);
+        document.all('custo2').innerHTML=custos[0].custo2.toFixed(2);
+        document.all('custo3').innerHTML=custos[0].custo3.toFixed(2);
+        document.all('custo4').innerHTML=custos[0].custo4.toFixed(2);
+        document.all('deprec').innerHTML=custos[0].deprec.toFixed(2);
+        document.all('despmensal').innerHTML=custos[0].despmensal;
+        document.all('hsmes').innerHTML=custos[0].hsmes.toFixed(2);
+        //document.all('regime').innerHTML=data.pessoa[0].regimebem;
+        document.all('imob').innerHTML=custos[0].imob;
+        document.all('iss').innerHTML=custos[0].iss.toFixed(2)+"%";
+        document.all('lucr').innerHTML=custos[0].lucr.toFixed(2)+"%";        
+        document.all('somasubtotal').innerHTML=custos[0].somasubtotal;
+      }
+
+//-->
+</script>
+
+<script language="vbscript">
+function Imprimir()
+  
+
+  Impressao.style.display = "none" 'Esconde o Div de Nome Imp
+  self.print() 'Chama a Propriedade da impressora
+  Impressao.style.display = "block" 'Mostra o Div ap? a Impress?.
+    
+end function
+</script>
+<body leftmargin="7"  onload="carregar(<%=JSON.stringify(CustoMaoObra)%>)">
+  <form id="Pf" name="Pf">
+<p align="left"><IMG height=47 src="" width=109 border=0><span lang="en-us"><font size="4">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+</font></span><font size="2"><span lang="pt-br">INFORMA?ES</span><span lang="en-us"> PARA CADASTRO DE CLIENTES - PESSOA </span>
+</font><font size="2"><span lang="pt-br">F?ICA</span></font></p>
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="34%" style="BORDER-TOP-WIDTH: 1px; PADDING-RIGHT: 1px; PADDING-LEFT: 1px; BORDER-LEFT-WIDTH: 1px; PADDING-BOTTOM: 1px; PADDING-TOP: 1px; BORDER-RIGHT-WIDTH: 1px">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+	<td width="14%" class="class_td">    <b>
+    <font size="1" face="Arial">COD. AG.:</font></b></td>
+    <td width="68%" class="class_td">
+    <b>
+    <font size="1" face="Arial">&nbsp;<span lang="en-us">AG.:</span></font></b></td>
+  </tr>
+  <tr >
+    <td width="34%" class="class_td">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+	<td width="14%" class="class_td" id="age">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="68%" class="class_td">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="100%" bgcolor="#c0c0c0" class="class_td"
+     >
+    <b><font size="1" face="Arial">DADOS BÁICOS DO TITULAR</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="16%" class="class_td">
+    <b>
+    <font size="1" face="Arial">Códico</font></b></td>
+    <td width="84%" class="class_td">
+    <b><font face="Arial" size="1">Razão Social</font></b></td>
+  </tr>
+  <tr >
+    <td width="16%" class="class_td" id="idp" name="idp">
+    <b>
+    <font size="1" face="Arial" >&nbsp;</font></b></td>
+    <td width="84%" class="class_td" id="nome" >
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+</table>
+
+ <table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="19%" class="class_td">
+    <b><font size="1" face="Arial">CNPJ</font></b></td>
+    <td width="15%" class="class_td">
+    <b><font face="Arial" size="1">Atividade</font></b></td>
+    <td width="18%" class="class_td">
+    <b><font size="1" face="Arial">Data do Registro na Junta </font></b></td>
+    <td width="22%" class="class_td">    <b><font face="Arial" size="1">Cidade 
+	da Sede</font></b></td>
+    <td width="6%" class="class_td">
+    <b><font size="1" face="Arial">UF</font></b></td>
+    <td width="20%" class="class_td">
+    <b><font face="Arial" size="1">CEP</font></b></td>
+  </tr>
+  <tr>
+    <td width="19%" class="class_td"  id="cpf">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="15%" class="class_td">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="18%" class="class_td" id="nasc">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="22%" class="class_td" id="nat">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="6%" class="class_td" id="ufnat">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="20%" class="class_td" id="pais">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="18%" class="class_td" >
+    <b><font face="Arial" size="1">Valor Hora com Lucro</font></b></td>
+    <td width="10%" class="class_td">    <b><font face="Arial" size="1">Valor S 
+	Lucro</font></b></td>
+    <td width="14%" class="class_td">
+    <b><font face="Arial" size="1">Valor Hora Inicial</font></b></td>
+    <td width="20%" class="class_td">
+    <b><font face="Arial" size="1">Custo1</font></b></td>
+    <td width="16%" class="class_td">
+    Custo 2</td>
+    <td width="22%" class="class_td" >
+    <b><font face="Arial" size="1">Custo 3</font></b></td>
+  </tr>
+  <tr>
+    <td width="18%" class="class_td" id="maodeobracomlucro">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="10%" class="class_td" id="chssemlucro">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="14%" class="class_td" id="chsinicial">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="20%" class="class_td" id="custo1">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="16%" class="class_td" id="custo2" >
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="22%" class="class_td" id="custo3">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+ <table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="29%" class="class_td">
+    <b><font face="Arial" size="1">Custo 4</font></b></td>
+    <td width="26%" class="class_td">
+    <b><font face="Arial" size="1">Soma Sub Total</font></b></td>
+    <td width="13%" class="class_td">
+    <b>
+    <font size="1" face="Arial">&nbsp;Custo Hora Mês</font></b></td>
+    <td width="7%" class="class_td">
+    <b><font face="Arial" size="1">Amostização</font></b></td>
+    <td width="19%" class="class_td">
+    <b><font face="Arial" size="1">Custos com Encargos</font></b></td>
+  </tr>
+  <tr>
+    <td width="29%" class="class_td" id="custo4">
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="26%" class="class_td" id="somasubtotal" >
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="13%" class="class_td" id="hsmes" >
+    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="7%" class="class_td" id="amort1">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="19%" class="class_td" id="comencargos">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="100%" class="class_td">    Nome do Pai</td>
+  </tr>
+  <tr>
+    <td width="100%" class="class_td" id="nomepai">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="100%" class="class_td">    <b><font size="1" face="Arial">Nome da Mãe</font></b></td>
+  </tr>
+  <tr>
+    <td width="100%" class="class_td" id="nomemae">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="100%" class="class_td">    <b><font size="1" face="Arial">Resid?cia atual (Av., Rua, Alameda.. n?)</font></b></td>  </tr>
+  <tr>
+    <td width="100%" class="class_td" id="rua_1">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="23%" class="class_td">    <b><font face="Arial" size="1">Despesas 
+	Mensal</font></b></td>
+    <td width="27%" class="class_td">    <b><font face="Arial" size="1">
+	Amortização</font></b></td>
+    <td width="8%" class="class_td">    <b><font face="Arial" size="1">
+	Imobilizado</font></b></td>
+    <td width="15%" class="class_td">    <b><font face="Arial" size="1">
+	Depreciação</font></b></td>
+    <td width="10%" class="class_td">    <b><font face="Arial" size="1">ISS</font></b></td>
+    <td width="17%" class="class_td">    <b><font face="Arial" size="1">
+	Percentual Lucro</font></b></td>
+  </tr>
+  <tr>
+    <td width="23%" class="class_td" id="despmensal">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="27%" class="class_td" id="amort">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="8%" class="class_td" id="imob">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="15%" class="class_td" id="deprec">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="10%" class="class_td" id="iss">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="17%" class="class_td" id="lucr">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="7%" class="class_td">    <b><font size="1" face="Arial">DDD</font></b></td>
+    <td width="14%" class="class_td">    <b><font size="1" face="Arial">Fax</font></b></td>
+    <td width="8%" class="class_td">    <b><font size="1" face="Arial">DDD</font></b></td>
+    <td width="17%" class="class_td">    <b><font size="1" face="Arial">Celular</font></b></td>
+    <td width="17%" class="class_td">    <b><font size="1" face="Arial">Caixa Postal</font></b></td>
+    <td width="37%" class="class_td">    <b><font size="1" face="Arial">E-mail</font></b></td>
+  </tr>
+  <tr>
+    <td width="7%" class="class_td" id="ddd_fax">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="14%" class="class_td" id="fax">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="8%" class="class_td" id="ddd_cel">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="17%" class="class_td" id="celular">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="17%" class="class_td" id="cxp">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="37%" class="class_td" id="email_2">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="25%" class="class_td">    <b><font size="1" face="Arial">Tempo de resid?cia</font></b></td>
+    <td width="29%" class="class_td">    <b><font size="1" face="Arial">Tipo de resid?cia</font></b></td>
+    <td width="46%" class="class_td">    <b><font size="1" face="Arial">Endere? para correspond?cia</font></b></td>
+  </tr>
+  <tr>
+    <td width="25%" class="class_td" id="temp_1">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="29%" class="class_td">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="46%" class="class_td" id="endcorresp">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="100%" class="class_td">    <b><font size="1" face="Arial">Resid?cia anterior (Av., Rua, Alameda.. n?)</font></b></td>
+  </tr>
+  <tr>
+    <td width="100%" class="class_td" id="rua_2">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="23%" class="class_td">    <b><font size="1" face="Arial">Bairro</font></b></td>
+    <td width="37%" class="class_td">    <b><font size="1" face="Arial">Cidade</font></b></td>
+    <td width="7%" class="class_td">    <b><font size="1" face="Arial">UF</font></b></td>
+    <td width="13%" class="class_td">    <b><font size="1" face="Arial">Cep</font></b></td>
+    <td width="20%" class="class_td">    <b><font size="1" face="Arial">Tempo de resid?cia</font></b></td>
+  </tr>
+  <tr>
+    <td width="23%" class="class_td" id="bairro_2">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="37%" class="class_td" id="cid_2">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="7%" class="class_td" id="uf_2">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="13%" class="class_td" id="cep_2">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="20%" class="class_td" id="temp_2">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="100%" bgcolor="#c0c0c0" class="class_td"
+     >
+    <b><font size="1" face="Arial">DADOS COMERCIAIS</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="81%" class="class_td">    <b><font size="1" face="Arial">Empresa onde trabalha</font></b></td>
+    <td width="19%" class="class_td">    <b><font size="1" face="Arial">Data e admiss?</font></b></td>
+  </tr>
+  <tr>
+    <td width="81%" class="class_td" id="dcempresa">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+    <td width="19%" class="class_td" id="dcadmissao">    <b>
+    <font size="1" face="Arial">&nbsp;</font></b></td>
+  </tr>
+ </table>
+
+<table border="0" cellpadding="0" cellspacing="0" style="BORDER-COLLAPSE: collapse" bordercolor="#111111" width="100%" id="AutoNumber1">
+  <tr>
+    <td width="35%" class="class_td">    <b><font size="1" face="Arial">Cargo/Fun?o</font></b></td>
+    <td width="65%" class="class_td">    <b><font size="1" face="Arial">Lo<span lang="en-us">c</span>al de trabalho(Endere?: Av., Rua ... n?)</font></b></td>
+  </tr>
+
+  <tr>
+    <td width="35%" class="class_td" id="dccargo" ><b><font face=Arial size=1>&nbsp;</FONT></B></td>
+    <td class="class_td" id="dcrua"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+  </tr>
+
+ </table>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td class="class_td"><b><font face=Arial size=1>Bairro</FONT></B></TD>
+    <td class="class_td" width="27%" height=14><b><font face=Arial size=1>Cidade</FONT></B></TD>
+    <td class="class_td" width="8%" height=14><b><font face=Arial size=1>UF</FONT></B></TD>
+    <td class="class_td" width="16%" height=14><b><font face=Arial size=1>Cep</FONT></B></TD>
+    <td class="class_td" width="9%" height=14><b><font face=Arial size=1 >DDD</FONT></B></TD>
+    <td class="class_td" width="17%" height=14><b><font face=Arial size=1>Telefone</FONT></B>
+    </TD>
+  </TR>
+  <tr>
+    <td class="class_td"  width="23%" height=14 id="dcbairro"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  width="27%" height=14 id="dccidade"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  width="8%" height=14 id="dcuf"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  width="16%" height=14 id="dccep"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  width="9%" height=14 id="dcddd"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  width="17%" height=14 id="dctelefone"><b><font face=Arial size=1>&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td  class="class_td" width="7%" height=14><b><font face=Arial size=1>DDD</FONT></B></TD>
+    <td  class="class_td" width="14%" height=14><b><font face=Arial size=1>Fax</FONT></B></TD>
+    <td  class="class_td" width="79%" height=14><b><font face=Arial size=1>E-mail</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" width="7%" height=14 id="dccontato" ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" width="14%" height=14><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" width="79%" height=14 id="dcemail"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td class="class_td" width="100%" bgColor=#c0c0c0 height=14><b><font face=Arial
+      size=1>DADOS DO <span lang=en-us>C?JUGE</SPAN></FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" width="77%" height=14><b><font face=Arial size=1>Nome (Completo)</FONT></B></TD>
+    <td class="class_td" width="23%" height=14><b><font face=Arial size=1>CPF</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" width="77%" height=14 id="cgnome"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="23%" height=14 id="cgcpf"><b><font face=Arial size=1>&nbsp;</FONT></B></TD></TR>
+</TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" width="18%" height=14><b><font face=Arial size=1>Data nascimento</FONT></B></TD>
+    <td class="class_td" width="56%" height=14><b><font face=Arial size=1>Profiss?</FONT></B></TD>
+    <td class="class_td" width="9%" height=14><b><font face=Arial size=1>DDD</FONT></B></TD>
+    <td class="class_td" width="17%" height=14><b><font face=Arial size=1>Telefone</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" width="18%" height=14 id="cgdtnasc"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="56%" height=14 id="cgprofissao"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="9%" height=14 id="cgddd"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="17%" height=14 id="cgtelefone"><b><font face=Arial size=1>&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td
+    class="class_td" width="27%" height=14><b><font face=Arial size=1>Documento<span lang=en-us> de
+      identidade</SPAN></FONT></B></TD>
+    <td class="class_td" width="23%" height=14><span lang=en-us><b><font face=Arial size=1>N?
+      Documento</FONT></B></SPAN></TD>
+    <td class="class_td" width="26%" height=14><span lang=en-us><b><font face=Arial size=1>?g?
+      expedidor</FONT></B></SPAN></TD>
+    <td
+    class="class_td" width="7%" height=14><span lang=en-us><b><font face=Arial size=1>UF</FONT></B></SPAN></TD>
+    <td class="class_td" width="17%" height=14><span lang=en-us><b><font face=Arial size=1>Data da
+      expedi?o</FONT></B></SPAN><b><font face=Arial size=1>&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" width="27%" height=14 id="cgdoc">Carteira de Identidade<b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="23%" height=14 id="cgnumerodoc"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="26%" height=14 id="cgorgao"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="7%" height=14 id="cgufrg"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="17%" height=14 id="cgdtexp"><b><font face=Arial size=1>&nbsp;&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td class="class_td" width="81%" height=14><b><font face=Arial size=1>Empresa onde trabalha</FONT></B></TD>
+    <td class="class_td" width="19%" height=14><b><font face=Arial size=1>Data e admiss?</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" width="81%" height=14 id="cgempresa"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="19%" height=14 id="cgdtadmisao"><b><font face=Arial size=1>&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" width="35%" height=14><b><font face=Arial size=1>Cargo/Fun?o</FONT></B></TD>
+    <td class="class_td" width="65%" height=14><b><font face=Arial size=1>Lo<span lang=en-us>c</SPAN>al de
+      trabalho(Endere?: Av., Rua ... n?)</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" width="35%" height=14 id="cgcargo"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="65%" height=14 id="cgruatrab"><b><font face=Arial size=1>&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td class="class_td" width="23%" height=14><b><font face=Arial size=1>Bairro</FONT></B></TD>
+    <td class="class_td" width="27%" height=14><b><font face=Arial size=1>Cidade</FONT></B></TD>
+    <td class="class_td" width="8%" height=14><b><font face=Arial size=1>UF</FONT></B></TD>
+    <td class="class_td" width="16%" height=14><b><font face=Arial size=1>Cep</FONT></B></TD>
+    <td class="class_td" width="9%" height=14><b><font face=Arial size=1>DDD</FONT></B></TD>
+    <td class="class_td" width="17%" height=14><b><font face=Arial size=1>Telefone</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" width="23%" height=14 id="cgbairro"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="27%" height=14 id="cgcidade"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="8%" height=14 id="cguf"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="16%" height=14 id="cgcep"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="9%" height=14 id="cgddd"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="17%" height=14 id="cgteltrab"><b><font face=Arial size=1>&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" width="7%" height=14><b><font face=Arial size=1>DDD</FONT></B></TD>
+    <td class="class_td" width="14%" height=14><b><font face=Arial size=1>Fax</FONT></B></TD>
+    <td class="class_td" width="79%" height=14><b><font face=Arial size=1>E-mail</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" width="7%" height=14 id="cgdddfax"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="14%" height=14 id="cgfax"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" width="79%" height=14 id="cgemail"><b><font face=Arial size=1>&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td class="class_td"width="100%" bgColor=#c0c0c0 height=14><span lang=en-us><b><font face=Arial size=1>RENDA
+      MENSAL DECLARADA</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+height=73 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=16>
+      <p align=center><b><font  face=Arial size=1>&nbsp;<span lang=en-us>Origem: Titular:</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="22%" height=16>
+      <p align=center><span lang=en-us ><b><font face=Arial size=1>Valor</FONT></B></SPAN></P></TD>
+    <td
+    class="class_td" align=top borderColor=#000000 align=left width="14%" height=16><p align=center><span lang=en-us><b><font face=Arial size=1>Data</FONT></B></SPAN></P></TD>
+    <td
+    class="class_td" align=top borderColor=#000000 align=left width="37%" height=16>
+      <p align=center><b><font face=Arial size=1>&nbsp;<span lang=en-us>Tipo de comprovante</SPAN></FONT></B></P></TD>
+  </TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=16 id="porirenda0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  align=top borderColor=#000000 align=center width="22%" height=16 id="prendavlr0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=center width="14%" height=16 id="pdatarenda0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" height=16 id="ptipocompr0"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=16 id="porirenda1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  align=top borderColor=#000000 align=center width="22%" height=16 id="prendavlr1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=center width="14%" height=16 id="pdatarenda1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" height=16 id="ptipocompr1"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=16 id="porirenda2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  align=top borderColor=#000000 align=center width="22%" height=16 id="prendavlr2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=center width="14%" height=16 id="pdatarenda2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" height=16 id="ptipocompr2"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=13>
+      <p align=center><b><font face=Arial size=1>&nbsp;<span lang=en-us>SubTotal (Titular):</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="22%" height=13 id="prendatotal"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="14%" bgColor=#c0c0c0 height=13><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" bgColor=#c0c0c0 height=13><b><font face=Arial  size=1>&nbsp;&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 height=72 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=14>
+      <p align=center><b><font face=Arial size=1>&nbsp;<span lang=en-us>Origem: C?juge:</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="22%" height=14></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="14%" height=14></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" height=14></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=16 id="corirenda0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  align=top borderColor=#000000 align=center width="22%" height=16 id="crendavlr0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=center width="14%" height=16 id="cdatarenda0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" height=16 id="ctipocompr0"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=16 id="corirenda1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  align=top borderColor=#000000 align=center width="22%" height=16 id="crendavlr1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=center width="14%" height=16 id="cdatarenda1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" height=16 id="ctipocompr1"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=16 id="corirenda2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td"  align=top borderColor=#000000 align=center width="22%" height=16 id="crendavlr2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=center width="14%" height=16 id="cdatarenda2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" height=16 id="ctipocompr2"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="27%" height=14>
+      <p align=center><b><font face=Arial size=1>&nbsp;<span lang=en-us>Total (Titular e C?juge):</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="22%" height=14 id="rendatotalgeral"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="14%" bgColor=#c0c0c0 height=14><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="37%" bgColor=#c0c0c0 height=14><b><font face=Arial size=1>&nbsp;&nbsp;</FONT></B></TD></TR>
+  <TR>
+    <TD colSpan=4><br style="PAGE-BREAK-BEFORE: always"
+      ></TD></TR></TABLE><!-- <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" id="AutoNumber1" height="11">
+  <tr>
+  	<TD height="1"><br style='page-break-before:always;'></TD>
+  </TR>
+</TABLE>  -->
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="100%" bgColor=#c0c0c0 height=14><span lang=en-us><b><font face=Arial size=1>PARTICIPA?O EMFIRMAS</FONT></B></SPAN></TD>
+  </TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 height=72 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="44%" height=16><p align=center><b><font
+      face=Arial size=1>&nbsp;<span lang=en-us>Nome da Firma</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="24%" height=16><p align=center><span lang=en-us><b><font face=Arial size=1>CNPJ</FONT></B></SPAN></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="20%" height=16><p align=center><span lang=en-us><b><font face=Arial size=1>Cargo</FONT></B></SPAN></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="12%" height=16><p align=center><b><font
+      face=Arial size=1>&nbsp;&nbsp;<span lang=en-us>Perc.Capital</SPAN></FONT></B></P></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="44%" height=16 id="pfirmanome0"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="24%" height=16 id="pfirmacnpj0"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="20%" height=16 id="pfirmacargo0"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="12%" height=16 id="pfirmacapital0"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="44%" height=16 id="pfirmanome1"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="24%" height=16 id="pfirmacnpj1"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="20%" height=16 id="pfirmacargo1"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="12%" height=16 id="pfirmacapital1"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+   <td class="class_td" align=top borderColor=#000000 align=left width="44%" height=16 id="pfirmanome2"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="24%" height=16 id="pfirmacnpj2"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="20%" height=16 id="pfirmacargo2"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="12%" height=16 id="pfirmacapital2"><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#c0c0c0
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >REFER?CIAS
+BANC?IAS</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 height=72 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="44%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1>&nbsp;<span lang=en-us
+      >C?. e Nome do Banco</SPAN></FONT></B></P></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="12%" height=16
+    >
+      <p align=center><span lang=en-us
+      ><b><font face=Arial size=1
+      >Cod.da Ag?cia</FONT></B></SPAN></P></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><span lang=en-us
+      ><b><font face=Arial size=1
+      >Cidade</FONT></B></SPAN></P></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="19%" height=16
+    >
+      <p align=center><span lang=en-us
+      ><b><font face=Arial size=1
+      >Telefone</FONT></B></SPAN></P></TD></TR>
+  <tr>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="44%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="12%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="25%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="19%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="44%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="12%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="25%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="19%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="44%" height=14
+    >
+      <p align=center><b><font
+      face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="12%" height=14
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="25%" bgColor=#ffffff
+    height=14><b><font face=Arial
+      size=1>&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="19%" bgColor=#ffffff
+    height=14><b><font face=Arial
+      size=1>&nbsp;&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#c0c0c0
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >REFER?CIAS
+  PESSOAIS/COMERCIAIS</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 height=72 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="44%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1>&nbsp;<span lang=en-us
+      >Nome</SPAN></FONT></B></P></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="37%" height=16
+    >
+      <p align=center><span lang=en-us
+      ><b><font face=Arial size=1
+      >Endere?</FONT></B></SPAN></P></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="19%" height=16
+    >
+      <p align=center><span lang=en-us
+      ><b><font face=Arial size=1
+      >Telefone</FONT></B></SPAN></P></TD></TR>
+  <tr>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="44%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="37%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="19%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="44%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="37%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="19%" height=16
+    ><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD></TR>
+  <tr>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="44%" height=14
+    >
+      <p align=center><b><font
+      face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="37%" height=14
+    ><b><font face=Arial size=1
+      >&nbsp;&nbsp;</FONT></B></TD>
+    <td
+    class="class_td" 
+    align=top borderColor=#000000 align=left width="19%" bgColor=#ffffff
+    height=14><b><font face=Arial
+      size=1>&nbsp;&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#c0c0c0
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1>CART?S
+      DE CR?ITO</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1>&nbsp;<span lang=en-us
+      >Nome do Cart?</SPAN></FONT></B></P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1>&nbsp;<span lang=en-us
+      >Nome do Cart?</SPAN></FONT></B></P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1>&nbsp;<span lang=en-us
+      >Nome do Cart?</SPAN></FONT></B></P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1>&nbsp;<span lang=en-us
+      >Nome do Cart?</SPAN></FONT></B></P></TD></TR>
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="25%" height=16
+    >
+      <p align=center><b><font
+      face=Arial size=1></FONT></B>&nbsp;</P></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="100%" bgColor=#c0c0c0 height=14><span lang=en-us><b><font face=Arial size=1>IM?EIS DECLARADOS</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=16>
+      <p><b><font face=Arial size=1>&nbsp;<span lang=en-us>Tipo</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="54%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Localiza?o (Endere?)</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Munic?io</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=16 id="Itipo0">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="54%" height=16 id="Iend0">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16 id="Imunicipio0">
+      <p><b><font face=Arial size=1>&nbsp;&nbsp;</FONT></B></P></TD>
+  </TR>
+</TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16>
+      <p><b><font face=Arial size=1>&nbsp;<span lang=en-us>Valor</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Cart?io de registro</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>N?ero do registro</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>H??us?</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16 id="Ivalor0">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td  class="class_td" align=top borderColor=#000000 align=left width="25%" height=16 id="Icartorio0">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16 id="InroReg0">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=16 id="Ionus0">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+  </TR>
+</TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=16>
+      <p><b><font face=Arial size=1>&nbsp;<span lang=en-us>Tipo</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="54%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Localiza?o (Endere?)</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Munic?io</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=16 id="Itipo1">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="54%" height=16 id="Iend1">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16 id="Imunicipio1">
+      <p><b><font face=Arial size=1>&nbsp;&nbsp;</FONT></B></P></TD>
+  </TR>
+</TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16>
+      <p><b><font face=Arial size=1>&nbsp;<span lang=en-us>Valor</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Cart?io de registro</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>N?ero do registro</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>H??us?</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16 id="Ivalor1">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td  class="class_td" align=top borderColor=#000000 align=left width="25%" height=16 id="Icartorio1">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16 id="InroReg1">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=16 id="Ionus1">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+  </TR>
+</TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=16>
+      <p><b><font face=Arial size=1>&nbsp;<span lang=en-us>Tipo</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="54%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Localiza?o (Endere?)</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Munic?io</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=16 id="Itipo2">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="54%" height=16 id="Iend2">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16 id="Imunicipio2">
+      <p><b><font face=Arial size=1>&nbsp;&nbsp;</FONT></B></P></TD>
+  </TR>
+</TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16>
+      <p><b><font face=Arial size=1>&nbsp;<span lang=en-us>Valor</SPAN></FONT></B></P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>Cart?io de registro</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>N?ero do registro</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=16><span lang=en-us><b
+      ><font face=Arial size=1>H??us?</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="25%" height=16 id="Ivalor2">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td  class="class_td" align=top borderColor=#000000 align=left width="25%" height=16 id="Icartorio2">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="31%" height=16 id="InroReg2">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=16 id="Ionus2">
+      <p><b><font face=Arial size=1></FONT></B>&nbsp;</P></TD>
+  </TR>
+</TABLE>
+<div id="maisImovel"></div>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#c0c0c0
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1>BENS M?EIS</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111 cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="18%" height=14><span lang=en-us><b><font face=Arial size=1>Esp?ie</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="21%" height=14><span lang=en-us><b><font face=Arial size=1>Marca</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=middle width="10%" height=14><span lang=en-us><b><font face=Arial size=1>Ano Fabric.</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="17%" height=14><span lang=en-us><b><font face=Arial size=1>N?ero certificado</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=14><span lang=en-us><b><font face=Arial size=1>Valor</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=14><span lang=en-us><b><font face=Arial size=1>H??us?</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="18%" height=14 id="vEspecie0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="21%" height=14 id="vMarca0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=middle width="10%" height=14 id="vAnoFab0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="17%" height=14 id="vChassi0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=14 id="vValor0"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=14 id="vOnus0"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD></TR>
+   <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="18%" height=14><span lang=en-us><b><font face=Arial size=1>Esp?ie</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="21%" height=14><span lang=en-us><b><font face=Arial size=1>Marca</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=middle width="10%" height=14><span lang=en-us><b><font face=Arial size=1>Ano Fabric.</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="17%" height=14><span lang=en-us><b><font face=Arial size=1>N?ero certificado</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=14><span lang=en-us><b><font face=Arial size=1>Valor</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=14><span lang=en-us><b><font face=Arial size=1>H??us?</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="18%" height=14 id="vEspecie1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="21%" height=14 id="vMarca1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=middle width="10%" height=14 id="vAnoFab1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="17%" height=14 id="vChassi1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=14 id="vValor1"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=14 id="vOnus1"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD></TR>
+   <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="18%" height=14><span lang=en-us><b><font face=Arial size=1>Esp?ie</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="21%" height=14><span lang=en-us><b><font face=Arial size=1>Marca</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=middle width="10%" height=14><span lang=en-us><b><font face=Arial size=1>Ano Fabric.</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="17%" height=14><span lang=en-us><b><font face=Arial size=1>N?ero certificado</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=14><span lang=en-us><b><font face=Arial size=1>Valor</FONT></B></SPAN></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=14><span lang=en-us><b><font face=Arial size=1>H??us?</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td class="class_td" align=top borderColor=#000000 align=left width="18%" height=14 id="vEspecie2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="21%" height=14 id="vMarca2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=middle width="10%" height=14 id="vAnoFab2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="17%" height=14 id="vChassi2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="15%" height=14 id="vValor2"><b><font face=Arial size=1>&nbsp;</FONT></B></TD>
+    <td class="class_td" align=top borderColor=#000000 align=left width="19%" height=14 id="vOnus2"><b><font face=Arial size=1
+      >&nbsp;</FONT></B></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#c0c0c0
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >&nbsp;</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#ffffff
+    height=14>
+      <p align=center><span lang=en-us
+      ><b><font face=Arial size=1
+      >&nbsp;</FONT><font face=Arial size=2
+      >DECLARA?O /
+  AUTORIZA?O</FONT></B></SPAN></P></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#ffffff
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >&nbsp;</FONT></B></SPAN></TD></TR>
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#ffffff
+    height=14>
+      <p align=justify><span lang=en-us
+      ><b><font face=Arial size=2
+      >&nbsp;Declaro que os presentes dados s? verdadeiros
+      e visam facilitar os processaos de negocia?es e transa?es banc?ias,
+      pela antecipa?o de informa?es a meu respeito. Autorizo o arquivamento
+      dos meus dados pessoais e de idoneidade no Banco da Amaz?ia S.A. e junto
+      a entidades de prote?o ao cr?ito conveniadas com esta Institui?o, que
+      poder? deles se utilizar, respeitadas as disposi?es legais em
+      vigor.</FONT></B></SPAN></P>
+      <p align=justify><span lang=en-us
+      ><b><font face=Arial size=2
+      >Autorizo, tamb?, nos termos do Artigo 3? da
+      resolu?o n? 2.724, de 31.05.2000, do Conselho Monet?io Nacional, o Banco
+      da Amaz?ia S.A. consultar as informa?es referentes ?minha pessoa,
+      consolidadas em termos de saldos devedores e responsabilidades,
+      integrantes do sistema central de risco de cr?ito, gerido pelo Banco
+      Central do Brasil, pelo que, por ser a presente autoriza?o a manifesta?o
+      fiel de minha livre vontade, firmo este documento, para os fins de
+      direito.</FONT></B></SPAN></P></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#ffffff
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >&nbsp;</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="100%" bgColor=#ffffff
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >&nbsp;</FONT></B></SPAN></TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="39%" bgColor=#ffffff
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >&nbsp;</FONT></B></SPAN></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="49%" bgColor=#ffffff
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >_________________________________________________________________________</FONT></B></SPAN></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="12%" bgColor=#ffffff
+    height=14>&nbsp;</TD></TR>
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="39%" bgColor=#ffffff
+    height=14>&nbsp;</TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="49%" bgColor=#ffffff
+    height=14>
+      <p align=center><span lang=en-us
+      ><b><font face=Arial size=1
+      >Local e data</FONT></B></SPAN></P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="12%" bgColor=#ffffff
+    height=14>&nbsp;</TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="39%" bgColor=#ffffff
+    height=14>&nbsp;</TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="49%" bgColor=#ffffff
+    height=14>
+      <p align=center>&nbsp;</P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="12%" bgColor=#ffffff
+    height=14>&nbsp;</TD></TR></TABLE>
+<table id=AutoNumber1 style="BORDER-COLLAPSE: collapse" borderColor=#111111
+cellSpacing=0 cellPadding=0 width="100%" border=0>
+
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="39%" bgColor=#ffffff
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >&nbsp;</FONT></B></SPAN></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="49%" bgColor=#ffffff
+    height=14><span lang=en-us><b
+      ><font face=Arial size=1
+      >_________________________________________________________________________</FONT></B></SPAN></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="12%" bgColor=#ffffff
+    height=14>&nbsp;</TD></TR>
+  <tr>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="39%" bgColor=#ffffff
+    height=14>&nbsp;</TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="49%" bgColor=#ffffff
+    height=14>
+      <p align=center><span lang=en-us
+      ><b><font face=Arial size=1
+      >Assinatura do cliente</FONT></B></SPAN></P></TD>
+    <td
+    class="class_td"
+    align=top borderColor=#000000 align=left width="12%" bgColor=#ffffff
+    height=14>&nbsp;</TD></TR></TABLE>
+  </td></font></b></span></p></td></td></tr></td></font></b></span></td></font></b></span></td></tr></table></td></p></td></td></tr></table></td></font></b></span></p></td></td></tr></td></font></b></span></td></font></b></span></td></tr></table></font></b></span></td>
+</form>
+</body>
+</html>

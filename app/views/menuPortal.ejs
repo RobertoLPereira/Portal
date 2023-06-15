@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="css/screen.css">
+<!--script language="javascript" src="JavaScript/UrlUtil.js" type="text/javascript"></script-->
+<script language="javascript" src="JavaScript/AjaxBrowser.js" type="text/javascript"></script>
+<script language="javascript" src="JavaScript/criarMenu.js" type="text/javascript"></script>
+<script language="javascript" src="JavaScript/ControleDiv.js" type="text/javascript"></script>
+<script language="javascript">
+function preparaAction(inf){
+	//alert(inf);
+	window.parent.document.frm1.action = inf;
+	window.parent.document.frm1.op.focus();
+}
+</script>
+<title>Menu</title>
+</head>
+<body onload="JavaScript:criarMenu('mnu','<%=usuario%>')" topmargin=0 bottommargin=0 leftmargin=0 rightmargin=0 style="OVERFLOW: auto" class=scroll>
+	<form id=mnu name=mnu>
+		<div id=wMenu name=wMenu></div>
+		<input type=hidden id=tt name=tt>
+		<!--textarea rows="3" cols="20" id="mm" name="mm"></textarea-->
+		<table>
+			<tr>
+			<td class="textosleft" align="left" style="FONT-SIZE: 8pt; BORDER-BOTTOM: blue 1px solid" onmouseover="javascript:this.className='btpesq3'" onmouseout="javascript:this.className='textosleft'" onclick="javascript:esconder('s0');menudiv('s0');">Autenticacao</td>
+			</tr>
+		<tbody>
+			<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/autenticar'" title="Autenticação">&nbsp;&nbsp;Autenticar</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/gerador'" title="Gerador">&nbsp;&nbsp;<b>Gerar Projeto</b></td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/Categorias'" title="Categorias">&nbsp;&nbsp;Manter Categorias</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/Setores'" title="Categorias">&nbsp;&nbsp;Manter Setor</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/Amortizacaodecapital'" title="Categorias">&nbsp;&nbsp;Manter Amortizção de Capital</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/DemonstrativoDespesas'" title="Categorias">&nbsp;&nbsp;Manter Despesas</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/Demonstrativos'" title="Categorias">&nbsp;&nbsp;<b>Relatório Demonstrativos</b></td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/EncargosBasicos'" title="Categorias">&nbsp;&nbsp;Encargos Basicos</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/EncargosImpostos'" title="Categorias">&nbsp;&nbsp;Encargos E Impostos</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/HorasAnuaisPagas'" title="Categorias">&nbsp;&nbsp;Horas Anuais Pagas</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/HorasImprodutivas'" title="Categorias">&nbsp;&nbsp;Horas Improdutivas</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/MaquinasEquipamentos'" title="Categorias">&nbsp;&nbsp;Manter Imobilizados</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/TipodeEncargo'" title="Categorias">&nbsp;&nbsp;Tipode de Encargo</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/TipodeInvestimento'" title="Categorias">&nbsp;&nbsp;Tipo de Investimento</td>
+    		</tr>
+    		<tr>
+				<td nowrap="" class="portaltextos" onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'" onclick="parent.principal.location='/TipoDespesas'" title="Categorias">&nbsp;&nbsp;Tipo de Despesas</td>
+    		</tr>
+    		<tr>
+    			<td nowrap class=portaltextos onmouseover="javascript:this.className='linkover'" onmouseout="javascript:this.className='portaltextos'"  onclick="parent.principal.location='/CustoMaoObra'" title="Custos de Mão de Obra">&nbsp;&nbsp;<b>Custo de Mão de Obra</b></td>
+    		</tr>
+		</tbody>
+		</table>
+
+	</form>	
+</body>
+</html>

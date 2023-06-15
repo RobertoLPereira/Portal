@@ -1,0 +1,235 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de Perfis</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+			var wPerfis = [];
+			var wSistemas = [];
+			function carregar(Perfis,Sistemas){
+				for (var i = Perfis.length - 1; i >= 0; i--) {
+					wPerfis[i] = Perfis[i].perfil;
+				}
+				var wsishtm = "<OPTION value =0 selected>Selecione sistema</OPTION>" ;
+						for (var i = Sistemas.length - 1; i >= 0; i--) {
+							if (Sistemas[i].nomesistema != undefined){
+								wsishtm+="<OPTION value ="+Sistemas[i].idsistema+">"+Sistemas[i].nomesistema+"</OPTION>";
+								wSistemas[i] = Sistemas[i];
+							}
+						}
+				var vForm = document.getElementById('per');
+				vForm.idsistema.innerHTML = wsishtm;				
+			}
+			
+			function Acao(tp,idperfil,nomeperfil,status,objetivo,idsistema)
+			{
+				var vForm = document.getElementById('per');
+				vForm.perfil.focus();  
+				if (tp == "Ed"){
+					vForm.idperfil.value=idperfil;
+					vForm.perfil.value = nomeperfil;
+					vForm.status.value =status;
+					vForm.objetivo.value=objetivo;
+					vForm.idsistema.value=idsistema;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	//vForm.action="/validarUsuario";
+			    	//vForm.method="post";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}else{
+					alert("vai testar nv");
+					if (tp == "Nv"){
+						vForm.btn_ok.innerHTML = "Confirmar";
+						vForm.idperfil.value="";
+						vForm.perfil.value = "";
+						vForm.status.value =0;
+						vForm.objetivo.value="";
+						vForm.idsistema.value=1;
+						vForm.action="/validarperfil";
+						vForm.method="post";
+						vForm.btn_ok.disabled = false;
+						return;
+					}else{
+						alert("vai testar psq");
+						if (tp == "Psq"){
+							vForm.btn_ok.innerHTML = "Pesquisar";
+							vForm.idperfil.value="";
+							vForm.perfil.value = "";
+							vForm.status.value =0;
+							vForm.objetivo.value="";
+							vForm.idsistema.value=0;
+							vForm.status.disabled =true;
+							vForm.objetivo.disabled =true;
+							vForm.idsistema.disabled =true;
+							vForm.action="/pesquisarperfil";
+							vForm.method="get";
+							vForm.btn_ok.disabled = false;
+						}else{
+							alert("excessao");
+							vForm.idperfil.value=idperfil;
+							vForm.perfil.value = nomeperfil;
+							vForm.status.value =status;
+							vForm.objetivo.value=objetivo;
+							vForm.idsistema.value=idsistema;
+							vForm.perfil.disabled=true;
+							vForm.status.disabled =true;
+							vForm.objetivo.disabled =true;
+							vForm.idsistema.disabled =true;
+							vForm.btn_ok.innerHTML = "Excluir";
+							vForm.action="/excperfil";
+							vForm.method="delete";
+							vForm.btn_ok.disabled = false;
+						}
+					}
+				}	 
+				 
+			}
+		</script>
+	</head>
+
+	<body onload="carregar(<%=JSON.stringify(Perfis)%>,<%=JSON.stringify(Sistemas)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="images/checked-user-male.png" class="img-responsive img-center" />Perfis
+									<br />
+									<P id="mensagem"></P>
+									<form action="/validarperfil" method="post" id="per" name="per">
+										<div class="form-group">											
+										</div>
+
+										<div class="form-group autocomplete">
+											<input type="hidden" name="idperfil" id="idperfil">
+											
+											<input type="text" name="perfil" id="perfil" class="form-control" placeholder="Nome do perfil" value="">
+										</div>
+										<div class="form-group">
+											<SELECT id="idsistema" name="idsistema">
+												<OPTION value =0 selected>Ativo</OPTION>
+												<OPTION value=1>Desativado</OPTION>								
+											</SELECT>
+										</div>
+										<div class="form-group">
+											<SELECT id="status" name="status">
+												<OPTION value =0 selected>Ativo</OPTION>
+												<OPTION value=1>Desativado</OPTION>								
+											</SELECT>
+										</div>
+										<div class="form-group">
+											<textarea name="objetivo" id="objetivo" class="form-control" placeholder="Objetivo do perfil" rows="4"></textarea>
+										</div>
+										<div class="form-group">										
+										<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+										</div>									
+									</form>
+								
+								</div>
+								<div id="lista" name="lista">
+
+<accordion-group heading="listagem de possiveisachados" >
+
+			<h4>Lista de Perfis</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv',0,'','','',0)">Novo</button>&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('Psq',0,'','','',0)" title="Informe a palavra ( todos ) quando desejar listar todos os registros cadastrados">Pesquisar</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				    <tr class="login-header">
+				        <th style="min-width: 60px;">Sistema</th>
+
+				        <th style="min-width: 60px;">Nome perfil</th>
+
+				        <th style="min-width: 60px;">Status</th>
+
+				        <th style="min-width: 60px;">Objetivo</th>
+
+                        <th style="min-width: 40px;">&nbsp;A c o e s</th>
+                     </tr>
+				</thead>
+				<tbody>
+					<% if(Perfis.length > 0) { %>
+	    				<%   var sisAnt = "";
+	    				
+	    				for(var i = 0; i < Perfis.length; i++) {%>
+							<tr >
+
+								<%if (sisAnt == Perfis[i].sistema.nomesistema){%>
+									<td></td><%
+								}else{%>
+									<td align="center"><%=Perfis[i].sistema.nomesistema%></td>
+								<%	sisAnt = Perfis[i].sistema.nomesistema
+								}%>
+					            <td nowrap><%=Perfis[i].idperfil%>&nbsp;-&nbsp; <%=Perfis[i].perfil%></td>
+					            <td><%=Perfis[i].status%></td>
+					            <td ><%=Perfis[i].objetivo%></td>
+								<td nowrap><%if (Perfis[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=Perfis[i].idperfil%>,'<%=Perfis[i].perfil%>',<%=Perfis[i].status%>,'<%=Perfis[i].objetivo%>',<%=Perfis[i].idsistema%>)">editar</button>
+									<%}else{%>
+											<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=Perfis[i].idperfil%>,'<%=Perfis[i].perfil%>',<%=Perfis[i].status%>,'<%=Perfis[i].objetivo%>',<%=Perfis[i].idsistema%>)">Ativar</button>
+									<% } %>
+									<%if (Perfis[i].status == 0) {%>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex',<%=Perfis[i].idperfil%>,'<%=Perfis[i].perfil%>',<%=Perfis[i].status%>,'<%=Perfis[i].objetivo%>',<%=Perfis[i].idsistema%>)">excluir</button>
+									<% } %>
+								</td>
+
+							</tr>
+						<% }%>
+					<% } %>
+				</tbody>
+			</table>
+	
+	</accordion-group>
+	<!--script src="js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script-->
+								</div>
+								
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+	<script type="text/javascript">
+		//chama a funcao de auto preenchimento do campo passando o nome do campo e o array com os conteudos de pesquisa
+		autocomplete(document.getElementById("perfil"), wPerfis);
+
+	</script>
+</html>

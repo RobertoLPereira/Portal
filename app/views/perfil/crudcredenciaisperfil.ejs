@@ -1,0 +1,259 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+
+		<title>Cadastro de Credenciais do Perfil</title>
+		
+		<!-- JQuery -->
+		<script src="js/jquery-3.1.1.min.js"></script>
+
+		<!-- bootstrap - link cdn -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+	
+		<!-- incluindo css -->
+		<link href="css/style.css" rel="stylesheet">
+		<script type="text/javascript" src="JavaScript/AutoCompletar.js"></script>
+		<script type="text/javascript">
+		function nomeSistema(Sis,id){
+			for (var i = Sis.length - 1; i >= 0; i--) {
+				if (Sis[i].idsistema == id){
+					return Sis[i].nomesistema;
+				}
+			}
+		}
+		</script>
+		<script type="text/javascript">
+			
+			function carregar(PerfisSistema,Transacoes,SubTransacoes){
+				//console.log(PerfisSistema);
+				
+				var wsishtm = "<OPTION value =0 selected>Selecione Perfil</OPTION>" ;
+						for (var i = PerfisSistema.length - 1; i >= 0; i--) {
+							if (PerfisSistema[i].perfil != undefined){
+								wsishtm+="<OPTION value ="+PerfisSistema[i].idperfilsistema+">"+PerfisSistema[i].perfil+"</OPTION>";
+							}
+						}
+				var vForm = document.getElementById('credper');
+				vForm.idperfilsistema.innerHTML = wsishtm;	
+		
+				wsishtm = "<OPTION value =0 selected>Selecione Opção de Menu</OPTION>" ;
+						for (var i = Transacoes.length - 1; i >= 0; i--) {
+							if (Transacoes[i].denominacao != undefined){
+								wsishtm+="<OPTION value ="+Transacoes[i].idtransacoes+">"+Transacoes[i].denominacao+"</OPTION>";
+							}
+						}
+				//var vForm = document.getElementById('credper');
+				vForm.idtransacoes.innerHTML = wsishtm;	
+				wsishtm = "<OPTION value =0 selected>Selecione Sub Transacao</OPTION>" ;
+						for (var i = SubTransacoes.length - 1; i >= 0; i--) {
+							if (SubTransacoes[i].transacoes != undefined){
+								wsishtm+="<OPTION value ="+SubTransacoes[i].idsubtransacao+">"+SubTransacoes[i].transacoes+"</OPTION>";
+							}
+						}
+				//var vForm = document.getElementById('persis');
+				vForm.idsubtransacao.innerHTML = wsishtm;			
+			}
+			
+			function Acao(tp,idcredenciais,idperfilsistema,idtransacoes,idsubtransacao,status,motivorecusa)
+			{
+				var vForm = document.getElementById('credper');
+				vForm.idperfilsistema.focus();  
+				if (tp == "Ed"){
+					vForm.idcredenciais.value=idcredenciais;
+					vForm.idperfilsistema.value=idperfilsistema;
+					vForm.idtransacoes.value = idtransacoes;
+					vForm.idsubtransacao.value=idsubtransacao;
+					vForm.status.value=status;
+					vForm.motivorecusa.value=motivorecusa;
+			    	vForm.btn_ok.innerHTML = "Alterar";
+			    	vForm.action="/inccredenciaisperfil";
+			    	vForm.method="post";
+			    	vForm.btn_ok.disabled = false;
+			    	return;
+				}
+				if (tp == "lst"){
+					vForm.action="/Credenciaisperfil";
+					vForm.btn_ok.innerHTML = "Lista";
+					vForm.method="get";
+			    	vForm.btn_ok.disabled = false;
+			    	vForm.submit();
+			    	return;
+				}
+				if (tp == "Nv"){
+					vForm.idcredenciais.value=null;
+					vForm.idperfilsistema.value=0;
+					vForm.idtransacoes.value = 0;
+					vForm.idsubtransacao.value=0;
+					vForm.status.value=0;
+					vForm.motivorecusa.value= " ";
+			    	vForm.btn_ok.innerHTML = "Confirmar";
+			    	vForm.action="/inccredenciaisperfil";
+			    	vForm.method="post";
+			    	vForm.btn_ok.disabled = false;
+						return;
+				}else{
+					vForm.idcredenciais.value=idcredenciais;
+					vForm.idperfilsistema.value=idperfilsistema;
+					vForm.idtransacoes.value = idtransacoes;
+					vForm.idsubtransacao.value=idsubtransacao;
+					vForm.status.value=1;
+					vForm.motivorecusa.value=motivorecusa;
+					vForm.idperfilsistema.disabled=true;
+					vForm.idtransacoes.disabled =true;
+					vForm.idsubtransacao.disabled =true;
+					vForm.btn_ok.innerHTML = "Excluir";
+					vForm.action="/exccredenciaisperfil";
+					vForm.method="delete";
+					vForm.btn_ok.disabled = false;
+					return;
+				}	 
+			}
+		</script>
+	</head>
+	<body onload="carregar(<%=JSON.stringify(PerfisSistemas)%>,<%=JSON.stringify(Transacoes)%>,<%=JSON.stringify(SubTransacoes)%>)">
+
+		<div class="container home">
+			<% if(msg != undefined){ %>
+				<div class="alert alert-success">
+						<strong>Atenção!</strong>
+						<ul>
+							<li><%=msg%></li>
+						</ul>
+					</div>
+				<% } %>
+			<% if(validacao.length > 0){ %>
+					<div class="alert alert-danger">
+						<strong>Atenção!</strong>
+						<ul>
+							<% for(var i = 0; i < validacao.length; i++) {%>
+								<li><%=validacao[i].msg%></li>
+							<% } %>
+						</ul>
+					</div>
+				<% } %>
+            <div class="row">
+                <div class="col-md-2"></div>
+                
+                <div class="col-md-12 painel-login">
+					<div class="panel panel-default">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+
+									<img src="img/transacao.png" class="img-responsive img-center" />Credenciais do Perfil
+									<br />
+									<P id="mensagem"></P>
+									<form action="/validarcredenciaisperfil" method="post" id="credper" name="credper">
+										<div class="form-group">											
+										</div>
+										<div class="form-group autocomplete">
+											<input type="hidden" name="idcredenciais" id="idcredenciais">
+											<input type="hidden" nome="motivorecusa" id="motivorecusa">
+										</div>
+										<div class="form-group">
+											<SELECT id="idperfilsistema" name="idperfilsistema">
+											</SELECT>
+										</div>
+										<div class="form-group">
+											<SELECT id="idtransacoes" name="idtransacoes">
+											</SELECT>
+										</div>
+										<div class="form-group">
+											<SELECT id="idsubtransacao" name="idsubtransacao">
+											</SELECT>
+										</div>
+										<div class="form-group">
+											<SELECT id="status" name="status">
+												<OPTION value=0 selected>Ativo</OPTION>
+												<OPTION value=1>Desativado</OPTION>								
+											</SELECT>
+										</div>
+										<div class="form-group">										
+										<button type="submit" id="btn_ok" class="btn btn-primary btn-login" disabled>Confirmar</button>
+										</div>									
+									</form>
+								
+								</div>
+								<div id="lista" name="lista">
+
+<accordion-group heading="listagem de credenciais atribuidas ao perfil" >
+
+			<h4>Lista de Credenciais do Perfil</h4><button class="btn btn-primary btn-login" onclick="Acao('Nv',0,0,0,0,0,0)">Novo</button>
+			&nbsp;
+			<button class="btn btn-primary btn-login" onclick="Acao('lst',0,0,0,0,0,0)" title="No click será listado todos os registros cadastrados" >Listar Todos</button>
+			<table class="table table-striped table-condensed">
+				<thead>
+				    <tr class="login-header">
+				        <th style="min-width: 60px;">Sequencial</th>
+				        <th style="min-width: 60px;">Nome perfil</th>
+				        <th style="min-width: 60px;">Transaçao</th>
+				        <th style="min-width: 60px;">Sub Transaçao</th>
+				        <th style="min-width: 60px;">Status</th>
+				        <th style="min-width: 60px;">Motivo</th>
+
+                        <th style="min-width: 40px;">&nbsp;A c o e s</th>
+                     </tr>
+				</thead>
+				<tbody>
+					<%if(CredenciaisPerfil.length > 0) { %>
+	    				<%   var sisAnt = 0;    					
+	    				for(var i = 0; i < CredenciaisPerfil.length; i++) {%>
+							<tr >
+								<td nowrap><%=CredenciaisPerfil[i].idcredenciais%></td>
+								<%if (sisAnt == CredenciaisPerfil[i].idperfilsistema){%>
+									<td></td><%
+								}else{%>
+									<td><%=CredenciaisPerfil[i].idperfilsistema%>
+										&nbsp;-&nbsp;
+					            	<% for(var c = 0; c < PerfisSistemas.length; c++) {
+					            		if (parseInt(CredenciaisPerfil[i].idperfilsistema) == parseInt(PerfisSistemas[c].idperfilsistema)){%>
+					            			<%=PerfisSistemas[c].perfil%>
+					            		<%}
+					            	}%>
+									</td>
+									<%sisAnt = CredenciaisPerfil[i].idperfilsistema
+									}%>				           					           
+					            <td ><%=CredenciaisPerfil[i].idtransacoes%>&nbsp;-&nbsp;
+					            	<% for(var a = 0; a < Transacoes.length; a++) {
+					            		if (parseInt(CredenciaisPerfil[i].idtransacoes) == parseInt(Transacoes[a].idtransacoes)){%>
+					            			<%=Transacoes[a].denominacao%>
+					            		<%}
+					            	}%>					            	
+					            </td>
+					            <td><%if (CredenciaisPerfil[i].idsubtransacao > 0){%>
+						            	<%=CredenciaisPerfil[i].idsubtransacao%>&nbsp;-&nbsp;
+						            	<% for(var b = 0; b < SubTransacoes.length; b++) {
+						            		if (parseInt(CredenciaisPerfil[i].idsubtransacao) == parseInt(SubTransacoes[b].idsubtransacao)){%>
+						            			<%=SubTransacoes[b].transacoes%>
+						            		<%}
+						            	}%>	
+						            <%}%>
+					            </td>
+					            <td><%=CredenciaisPerfil[i].status%></td>
+					            <td><%=CredenciaisPerfil[i].motivorecusa%></td>
+								<td nowrap>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ed',<%=CredenciaisPerfil[i].idcredenciais%>,<%=CredenciaisPerfil[i].idperfilsistema%>,<%=CredenciaisPerfil[i].idtransacoes%>,<%=CredenciaisPerfil[i].idsubtransacao%>,<%=CredenciaisPerfil[i].status%>,<%=CredenciaisPerfil[i].motivorecusa%>)">editar</button>
+									<button class="btn btn-primary btn-login" onclick="Acao('Ex',<%=CredenciaisPerfil[i].idcredenciais%>,<%=CredenciaisPerfil[i].idperfilsistema%>,<%=CredenciaisPerfil[i].idtransacoes%>,<%=CredenciaisPerfil[i].idsubtransacao%>,<%=CredenciaisPerfil[i].status%>,<%=CredenciaisPerfil[i].motivorecusa%>)">excluir</button>
+								</td>
+							</tr>
+						<% }%>
+					<% } %>
+				</tbody>
+			</table>
+	
+	</accordion-group>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+                </div>
+
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+		
+	</body>
+	
+</html>
